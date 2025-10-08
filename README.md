@@ -1,70 +1,113 @@
-# Getting Started with Create React App
+# MyAnilist Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This folder contains the Create React App frontend used by the MyAnilist project.
 
-## Available Scripts
+The instructions below are written for Windows (PowerShell). They work on other platforms with equivalent commands.
 
-In the project directory, you can run:
+## Prerequisites
 
-### `npm start`
+- Node.js (recommended LTS >= 16)
+- npm (comes with Node) or yarn
+- (Optional) A running backend API for full functionality. By default the frontend expects the backend at `http://localhost:8000`.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Install dependencies
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Open PowerShell in the `myanilist_front` folder and run:
 
-### `npm test`
+```powershell
+npm install
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+or with yarn:
 
-### `npm run build`
+```powershell
+yarn install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Configure API base URL
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The frontend reads the backend base URL from an environment variable named `REACT_APP_API_BASE_URL`.
+Create a `.env` file in the `myanilist_front` folder (same level as `package.json`) with the API URL you want to use. Example:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+REACT_APP_API_BASE_URL=http://localhost:8000
+```
 
-### `npm run eject`
+Note: Create React App exposes only variables prefixed with `REACT_APP_` to the client bundle.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+After changing `.env` you may need to restart the dev server.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Run in development
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Start the dev server (hot reload):
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```powershell
+npm start
+```
 
-## Learn More
+This will open the app at http://localhost:3000 by default.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+If your backend runs on a different host/port, set `REACT_APP_API_BASE_URL` accordingly in `.env`.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Build for production
 
-### Code Splitting
+```powershell
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The optimized files are produced in the `build` folder. To serve the production build locally you can use the `serve` package:
 
-### Analyzing the Bundle Size
+```powershell
+npm i -g serve
+serve -s build -l 3000
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Common scripts
 
-### Making a Progressive Web App
+- `npm start` — development server
+- `npm test` — run tests
+- `npm run build` — production build
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Backend endpoints used by the frontend
 
-### Advanced Configuration
+The frontend expects the backend API paths under `/api/anilist/` (example):
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- Search by name: `POST /api/anilist/search/name/` (JSON body like {"name":"Naruto","page":1,"limit":10})
+- Anime detail and tabs: `/api/anilist/anime/<anime_id>/...` (characters, staffs, stats, watch)
 
-### Deployment
+If a feature doesn't work, ensure your Django backend is running and that `REACT_APP_API_BASE_URL` points to it.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Troubleshooting
 
-### `npm run build` fails to minify
+- CORS errors: enable CORS on the Django backend (e.g., use `django-cors-headers`) and allow the frontend origin.
+- 404 on API calls: confirm the backend base URL and the routes defined in the backend (check `src/api/anilist/urls.py` on the Django project).
+- Wrong/missing data: check backend logs (where you run `python manage.py runserver`) for tracebacks.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Quick Postman test (example)
+
+To test the search endpoint with Postman, send a POST to:
+
+```
+{{baseURL}}/api/anilist/search/name/
+```
+
+With header `Content-Type: application/json` and body:
+
+```json
+{
+  "name": "Naruto",
+  "page": 1,
+  "limit": 10
+}
+```
+
+## Contributing
+
+If you change frontend behavior that depends on backend responses, please coordinate with backend changes and update `REACT_APP_API_BASE_URL` or the code that consumes backend fields.
+
+---
+
+If you want, I can also:
+- add a sample `.env.example` file,
+- add a README section describing how the frontend calls specific backend endpoints (examples of requests), or
+- prepare a small script to run backend + frontend together for local development. Which would you like?
