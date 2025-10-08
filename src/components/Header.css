@@ -1,0 +1,78 @@
+/* src/components/Header.css */
+
+.app-header {
+  display: flex;
+  justify-content: space-between; /* Đẩy các phần tử ra xa nhau */
+  align-items: center;
+  padding: 10px 50px;
+  background-color: #152232;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* --- Phần Trái --- */
+.header-left .logo {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #fff;
+  /* Hiệu ứng màu gradient cho logo chữ A */
+  background: linear-gradient(to top, #3DB4F2, #fff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* --- Phần Giữa --- */
+.header-center a {
+  color: #c2c2c2;
+  text-decoration: none;
+  margin: 0 18px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.header-center a:hover {
+  color: #3DB4F2;
+}
+
+/* --- Phần Phải --- */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 25px; /* Khoảng cách giữa icon search và avatar */
+}
+
+.search-icon {
+  font-size: 1.2rem;
+  color: #c2c2c2;
+  cursor: pointer;
+}
+
+.user-profile {
+  position: relative; /* Cần thiết để định vị notification badge */
+  cursor: pointer;
+}
+
+.user-profile img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #3DB4F2;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  background-color: #E84F63; /* Màu đỏ cho thông báo */
+  color: white;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #152232; /* Viền cùng màu với nền header */
+}
