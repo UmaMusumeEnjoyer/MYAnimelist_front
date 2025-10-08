@@ -7,3 +7,20 @@ body {
     sans-serif;
   margin: 0;
 }
+
+/* src/App.css */
+
+.App {
+  /*max-width: 1920px; /* Giới hạn chiều ngang tối đa của nội dung */
+  margin: 0 auto;   /* Tự động căn giữa theo chiều ngang */
+}
+
+/* Các style khác của bạn giữ nguyên */
+body {
+  background-color: #0B1622;
+  color: #c2c2c2;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  margin: 0;
+}

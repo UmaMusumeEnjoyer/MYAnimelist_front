@@ -39,3 +39,9 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
+
+/* Thêm vào cuối file src/components/AnimeCard.css */
+.anime-card-link {
+  text-decoration: none;
+  color: inherit; /* Kế thừa màu chữ từ cha */
+}

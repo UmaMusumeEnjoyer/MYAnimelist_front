@@ -9,7 +9,7 @@ const HomePage = () => {
   const airingAnimeIds = [181182, 178701];
 
   // ▼▼▼ NHẬP ID CHO KHU VỰC "ANIME IN PROGRESS" TẠI ĐÂY ▼▼▼
-  const inProgressAnimeIds = [195153, 173523];
+  const inProgressAnimeIds = [195153, 173523, 183385];
 
   // Tạo 2 state riêng biệt cho mỗi danh sách
   const [airingList, setAiringList] = useState([]);

@@ -1,0 +1,36 @@
+/* src/components/InfoSidebar.css */
+.info-sidebar {
+  flex: 0 0 225px; /* Chiều rộng cố định */
+  width: 225px;
+  background-color: #152232; /* Màu nền cho sidebar */
+  padding: 20px;
+  border-radius: 8px;
+  height: fit-content; /* Chiều cao tự động theo nội dung */
+}
+
+.info-block {
+  margin-bottom: 15px;
+}
+
+.info-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff; /* Chữ trắng cho label */
+  margin: 0 0 4px 0;
+}
+
+.info-value {
+  font-size: 0.9rem;
+  color: #c2c2c2;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.info-value.list-item {
+  margin-bottom: 2px;
+}
+
+.info-label.airing-label,
+.info-value.airing-value {
+  color: #3DB4F2;
+}

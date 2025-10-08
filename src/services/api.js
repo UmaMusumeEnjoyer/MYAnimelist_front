@@ -15,6 +15,12 @@ export const getAnimeById = (id) => {
   return API.get(`/anilist/anime/${id}/`);
 };
 
-// Bạn có thể giữ lại hoặc xóa các hàm cũ không còn dùng đến
-// export const getAiringAnime = ...
-// export const getInProgressAnime = ...
+
+/**
+ * Lấy danh sách nhân vật của một anime dựa vào ID.
+ * @param {number} id - ID của anime.
+ * @returns {Promise} - Promise chứa dữ liệu nhân vật.
+ */
+export const getAnimeCharacters = (id) => {
+  return API.get(`/anilist/anime/${id}/characters/`);
+};

@@ -1,0 +1,48 @@
+/* src/components/CharacterCard.css */
+.character-card {
+  display: flex;
+  justify-content: space-between;
+  background-color: #152232;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 80px;
+}
+
+.person-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.person-avatar {
+  width: 55px;
+  height: 100%;
+  object-fit: cover;
+}
+
+.person-details {
+  padding: 5px 0;
+}
+
+.person-name {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+}
+
+.person-role {
+  color: #c2c2c2;
+  font-size: 0.8rem;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+/* Style riêng cho diễn viên lồng tiếng để đảo ngược layout */
+.va-info {
+  text-align: right;
+}
+
+.va-details {
+  padding-right: 10px;
+}

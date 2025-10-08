@@ -1,0 +1,20 @@
+/* src/components/CharactersSection.css */
+.characters-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Tạo layout 3 cột */
+  gap: 20px;
+}
+
+/* Responsive: chuyển về 2 cột trên màn hình nhỏ hơn */
+@media (max-width: 1024px) {
+  .characters-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Responsive: chuyển về 1 cột trên màn hình rất nhỏ */
+@media (max-width: 768px) {
+  .characters-grid {
+    grid-template-columns: 1fr;
+  }
+}
