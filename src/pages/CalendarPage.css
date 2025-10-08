@@ -1,0 +1,120 @@
+/* src/pages/Calendar.css */
+
+/* --- Layout chính --- */
+.calendar-page-container {
+  display: flex;
+  height: calc(100vh - 80px);
+  background-color: #202124;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.calendar-sidebar { /* ... giữ nguyên ... */ }
+.calendar-main-content { /* ... giữ nguyên ... */ }
+.create-btn { /* ... giữ nguyên ... */ }
+
+/* --- Tổng thể Lịch --- */
+.rbc-calendar {
+  background-color: transparent;
+  color: #bdc1c6;
+  border: none;
+}
+
+/* --- Thanh Toolbar --- */
+.rbc-toolbar {
+  border-bottom: 1px solid #5f6368;
+  margin-bottom: 0;
+  padding-bottom: 1em;
+}
+/* ... (các style khác của toolbar giữ nguyên) ... */
+
+/* --- Lưới Lịch --- */
+.rbc-month-view, .rbc-time-view, .rbc-agenda-view {
+  border: 1px solid #5f6368;
+  border-width: 1px 0 0 1px;
+}
+.rbc-header {
+  border: none;
+  padding: 10px 12px;
+  text-align: left;
+  color: #9aa0a6;
+  font-weight: 500;
+  border-bottom: 1px solid #5f6368;
+}
+
+/* Ô chứa ngày */
+.rbc-day-bg {
+  border: none;
+  border-right: 1px solid #5f6368;
+}
+.rbc-month-row {
+  border: none;
+}
+.rbc-month-row + .rbc-month-row {
+  border-top: 1px solid #5f6368;
+}
+.rbc-off-range-bg {
+  background-color: transparent;
+}
+
+/* Số ngày và highlight ngày hôm nay */
+.rbc-date-cell {
+  padding: 8px;
+  text-align: left;
+}
+.rbc-date-cell .rbc-button-link {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #bdc1c6;
+}
+.rbc-now .rbc-button-link {
+  background-color: #8ab4f8;
+  color: #202124;
+  font-weight: bold;
+}
+.rbc-off-range .rbc-date-cell .rbc-button-link {
+  color: #5f6368;
+}
+
+/* --- Sự kiện --- */
+/* Ghi đè style mặc định của sự kiện */
+.rbc-event {
+  background-color: transparent;
+  border: none;
+  padding: 1px 0;
+}
+/* Style cho component tùy chỉnh */
+.custom-event {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.event-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.event-title {
+  color: #bdc1c6;
+}
+
+/* Style cho sự kiện cả ngày */
+.rbc-row-segment .rbc-event {
+  background-color: #0277bd; /* Màu nền cho sự kiện cả ngày */
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+.rbc-row-segment .rbc-event .event-title {
+  color: white;
+}
+.rbc-row-segment .rbc-event .event-dot {
+  display: none; /* Ẩn chấm tròn cho sự kiện cả ngày */
+}

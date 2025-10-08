@@ -24,3 +24,11 @@ body {
     sans-serif;
   margin: 0;
 }
+
+.main-content-container {
+  max-width: 1400px; /* Bạn có thể điều chỉnh chiều rộng tối đa này */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 50px;  /* Giữ khoảng cách lề hai bên */
+  padding-right: 50px;
+}

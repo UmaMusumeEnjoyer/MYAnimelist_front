@@ -29,6 +29,18 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 36%;
-  height: 36%;
+  width: 51%;
+  height: 51%;
+}
+
+/* Thêm vào cuối file src/components/MainContentArea.css */
+
+.distribution-container {
+  display: flex;
+  gap: 30px; /* Khoảng cách giữa 2 khu vực */
+}
+
+/* Đảm bảo mỗi khu vực trong container chiếm không gian bằng nhau */
+.distribution-container .content-section {
+  flex: 1;
 }

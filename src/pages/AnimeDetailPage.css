@@ -10,7 +10,7 @@
 
 .content-wrapper {
   /* Bỏ display: flex, gap và margin-top */
-  padding: 0 50px 50px 50px; /* Thêm padding-bottom */
+ 
 }
 
 .detail-body-grid {

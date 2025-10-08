@@ -1,0 +1,6 @@
+/* src/components/RankingsSection.css */
+.rankings-grid {
+  display: flex;
+  flex-wrap: wrap; /* Cho phép các item tự xuống dòng */
+  gap: 15px;
+}

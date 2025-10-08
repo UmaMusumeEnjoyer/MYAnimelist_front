@@ -53,11 +53,13 @@ const HomePage = () => {
   return (
     <div>
       <Header />
+      <div className="main-content-container">
       <main style={{ padding: '0 50px' }}>
         {/* Render 2 khu vực riêng biệt */}
         <AnimeSection title="Airing" animeList={airingList} />
         <AnimeSection title="Anime in Progress" animeList={inProgressList} />
       </main>
+    </div>
     </div>
   );
 };

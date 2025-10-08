@@ -48,7 +48,7 @@ const AnimeDetailPage = () => {
             style={{ backgroundImage: `url(${anime.banner_image})` }}
           ></div>
         )}
-        
+         <div className="main-content-container">
         <div className="content-wrapper">
           {/* Truyền prop hasBanner xuống SummarySection */}
           <SummarySection anime={anime} hasBanner={hasBanner} />
@@ -57,6 +57,7 @@ const AnimeDetailPage = () => {
             <InfoSidebar anime={anime} />
             <MainContentArea anime={anime} />
           </div>
+        </div>
         </div>
       </div>
     </>

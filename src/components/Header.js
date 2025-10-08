@@ -17,9 +17,9 @@ const Header = () => {
         <a href="/">Home</a>
         <a href="/profile">Profile</a>
         <a href="/animelist">Anime List</a>
-        <a href="/mangalist">Manga List</a>
+        <a href="/calendar">Calendar</a>
         <a href="/browse">Browse</a>
-        <a href="/forum">Forum</a>
+       
       </nav>
 
       {/* PHẦN BÊN PHẢI */}

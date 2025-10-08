@@ -24,3 +24,21 @@ export const getAnimeById = (id) => {
 export const getAnimeCharacters = (id) => {
   return API.get(`/anilist/anime/${id}/characters/`);
 };
+
+/**
+ * Lấy danh sách staff của một anime dựa vào ID.
+ * @param {number} id - ID của anime.
+ * @returns {Promise} - Promise chứa dữ liệu staff.
+ */
+export const getAnimeStaff = (id) => {
+  return API.get(`/anilist/anime/${id}/staffs/`);
+};
+
+/**
+ * Lấy dữ liệu thống kê (rankings, distribution) của một anime.
+ * @param {number} id - ID của anime.
+ * @returns {Promise} - Promise chứa dữ liệu stats.
+ */
+export const getAnimeStats = (id) => {
+  return API.get(`/anilist/anime/${id}/stats/`);
+};

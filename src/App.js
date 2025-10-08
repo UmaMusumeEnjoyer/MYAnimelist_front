@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import HomePage from './pages/HomePage';
 import AnimeDetailPage from './pages/AnimeDetailPage'; // Sẽ tạo ở bước sau
+import CalendarPage from './pages/CalendarPage';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/anime/:animeId" element={<AnimeDetailPage />} />
+          <Route path="/calendar" element={<CalendarPage />} />
         </Routes>
       </div>
     </Router>

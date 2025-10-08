@@ -1,27 +1,34 @@
 // src/components/AnimeCard.js
 import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link
+import { Link } from 'react-router-dom';
 import './AnimeCard.css';
 
 const AnimeCard = ({ anime }) => {
-  // ... hàm renderEpisodeInfo giữ nguyên ...
-  const renderEpisodeInfo = () => {
-    if (anime.next_airing_ep) {
-        const { episode, timeUntilAiring } = anime.next_airing_ep;
-        const days = Math.floor(timeUntilAiring / 86400);
-        const hours = Math.floor((timeUntilAiring % 86400) / 3600);
-        const minutes = Math.floor(((timeUntilAiring % 86400) % 3600) / 60);
-        return `Ep ${episode} - ${days}d ${hours}h ${minutes}m`;
-    }
-    if (anime.airing_status === 'FINISHED') {
-        return `Finished - ${anime.airing_episodes} eps`;
-    }
-    return null;
-  };
+  let airingInfo = null;
+  let progressPercent = 0;
 
+  // Xử lý thông tin và tính toán tiến trình
+  if (anime.next_airing_ep) {
+    const { episode, timeUntilAiring } = anime.next_airing_ep;
+    
+    // Giả định thời gian giữa các tập là 1 tuần (604800 giây)
+    const timeSinceAired = 604800 - timeUntilAiring;
+    progressPercent = Math.max(0, Math.min(100, (timeSinceAired / 604800) * 100));
+
+    // Format lại chuỗi thời gian đếm ngược
+    const days = Math.floor(timeUntilAiring / 86400);
+    const hours = Math.floor((timeUntilAiring % 86400) / 3600);
+    const minutes = Math.floor(((timeUntilAiring % 86400) % 3600) / 60);
+
+    let timeString = `${days}d ${hours}h ${minutes}m`;
+    if (days === 0) {
+      timeString = `${hours}h ${minutes}m`;
+    }
+
+    airingInfo = `Ep ${episode} - ${timeString}`;
+  }
 
   return (
-    // Bọc toàn bộ card bằng Link
     <Link to={`/anime/${anime.id}`} className="anime-card-link">
       <div className="anime-card">
         <img 
@@ -29,12 +36,17 @@ const AnimeCard = ({ anime }) => {
           alt={anime.name_romaji} 
           className="anime-poster" 
         />
-        {renderEpisodeInfo() && (
-          <div className="anime-overlay">
-            <span className="episode-info">{renderEpisodeInfo()}</span>
+        {airingInfo && (
+          <div className="airing-info">
+            <p className="episode-time">{airingInfo}</p>
+            <div className="progress-bar-container">
+              <div 
+                className="progress-bar-fill" 
+                style={{ width: `${progressPercent}%` }}
+              ></div>
+            </div>
           </div>
         )}
-        <p className="anime-title">{anime.name_romaji}</p>
       </div>
     </Link>
   );

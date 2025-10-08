@@ -1,0 +1,46 @@
+/* src/components/StaffCard.css */
+.staff-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: #152232;
+  border-radius: 6px;
+  height: 80px;
+  overflow: hidden;
+}
+
+.staff-avatar {
+  width: 55px;
+  height: 100%;
+  object-fit: cover;
+}
+
+.no-image-placeholder {
+  flex-shrink: 0;
+  width: 55px;
+  height: 100%;
+  background-color: #2d3748;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #c2c2c2;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.staff-details {
+  padding: 5px 0;
+}
+
+.staff-name {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+}
+
+.staff-role {
+  color: #c2c2c2;
+  font-size: 0.8rem;
+  margin: 0;
+}
