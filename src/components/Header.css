@@ -2,26 +2,24 @@
 
 .app-header {
   display: flex;
-  justify-content: space-between; /* Đẩy các phần tử ra xa nhau */
+  justify-content: space-between;
   align-items: center;
   padding: 10px 50px;
   background-color: #152232;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-/* --- Phần Trái --- */
+/* --- Phần Trái (Không đổi) --- */
 .header-left .logo {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #fff;
-  /* Hiệu ứng màu gradient cho logo chữ A */
   background: linear-gradient(to top, #3DB4F2, #fff);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-/* --- Phần Giữa --- */
+/* --- Phần Giữa (Không đổi) --- */
 .header-center a {
   color: #c2c2c2;
   text-decoration: none;
@@ -35,44 +33,38 @@
   color: #3DB4F2;
 }
 
-/* --- Phần Phải --- */
+/* --- Phần Phải (Đã cập nhật) --- */
 .header-right {
   display: flex;
   align-items: center;
-  gap: 25px; /* Khoảng cách giữa icon search và avatar */
+  gap: 15px; /* Khoảng cách giữa hai nút Login và Sign Up */
 }
 
-.search-icon {
-  font-size: 1.2rem;
-  color: #c2c2c2;
-  cursor: pointer;
+/* Style chung cho các nút bên phải */
+.header-right a {
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 8px 18px;
+    border-radius: 8px; /* Bo góc cho đẹp */
+    transition: all 0.2s ease-in-out;
 }
 
-.user-profile {
-  position: relative; /* Cần thiết để định vị notification badge */
-  cursor: pointer;
+/* Style cho nút Login (dạng chữ) */
+.header-right .btn-login {
+    color: #c2c2c2;
 }
 
-.user-profile img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 2px solid #3DB4F2;
+.header-right .btn-login:hover {
+    color: #fff;
 }
 
-.notification-badge {
-  position: absolute;
-  top: -5px;
-  right: -8px;
-  background-color: #E84F63; /* Màu đỏ cho thông báo */
-  color: white;
-  border-radius: 50%;
-  width: 22px;
-  height: 22px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 2px solid #152232; /* Viền cùng màu với nền header */
+/* Style cho nút Sign Up (có nền xanh) */
+.header-right .btn-signup {
+    background-color: #3578E5; /* Màu xanh dương giống trong mẫu */
+    color: white;
+}
+
+.header-right .btn-signup:hover {
+    background-color: #2a62bc; /* Màu xanh đậm hơn khi hover */
 }
