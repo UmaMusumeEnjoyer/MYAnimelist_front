@@ -8,16 +8,39 @@
   height: 80px;
 }
 
+/* Style mới cho các khu vực Link */
+.card-link {
+  flex: 1; /* Cho mỗi link chiếm 50% không gian */
+  display: flex;
+  align-items: center;
+  text-decoration: none; /* Bỏ gạch chân của link */
+  color: inherit; /* Kế thừa màu chữ từ cha */
+  transition: background-color 0.2s ease;
+}
+
+.card-link:hover {
+    background-color: #1c2e42; /* Thêm hiệu ứng hover */
+}
+
+/* Căn chỉnh cho phần diễn viên lồng tiếng sang phải */
+.va-part {
+    justify-content: flex-end;
+}
+
+
+/* Các style cũ vẫn giữ nguyên */
 .person-info {
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%; /* Đảm bảo person-info chiếm hết chiều rộng của link */
 }
 
 .person-avatar {
   width: 55px;
   height: 100%;
   object-fit: cover;
+  flex-shrink: 0; /* Ngăn ảnh bị co lại */
 }
 
 .person-details {
@@ -40,6 +63,7 @@
 
 /* Style riêng cho diễn viên lồng tiếng để đảo ngược layout */
 .va-info {
+  justify-content: flex-end; /* Căn nội dung bên trong sang phải */
   text-align: right;
 }
 

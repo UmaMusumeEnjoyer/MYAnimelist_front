@@ -1,0 +1,123 @@
+/* src/pages/CharacterPage.module.css */
+.pageWrapper {
+    background-color: #152232;
+    color: #c2c2c2;
+    padding: 40px 8%;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.loading {
+    color: #fff;
+    font-size: 1.5rem;
+    text-align: center;
+    min-height: 80vh;
+}
+
+.mainContent {
+    display: grid;
+    grid-template-columns: 225px 1fr;
+    gap: 40px;
+    margin-bottom: 50px;
+}
+
+.leftColumn {
+    width: 100%;
+}
+
+.characterImage {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.rightColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.characterName {
+    font-size: 2.2rem;
+    color: #fff;
+    margin: 0;
+}
+
+.nativeName {
+    font-size: 1rem;
+    margin: 5px 0 25px 0;
+}
+
+.extraInfoGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 20px;
+    margin-bottom: 25px;
+    font-size: 0.9rem;
+}
+
+.extraInfoGrid p {
+    margin: 0;
+}
+.extraInfoGrid strong {
+    color: #fff;
+}
+
+
+.description {
+    line-height: 1.7;
+    white-space: pre-wrap; /* Giữ nguyên các dấu xuống dòng */
+}
+
+.spoiler {
+    background-color: #46546b;
+    color: #46546b;
+    padding: 2px 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+}
+.spoiler:hover {
+    color: #fff;
+}
+
+.spoilerRevealed {
+    background-color: transparent;
+    color: inherit;
+}
+
+.mediaSection {
+    border-top: 1px solid #2a3a50;
+    padding-top: 30px;
+}
+.mediaSection h2 {
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.mediaGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.mediaCard {
+    text-decoration: none;
+    color: #c2c2c2;
+    font-size: 0.85rem;
+}
+
+.mediaCard img {
+    width: 100%;
+    height: 210px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    transition: transform 0.2s ease;
+}
+
+.mediaCard:hover img {
+    transform: translateY(-5px);
+}
+.mediaCard p {
+    margin: 0;
+}   

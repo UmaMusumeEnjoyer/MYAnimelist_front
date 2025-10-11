@@ -97,7 +97,7 @@ const CustomEvent = ({ event }) => {
 const CalendarPage = () => {
   return (
     <div>
-      <Header />
+      
       <div style={{ height: '85vh', padding: '20px' }}> {/* Đặt chiều cao cho lịch */}
         <Calendar
           localizer={localizer}

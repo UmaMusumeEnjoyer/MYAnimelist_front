@@ -42,3 +42,24 @@ export const getAnimeStaff = (id) => {
 export const getAnimeStats = (id) => {
   return API.get(`/anilist/anime/${id}/stats/`);
 };
+
+/**
+ * Lấy dữ liệu thống kê (rankings, distribution) của một anime.
+ * @param {number} id - ID của anime.
+ * @returns {Promise} - Promise chứa dữ liệu stats.
+ */
+export const getAnimeCharacter = (id) => {
+  return API.get(`/anilist/character/${id}/`);
+};
+
+// src/api/api.js
+// ... các hàm khác
+
+/**
+ * Lấy dữ liệu chi tiết của một staff (diễn viên, đạo diễn, etc.).
+ * @param {number} id - ID của staff.
+ * @returns {Promise} - Promise chứa dữ liệu staff.
+ */
+export const getStaffById = (id) => {
+  return API.get(`/anilist/staff/${id}/`); // Giả sử đây là endpoint của bạn
+};

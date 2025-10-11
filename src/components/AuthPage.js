@@ -39,6 +39,7 @@ const AuthPage = () => {
                         <input type="text" placeholder="Username" />
                         <input type="password" placeholder="Password" />
                         <input type="password" placeholder="Confirm Password" />
+                        
                         <div className={styles.terms}>
                             <input type="checkbox" id="terms" />
                             <label htmlFor="terms">You agree to our terms of service</label>

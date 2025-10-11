@@ -39,7 +39,7 @@ const AnimeDetailPage = () => {
   const hasBanner = !!anime.banner_image;
   return (
     <>
-      <Header />
+      
       <div className="anime-detail-page">
         {/* CHỈ RENDER BANNER KHI CÓ DỮ LIỆU */}
         {hasBanner && (

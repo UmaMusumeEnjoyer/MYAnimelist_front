@@ -1,0 +1,175 @@
+/* src/pages/StaffPage.module.css */
+.pageWrapper {
+    background-color: #152232;
+    color: #c2c2c2;
+    padding: 40px 8%;
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+}
+
+.loading {
+    color: #fff;
+    font-size: 1.5rem;
+    text-align: center;
+    padding-top: 50px;
+}
+
+.mainContent {
+    display: grid;
+    grid-template-columns: 225px 1fr;
+    gap: 40px;
+    margin-bottom: 50px;
+}
+
+.leftColumn {
+    width: 100%;
+}
+
+.staffImage {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.rightColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.staffName {
+    font-size: 2.2rem;
+    color: #fff;
+    margin: 0;
+}
+
+.nativeName {
+    font-size: 1rem;
+    margin: 5px 0 25px 0;
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 20px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    max-width: 500px;
+}
+.infoGrid p { margin: 0; }
+.infoGrid strong { color: #fff; }
+
+
+/* --- Phần Description và nút Read More --- */
+.description {
+    line-height: 1.7;
+    white-space: pre-wrap;
+    font-size: 0.9rem;
+    transition: max-height 0.3s ease-in-out; /* Hiệu ứng co giãn mượt */
+}
+.description p { margin-top: 0; }
+.description ul { padding-left: 20px; margin: 0; }
+.description li { margin-bottom: 5px; }
+
+.description.collapsed {
+    max-height: 120px; /* Giới hạn chiều cao khi thu gọn */
+    overflow: hidden;
+    position: relative;
+    /* Hiệu ứng mờ dần ở cuối */
+    -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+}
+
+.readMoreButton {
+    background: none;
+    border: none;
+    color: #8a92a3;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: inherit;
+    font-size: 1em;
+    padding: 0;
+    margin-top: 8px;
+}
+
+.readMoreButton:hover {
+    filter: brightness(1.2);
+}
+
+.descriptionLink {
+    color: #3DB4F2;
+    text-decoration: none;
+}
+.descriptionLink:hover {
+    text-decoration: underline;
+}
+
+
+/* --- Phần danh sách vai diễn (Roles) --- */
+.rolesSection {
+    margin-top: 40px;
+}
+
+.yearGroup {
+    margin-bottom: 40px;
+}
+
+.yearTitle {
+    color: #fff;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #2a3a50;
+}
+
+.rolesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.roleCardLink {
+    text-decoration: none; /* Bỏ gạch chân cho link */
+    color: inherit;
+}
+
+.roleCard {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: #1a2838;
+    border-radius: 6px;
+    overflow: hidden;
+    height: 80px;
+    /* Hiệu ứng chuyển động mượt */
+    transition: background-color 0.2s ease-in-out, filter 0.2s ease-in-out;
+}
+
+/* Hiệu ứng hover cho card */
+.roleCardLink:hover .roleCard {
+    background-color: rgba(255, 255, 255, 0.05); /* Sáng nhẹ nền */
+    filter: brightness(1.2); /* Tăng độ sáng tổng thể */
+}
+
+.roleImage {
+    width: 55px;
+    height: 100%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.roleDetails p {
+    margin: 0;
+}
+
+.roleMainText {
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.roleSubText {
+    color: #c2c2c2;
+    font-size: 0.8rem;
+    text-transform: capitalize;
+}
