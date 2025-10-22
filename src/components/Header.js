@@ -1,33 +1,45 @@
 // src/components/Header.js
 import React from 'react';
 import './Header.css';
-import { Link } from 'react-router-dom'; // Import Link
-
-// Bạn có thể dùng một icon search từ thư viện như react-icons
-// import { FaSearch } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; // Import useAuth
 
 const Header = () => {
+  const { isAuthenticated, logout } = useAuth(); // Lấy trạng thái và hàm logout
+
   return (
     <header className="app-header">
       {/* PHẦN BÊN TRÁI */}
       <div className="header-left">
-        <div className="logo">A</div>
+        <div className="logo">
+            <Link to="/">A</Link>
+        </div>
       </div>
 
       {/* PHẦN Ở GIỮA */}
       <nav className="header-center">
-        <a href="/">Home</a>
-        <a href="/profile">Profile</a>
-        <a href="/animelist">Anime List</a>
-        <a href="/calendar">Calendar</a>
-        <a href="/browse">Browse</a>
-       
+        <Link to="/">Home</Link>
+        <Link to="/profile">Profile</Link>
+        <Link to="/animelist">Anime List</Link>
+        <Link to="/calendar">Calendar</Link>
+        <Link to="/browse">Browse</Link>
       </nav>
 
       {/* PHẦN BÊN PHẢI */}
       <div className="header-right">
-        <Link to="/login" className="btn-login">Login</Link>
-        <Link to="/signup" className="btn-signup">Sign Up</Link>
+        {isAuthenticated ? (
+          <>
+            {/* Khi đã đăng nhập */}
+            <div className="user-avatar">AVATAR</div>
+            <button onClick={logout} className="btn-logout">Logout</button>
+          </>
+        ) : (
+          <>
+            {/* Khi chưa đăng nhập */}
+            <Link to="/login" className="btn-login">Login</Link>
+            <Link to="/signup" className="btn-signup">Sign Up</Link>
+          </>
+        )}
       </div>
     </header>
   );
