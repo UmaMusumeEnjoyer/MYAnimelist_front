@@ -86,3 +86,27 @@ export const register = (userData) => {
 export const login = (credentials) => {
   return API.post('/auth/login/', credentials);
 };
+
+// Request interceptor: attach token from localStorage and log for debugging
+API.interceptors.request.use((config) => {
+  try {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      // Set Authorization header if token exists
+      config.headers = config.headers || {};
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    // Debug log to help check token presence at request time
+    // Note: remove or lower verbosity in production
+    // eslint-disable-next-line no-console
+    console.debug('[apiService] Request:', config.method?.toUpperCase(), config.url, 'Authorization:', config.headers?.Authorization || '<<none>>');
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error('[apiService] Error reading token from localStorage', err);
+  }
+
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
