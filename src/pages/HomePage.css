@@ -1,0 +1,97 @@
+/* src/pages/HomePage.css */
+
+/* --- PHẦN 2: Khu vực Video Call-to-Action --- */
+
+/* Container chính cho khu vực video */
+.videoSection {
+  position: relative;
+  width: 100%;
+  height: 450px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+  background-color: #333; /* Màu nền dự phòng */
+}
+
+/* Thẻ <video> */
+.videoBackground {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+/* Lớp phủ làm mờ */
+.videoOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+/* Container chứa text và button */
+.contentContainer {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+/* Div chứa chữ bên trái */
+.textContainer {
+  flex: 2;
+  padding-right: 30px;
+}
+
+/* CSS cho văn bản bên trong (Tôi cũng chuyển từ inline style ra đây) */
+.contentContainer h3 {
+  color: white;
+  margin: 0;
+  font-size: 2.2rem;
+}
+
+.contentContainer p {
+  color: #eee;
+  margin: 10px 0 0;
+  font-size: 1.1rem;
+}
+
+
+/* --- Nút SIGN UP --- */
+/* Đây là class mà <Link> của bạn đang sử dụng */
+.signUpButton {
+  /* Style từ object cũ của bạn */
+  padding: 15px 30px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  background-color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  white-space: nowrap;
+  
+  /* QUAN TRỌNG: Thêm cái này để xóa gạch chân của thẻ <Link> */
+  text-decoration: none; 
+}
+
+/* Thêm hiệu ứng hover cho đẹp */
+.signUpButton:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.03);
+}

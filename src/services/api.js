@@ -10,7 +10,7 @@ const API = axios.create({
 // =================================================================
 
 const simpleCache = {};
-const defaultTTL = 1000 * 60 * 5; // 5 phút
+const defaultTTL = 1000 * 60 * 10; // 10 phút
 
 /**
  * Lấy dữ liệu từ cache nếu có và chưa hết hạn.
