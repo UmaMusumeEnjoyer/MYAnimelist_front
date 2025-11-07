@@ -1,97 +1,586 @@
 /* src/pages/HomePage.css */
 
-/* --- PHẦN 2: Khu vực Video Call-to-Action --- */
+/* --- Global & Reset --- */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: #121212; /* Nền siêu tối */
+  color: #ffffff;
+}
 
-/* Container chính cho khu vực video */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  font-weight: 600;
+}
+
+h2 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  font-weight: 700;
+}
+
+section {
+  /* Thêm padding chung cho các section */
+  padding: 4rem 5%;
+}
+
+/* --- PHẦN 1: Video Section (Style cho code của bạn) --- */
 .videoSection {
   position: relative;
   width: 100%;
-  height: 450px;
+  height: 76vh; /* Chiều cao 90% màn hình */
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 50px;
-  background-color: #333; /* Màu nền dự phòng */
+  padding: 0; /* Ghi đè padding chung */
 }
 
-/* Thẻ <video> */
 .videoBackground {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
   transform: translate(-50%, -50%);
-  z-index: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: 1;
 }
 
-/* Lớp phủ làm mờ */
 .videoOverlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  z-index: 1;
+  background: rgba(0, 0, 0, 0.6); /* Lớp phủ tối hơn */
+  z-index: 2;
 }
 
-/* Container chứa text và button */
 .contentContainer {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   width: 100%;
   max-width: 1200px;
-  padding: 0 50px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  color: white;
+  justify-content: space-between;
+  padding: 0 5%;
+  box-sizing: border-box; /* Đảm bảo padding không làm vỡ layout */
 }
 
-/* Div chứa chữ bên trái */
 .textContainer {
-  flex: 2;
-  padding-right: 30px;
+  max-width: 50%;
 }
 
-/* CSS cho văn bản bên trong (Tôi cũng chuyển từ inline style ra đây) */
-.contentContainer h3 {
-  color: white;
-  margin: 0;
-  font-size: 2.2rem;
+.textContainer h3 {
+  font-size: 3rem;
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
 }
 
-.contentContainer p {
-  color: #eee;
-  margin: 10px 0 0;
-  font-size: 1.1rem;
+.textContainer p {
+  font-size: 1.2rem;
+  color: #e0e0e0; /* Màu xám nhạt */
 }
 
-
-/* --- Nút SIGN UP --- */
-/* Đây là class mà <Link> của bạn đang sử dụng */
 .signUpButton {
-  /* Style từ object cũ của bạn */
-  padding: 15px 30px;
-  font-size: 1rem;
+  background-color: #007bff; /* Màu xanh dương */
+  color: #ffffff;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
   font-weight: bold;
-  color: #333;
-  background-color: white;
-  border: none;
+  text-decoration: none;
   border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  white-space: nowrap;
-  
-  /* QUAN TRỌNG: Thêm cái này để xóa gạch chân của thẻ <Link> */
-  text-decoration: none; 
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
 }
 
-/* Thêm hiệu ứng hover cho đẹp */
 .signUpButton:hover {
-  background-color: #f0f0f0;
-  transform: scale(1.03);
+  background-color: #0056b3;
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
 }
+
+
+/* --- PHẦN 2: Trending Section --- */
+.trendingSection {
+  background-color: #1a1a1a; /* Nền tối hơn 1 chút */
+}
+
+.animeGrid {
+  display: grid;
+  /* Responsive Grid: 
+     - Tự động vừa (auto-fit)
+     - Cột có chiều rộng tối thiểu 280px
+     - Tối đa 1fr (chia đều không gian)
+  */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.animeCard {
+  background: #242424; /* Nền của card */
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  color: #fff;
+}
+
+.animeCard:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.animeCard img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover; /* Đảm bảo ảnh lấp đầy, không bị méo */
+}
+
+.cardContent {
+  padding: 1.5rem;
+}
+
+.cardContent h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.cardContent p {
+  font-size: 0.95rem;
+  color: #ccc;
+  line-height: 1.5;
+  /* Giới hạn text 2 dòng */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.cardButton {
+  display: inline-block;
+  margin-top: 1rem;
+  font-weight: bold;
+  color: #007bff;
+  transition: color 0.3s;
+}
+
+.animeCard:hover .cardButton {
+  color: #3399ff; /* Sáng lên khi hover card */
+}
+
+
+/* --- PHẦN 3: Genre Section --- */
+.genreSection {
+  background-color: #121212; /* Quay lại nền chính */
+}
+
+.genreChips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.genreChip {
+  padding: 0.75rem 1.75rem;
+  background: #333;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 50px; /* Bo tròn thành "viên thuốc" */
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.genreChip:hover {
+  background: #007bff;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+
+/* --- PHẦN 4: Latest News Section --- */
+.latestNewsSection {
+  background-color: #1a1a1a;
+}
+
+.newsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.newsArticle {
+  background: #242424;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column; /* Giúp link "Read More" ở cuối */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.newsArticle img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.newsContent {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Đẩy nội dung xuống */
+}
+
+.newsContent h4 {
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+}
+
+.newsContent p {
+  color: #ccc;
+  line-height: 1.5;
+  flex-grow: 1; /* Đẩy link "Read More" xuống cuối */
+}
+
+.readMoreLink {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+  align-self: flex-start; /* Nằm bên trái */
+  margin-top: 1rem;
+}
+
+.readMoreLink:hover {
+  text-decoration: underline;
+}
+
+
+/* --- PHẦN 5: Footer --- */
+.footer {
+  padding: 2.5rem 5%;
+  background: #000; /* Nền đen tuyền */
+  text-align: center;
+  color: #888;
+}
+
+.footerLinks {
+  margin-bottom: 1rem;
+}
+
+.footerLinks a {
+  color: #aaa;
+  text-decoration: none;
+  margin: 0 1rem;
+  transition: color 0.3s;
+}
+
+.footerLinks a:hover {
+  color: #007bff;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* --- Responsive (Điện thoại) --- */
+@media (max-width: 768px) {
+  h2 {
+    font-size: 2rem;
+  }
+
+  .contentContainer {
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .textContainer {
+    max-width: 90%;
+    margin-bottom: 2rem;
+  }
+
+  .textContainer h3 {
+    font-size: 2.5rem;
+  }
+
+  .signUpButton {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .animeCard img {
+    height: 300px;
+  }
+}
+
+/* src/pages/HomePage.css */
+
+/* --- Global & Reset --- */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: #121212; /* Nền siêu tối */
+  color: #ffffff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  font-weight: 600;
+}
+
+h2 {
+  font-size: 2.5rem;
+  text-align: center; /* Có thể ghi đè nếu muốn text căn trái */
+  margin-bottom: 2.5rem;
+  font-weight: 700;
+}
+
+section {
+  padding: 4rem 5%;
+}
+
+/* Thêm Font Awesome cho icons (nếu chưa có) */
+/* Để các icon hiển thị, bạn cần thêm dòng này vào public/index.html của dự án React
+   HOẶC cài đặt nó qua npm/yarn và import vào dự án của bạn.
+   Ví dụ: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+*/
+
+
+/* --- PHẦN MỚI 1: Hero Section Styles --- */
+.heroSection {
+    background-color: #1a1a2e; /* Nền màu xanh đậm/tím đậm */
+    padding: 6rem 5%; /* Padding lớn hơn cho phần đầu */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; /* Cho phép xuống dòng trên màn hình nhỏ */
+    gap: 3rem; /* Khoảng cách giữa text và hình ảnh */
+}
+
+.heroContent {
+    flex: 1; /* Cho phép mở rộng */
+    min-width: 400px; /* Chiều rộng tối thiểu */
+    max-width: 600px;
+    color: #ffffff;
+}
+
+.heroContent h1 {
+    font-size: 3.8rem; /* Kích thước chữ lớn hơn */
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+.heroContent p {
+    font-size: 1.3rem;
+    color: #b0b0d0; /* Màu xám xanh nhạt */
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+
+.heroImage {
+    flex: 1;
+    min-width: 300px; /* Chiều rộng tối thiểu cho ảnh */
+    text-align: right;
+}
+
+.heroImage img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px; /* Bo góc ảnh */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* Đổ bóng nhẹ */
+}
+
+
+
+.clientLogos {
+    display: flex;
+    justify-content: space-around; /* Chia đều không gian giữa các logo */
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.clientLogos img {
+    max-height: 40px; /* Chiều cao tối đa của logo */
+    filter: grayscale(100%) brightness(150%); /* Làm mờ và sáng logo để phù hợp với dark mode */
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.clientLogos img:hover {
+    filter: grayscale(0%) brightness(100%); /* Sáng và hiện màu khi hover */
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+/* --- PHẦN MỚI 3: Features Section Styles --- */
+.featuresSection {
+    background-color: #1a1a1a;
+    padding: 5rem 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4rem;
+}
+
+.featuresTextContent {
+    flex: 1;
+    min-width: 350px;
+    max-width: 550px;
+    color: #ffffff;
+}
+
+.featuresLabel {
+    display: inline-block;
+    background-color: #3a3a5e; /* Nền cho label */
+    color: #a0a0ff; /* Màu text cho label */
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.featuresTextContent h2 {
+    text-align: left; /* Tiêu đề này căn trái */
+    font-size: 2.8rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+}
+
+.featuresIntro {
+    font-size: 1.1rem;
+    color: #c0c0c0;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+}
+
+.featureItem {
+    display: flex;
+    align-items: flex-start; /* Căn trên cùng */
+    margin-bottom: 2.5rem;
+    gap: 1.5rem;
+}
+
+.featureIcon {
+    font-size: 1.8rem;
+    color: #4CAF50; /* Màu xanh lá cây cho icon */
+    background-color: #2e2e4a; /* Nền cho icon */
+    padding: 0.8rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px; /* Kích thước cố định */
+    height: 60px; /* Kích thước cố định */
+    flex-shrink: 0; /* Không co lại */
+}
+
+.featureDetails h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.featureDetails p {
+    font-size: 0.95rem;
+    color: #c0c0c0;
+    line-height: 1.5;
+}
+
+.featuresImage {
+    flex: 1;
+    min-width: 300px;
+    text-align: center; /* Căn giữa ảnh laptop */
+}
+
+.featuresImage img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* --- Responsive cho các section mới --- */
+@media (max-width: 992px) {
+    .heroSection {
+        flex-direction: column; /* Xếp chồng trên màn hình nhỏ */
+        text-align: center;
+    }
+
+    .heroContent {
+        max-width: 100%;
+    }
+
+    .heroContent h1 {
+        font-size: 3rem;
+    }
+
+    .heroImage {
+        order: -1; /* Đẩy ảnh lên trên trên mobile */
+        margin-bottom: 2rem;
+    }
+
+    .emailSignup {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .emailSignup input, .heroGetStartedButton {
+        width: 100%;
+    }
+
+    .featuresSection {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .featuresTextContent h2 {
+        text-align: center;
+    }
+
+    .featuresIntro {
+        text-align: center;
+    }
+
+    .featureItem {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .featureIcon {
+        margin-bottom: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .heroContent h1 {
+        font-size: 2.5rem;
+    }
+    .heroContent p {
+        font-size: 1.1rem;
+    }
+    .featuresTextContent h2 {
+        font-size: 2.2rem;
+    }
+    .clientLogos img {
+        max-height: 30px; /* Nhỏ hơn trên mobile */
+    }
+}
+
+
+/* --- CÁC STYLE CŨ CỦA BẠN (VIDEO, TRENDING, GENRE, NEWS, FOOTER) SẼ NẰM Ở ĐÂY --- */
+/* ... (Bao gồm toàn bộ CSS cho videoSection, trendingSection, genreSection, latestNewsSection, footer) ... */

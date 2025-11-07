@@ -12,6 +12,7 @@ import AuthPage from './components/AuthPage';
 import CharacterPage from './pages/CharacterPage'; // Sửa đường dẫn import
 import StaffPage from './pages/StaffPage';
 import { AuthProvider } from './context/AuthContext';
+import NewsDetailPage from './pages/NewsData/NewsDetailPage';
 
 function App() {
   return (
@@ -32,8 +33,14 @@ function App() {
           <Route path="/signup" element={<AuthPage />} />
           <Route path="/character/:characterId" element={<CharacterPage />} />
           <Route path="/staff/:staffId" element={<StaffPage />} />
+          <Route path="/news/:id" element={<NewsDetailPage />} />
 
+          <Route path="/terms" element={<NewsDetailPage />} />
+          <Route path="/privacy" element={<NewsDetailPage />} />
+          <Route path="/contact" element={<NewsDetailPage />} />
+          <Route path="/about" element={<NewsDetailPage />} />
         </Routes>
+      
       </main>
         </AuthProvider>
     </Router>

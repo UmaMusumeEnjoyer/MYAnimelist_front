@@ -19,10 +19,15 @@ const Header = () => {
       {/* PHẦN Ở GIỮA */}
       <nav className="header-center">
         <Link to="/">Home</Link>
-        <Link to="/profile">Profile</Link>
-        <Link to="/animelist">Anime List</Link>
-        <Link to="/calendar">Calendar</Link>
         <Link to="/browse">Browse</Link>
+        {isAuthenticated && (
+          <>
+            {/* Khi đã đăng nhập */}
+            <Link to="/calendar">Calendar</Link>
+            <Link to="/profile">Profile</Link>
+            <Link to="/animelist">Anime List</Link>
+          </>
+        )}
       </nav>
 
       {/* PHẦN BÊN PHẢI */}
