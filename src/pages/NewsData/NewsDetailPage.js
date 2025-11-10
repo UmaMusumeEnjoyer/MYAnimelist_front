@@ -1,52 +1,72 @@
 import React from 'react';
-// Import hook useParams từ react-router-dom
 import { useParams, Link } from 'react-router-dom';
-// Import mảng dữ liệu tin tức của chúng ta
 import { newsData } from './newsData';
+import './NewsDetail.css';
 
 function NewsDetailPage() {
-  // 1. Lấy 'id' từ URL bằng hook useParams
-  // Tên 'id' này phải khớp với tên bạn đặt trong Route (ví dụ: path="/news/:id")
-  const { id } = useParams();
+  const { id } = useParams();
+  const newsItem = newsData.find(news => news.id.toString() === id);
 
-  // 2. Tìm tin tức trong mảng dựa trên 'id'
-  // Lưu ý: useParams luôn trả về 'id' dưới dạng chuỗi (string),
-  // nên chúng ta dùng '==' để so sánh lỏng hoặc chuyển đổi kiểu dữ liệu.
-  const newsItem = newsData.find(news => news.id.toString() === id);
+  if (!newsItem) {
+    return (
+      <div className="news-page-container">
+        <section className="news-detail-content not-found">
+          <h2>Không tìm thấy tin tức</h2>
+          <p>Tin tức với ID "{id}" không tồn tại.</p>
+          <Link to="/">Quay về trang chủ</Link>
+        </section>
+      </div>
+    );
+  }
 
-  // 3. Xử lý trường hợp không tìm thấy tin tức
-  if (!newsItem) {
-    return (
-      <section className="newsDetailSection">
-        <h2>Không tìm thấy tin tức</h2>
-        <p>Tin tức với ID "{id}" không tồn tại.</p>
-        <Link to="/">Quay về trang chủ</Link>
-      </section>
-    );
-  }
+  return (
+    <div className="news-page-container">
+      <section className="news-detail-content">
 
-  // 4. Hiển thị nội dung chi tiết của tin tức đã tìm thấy
-  return (
-    <section className="newsDetailSection">
-      <h1>{newsItem.title}</h1>
-      <img 
-        src={newsItem.img} 
-        alt={newsItem.title} 
-        style={{ maxWidth: '600px', width: '100%', height: 'auto' }} 
-      />
-      {/* Hiển thị 'fullContent' thay vì 'snippet' */}
-      <div className="fullContent">
-        {/* Chúng ta dùng nl2br (hoặc CSS) để xuống hàng nếu nội dung có \n */}
-        {newsItem.fullContent.split('\n').map((line, index) => (
-          <p key={index}>{line}</p>
-        ))}
-      </div>
-      <br />
-      <Link to="/" className="backLink">
-        &larr; Quay lại danh sách
-      </Link>
-    </section>
-  );
+        <div className="news-header-bar">
+          <h1>{newsItem.title}</h1>
+        </div>
+
+        <div className="news-body">
+          <img 
+            src={newsItem.img} 
+            alt={newsItem.title} 
+            className="news-image" 
+          />
+          
+          {/* 1. Render khối nội dung chính như bình thường */}
+          <div className="fullContent">
+            {newsItem.fullContent.split('\n').map((line, index) => {
+              const trimmedLine = line.trim();
+              // Bỏ qua các dòng trống
+              if (trimmedLine.length > 0) {
+                return <p key={index}>{trimmedLine}</p>;
+              }
+              return null;
+            })}
+          </div>
+
+          {/* 2. KIỂM TRA VÀ RENDER TRÍCH DẪN ĐẶC BIỆT 
+            Toán tử '&&' có nghĩa là: "Nếu vế bên trái (newsItem.featuredQuote)
+            là 'true' (tức là không rỗng/null), thì hãy render vế bên phải."
+          */}
+          {newsItem.featuredQuote && (
+            <blockquote className="special-quote">
+              {newsItem.featuredQuote}
+              {newsItem.quoteAttribution && (
+                <span className="attribution">{newsItem.quoteAttribution}</span>
+              )}
+            </blockquote>
+          )}
+
+        </div>
+        
+        <Link to="/" className="backLink">
+          &larr; Quay lại danh sách
+        </Link>
+      </section>
+    </div>
+  );
 }
 
 export default NewsDetailPage;

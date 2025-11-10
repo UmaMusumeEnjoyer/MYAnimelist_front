@@ -1,0 +1,137 @@
+/* NewsDetail.css */
+
+/* Container này sẽ bọc toàn bộ trang 
+  để tạo nền xám nhẹ và căn giữa nội dung
+*/
+.news-page-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px;
+  /* Một màu nền nhẹ giống với ảnh mẫu */
+  background-color: #EDF1F5; 
+  min-height: 80vh; /* Đảm bảo nó chiếm không gian */
+}
+
+/* Đây là khung nội dung chính màu trắng, 
+  giới hạn chiều rộng giống như trong diễn đàn
+*/
+.news-detail-content {
+  width: 100%;
+  max-width: 960px; /* Giới hạn chiều rộng của nội dung */
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* Để bo góc cho header-bar */
+}
+
+/* Đây chính là THANH TIÊU ĐỀ MÀU XANH 
+  theo phong cách của ảnh mẫu
+*/
+.news-header-bar {
+  /* Màu xanh đậm giống trong ảnh (lấy từ "Submission Thread") */
+  background-color: #2F455C; 
+  padding: 14px 24px;
+  border-bottom: 3px solid #1f2d3c;
+}
+
+.news-header-bar h1 {
+  color: #ffffff; /* Chữ trắng */
+  text-align: center; /* Căn giữa */
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Phần thân nội dung (ảnh và text) 
+  nằm bên dưới thanh tiêu đề
+*/
+.news-body {
+  padding: 24px 32px 32px 32px;
+}
+
+.news-image {
+  max-width: 650px; /* Giới hạn kích thước ảnh */
+  width: 100%;
+  height: auto;
+  display: block; /* Căn giữa ảnh */
+  margin: 0 auto 24px auto; /* Khoảng cách bên dưới ảnh */
+  border-radius: 5px; /* Bo góc nhẹ cho ảnh */
+  border: 1px solid #eee;
+}
+
+.fullContent p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+/* Tạo kiểu cho link "Quay lại"
+*/
+.backLink {
+  display: inline-block;
+  padding: 0 32px 32px 32px; /* Đặt link ở góc */
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #0056b3;
+  
+}
+
+/* CSS cho trang "Không tìm thấy" */
+.news-detail-content.not-found {
+  padding: 40px;
+  text-align: center;
+}
+.not-found h2 {
+  margin-bottom: 16px;
+  color: #d9534f;
+}
+.not-found p {
+  margin-bottom: 24px;
+}
+
+/* --- Thêm vào cuối tệp NewsDetail.css --- */
+
+/* Lớp (class) cho trích dẫn đặc biệt */
+.special-quote {
+  background-color: #f7f9fa;   /* Màu nền rất nhạt để tách biệt */
+  
+  /* Dùng màu xanh #2F455C của header-bar làm viền trái */
+  border-left: 5px solid #2F455C; 
+  
+  margin: 24px 0;             /* Khoảng cách trên dưới với nội dung khác */
+  padding: 16px 24px;         /* Đệm bên trong */
+  
+  font-style: italic;         /* In nghiêng */
+  font-size: 1.1rem;          /* Kích thước chữ to hơn một chút */
+  line-height: 1.6;
+  color: #444;                 /* Màu chữ hơi sẫm (tối hơn) */
+  
+  /* Thêm hiệu ứng đổ bóng nhẹ cho nổi bật */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* (Tùy chọn) Nếu bạn muốn thêm tên tác giả/nguồn trích dẫn,
+  chúng ta sẽ tạo style cho nó
+*/
+.special-quote .attribution {
+  display: block;      /* Hiển thị trên một dòng riêng */
+  text-align: right;   /* Căn phải */
+  font-style: normal;  /* Không in nghiêng */
+  font-weight: 600;    /* In đậm */
+  font-size: 1rem;     /* Kích thước chữ bình thường */
+  color: #2F455C;      /* Dùng màu xanh chủ đạo */
+  margin-top: 12px;
+}
+
+.special-quote .attribution::before {
+  content: "— "; /* Thêm dấu gạch ngang trước tên tác giả */
+}
