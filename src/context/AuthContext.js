@@ -23,7 +23,8 @@ export const AuthProvider = ({ children }) => {
             // Giả sử API trả về token khi thành công
             // localStorage.setItem('authToken', response.data.token); 
             setIsAuthenticated(true);
-            navigate('/'); // Chuyển hướng về trang chủ
+            // Chuyển hướng về trang HomePagelogin sau khi đăng nhập thành công
+            navigate('/homepagelogin');
             return { success: true, message: response.data.message || 'Login successful!' };
         } catch (error) {
             setIsAuthenticated(false);

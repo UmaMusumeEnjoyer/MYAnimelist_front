@@ -1,6 +1,5 @@
 // src/pages/HomePage.js
 import React, { useState, useEffect } from 'react';
-import Header from '../components/Header';
 import AnimeSection from '../components/AnimeSection';
 import { getAnimeById } from '../services/api';
 

@@ -6,6 +6,7 @@ import './App.css';
 // Import các component và trang
 import Header from './components/Header'; // Import Header
 import HomePage from './pages/HomePage';
+import HomePagelogin from './pages/HomePagelogin';
 import AnimeDetailPage from './pages/AnimeDetailPage';
 import CalendarPage from './pages/CalendarPage';
 import AuthPage from './components/AuthPage';
@@ -31,14 +32,16 @@ function App() {
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/login" element={<AuthPage />} />
           <Route path="/signup" element={<AuthPage />} />
+          {/* Route for logged-in home view */}
+          <Route path="/homepagelogin" element={<HomePagelogin />} />
           <Route path="/character/:characterId" element={<CharacterPage />} />
           <Route path="/staff/:staffId" element={<StaffPage />} />
           <Route path="/news/:id" element={<NewsDetailPage />} />
-
           <Route path="/terms" element={<NewsDetailPage />} />
           <Route path="/privacy" element={<NewsDetailPage />} />
           <Route path="/contact" element={<NewsDetailPage />} />
           <Route path="/about" element={<NewsDetailPage />} />
+          {/* <Route path="/search/:type" element={<SearchPage />} /> */}
         </Routes>
       
       </main>

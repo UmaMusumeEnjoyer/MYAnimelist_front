@@ -18,6 +18,11 @@ const Header = () => {
 
       {/* PHẦN Ở GIỮA */}
       <nav className="header-center">
+        {isAuthenticated && (
+          <>
+          <Link to="/homepagelogin">Home</Link>
+          </>
+        )}
         <Link to="/">Home</Link>
         <Link to="/browse">Browse</Link>
         {isAuthenticated && (
