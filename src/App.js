@@ -9,11 +9,11 @@ import HomePage from './pages/HomePage';
 import HomePagelogin from './pages/HomePagelogin';
 import AnimeDetailPage from './pages/AnimeDetailPage';
 import CalendarPage from './pages/CalendarPage';
-import AuthPage from './components/AuthPage';
+import AuthPage from './pages/AuthPage';
 import CharacterPage from './pages/CharacterPage'; // Sửa đường dẫn import
 import StaffPage from './pages/StaffPage';
 import { AuthProvider } from './context/AuthContext';
-import NewsDetailPage from './pages/NewsData/NewsDetailPage';
+import NewsDetailPage from './pages/NewsDetailPage';
 
 function App() {
   return (

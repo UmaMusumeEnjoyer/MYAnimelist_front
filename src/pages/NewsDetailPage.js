@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { newsData } from './newsData';
+import { newsData } from '../data/newsData';
 import './NewsDetail.css';
 
 function NewsDetailPage() {
