@@ -1,7 +1,7 @@
 // src/pages/HomePage.js
 import React, { useState, useEffect } from 'react';
-import AnimeSection from '../components/AnimeSection';
-import { getAnimeById } from '../services/api';
+import AnimeSection from './components/AnimeSection';
+import { getAnimeById } from '../../services/api';
 
 const HomePage = () => {
   // ▼▼▼ NHẬP ID CHO KHU VỰC "AIRING" TẠI ĐÂY ▼▼▼

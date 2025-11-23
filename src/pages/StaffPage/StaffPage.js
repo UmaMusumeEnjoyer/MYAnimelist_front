@@ -1,7 +1,7 @@
 // src/pages/StaffPage.js
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom'; // Thêm Link vào import
-import { getStaffById } from '../services/api';
+import { getStaffById } from '../../services/api';
 import styles from './StaffPage.module.css';
 
 // Helper function để định dạng ngày tháng (không đổi)
@@ -22,7 +22,7 @@ const DescriptionRenderer = ({ text }) => {
     const parts = text.split(/(\[.*?\]\(.*?\))/g);
     return (
         <p>
-            {parts.map((part, index) => {
+            {parts.map((part, index) => {   
                 const match = part.match(/\[(.*?)\]\((.*?)\)/);
                 if (match) {
                     return (

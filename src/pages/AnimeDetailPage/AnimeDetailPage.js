@@ -1,11 +1,11 @@
 // src/pages/AnimeDetailPage.js
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getAnimeById } from '../services/api';
-import Header from '../components/Header';
-import SummarySection from '../components/SummarySection';
-import InfoSidebar from '../components/InfoSidebar'; // Component mới cho cột trái
-import MainContentArea from '../components/MainContentArea'; // Component mới cho cột phải
+import { getAnimeById } from '../../services/api';
+import Header from '../../components/Header';
+import SummarySection from './components/SummarySection';
+import InfoSidebar from './components/InfoSidebar'; // Component mới cho cột trái
+import MainContentArea from './components/MainContentArea'; // Component mới cho cột phải
 import './AnimeDetailPage.css';
 
 const AnimeDetailPage = () => {

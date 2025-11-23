@@ -1,7 +1,7 @@
 // src/pages/CharacterPage.js
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getAnimeCharacter } from '../services/api'; // Giả sử file api của bạn ở đây
+import { getAnimeCharacter } from '../../services/api'; // Giả sử file api của bạn ở đây
 import styles from './CharacterPage.module.css';
 
 // Component con để xử lý spoiler

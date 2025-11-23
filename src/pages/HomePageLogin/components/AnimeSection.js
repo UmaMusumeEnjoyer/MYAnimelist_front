@@ -1,6 +1,6 @@
 // src/components/AnimeSection.js
 import React from 'react';
-import AnimeCard from './AnimeCard';
+import AnimeCard from '../../../components/AnimeCard';
 import './AnimeSection.css';
 
 const AnimeSection = ({ title, animeList }) => {

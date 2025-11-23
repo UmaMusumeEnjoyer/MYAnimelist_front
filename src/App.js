@@ -5,15 +5,15 @@ import './App.css';
 
 // Import các component và trang
 import Header from './components/Header'; // Import Header
-import HomePage from './pages/HomePage';
-import HomePagelogin from './pages/HomePagelogin';
-import AnimeDetailPage from './pages/AnimeDetailPage';
-import CalendarPage from './pages/CalendarPage';
-import AuthPage from './pages/AuthPage';
-import CharacterPage from './pages/CharacterPage'; // Sửa đường dẫn import
-import StaffPage from './pages/StaffPage';
+import HomePage from './pages/HomePage/HomePage';
+import HomePagelogin from './pages/HomePageLogin/HomePagelogin';
+import AnimeDetailPage from './pages/AnimeDetailPage/AnimeDetailPage';
+import CalendarPage from './pages/CalendarPage/CalendarPage';
+import AuthPage from './pages/AuthPage/AuthPage';
+import CharacterPage from './pages/CharacterPage/CharacterPage'; // Sửa đường dẫn import
+import StaffPage from './pages/StaffPage/StaffPage';
 import { AuthProvider } from './context/AuthContext';
-import NewsDetailPage from './pages/NewsDetailPage';
+import NewsDetailPage from './pages/NewsDetailPage/NewsDetailPage';
 
 function App() {
   return (

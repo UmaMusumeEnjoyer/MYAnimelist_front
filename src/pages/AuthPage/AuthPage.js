@@ -6,8 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGooglePlusG, faFacebookF, faGithub, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 
 // Import các hàm cần thiết
-import { register } from '../services/api'; // Đổi tên ở đây
-import { useAuth } from '../context/AuthContext';
+import { register } from '../../services/api'; // Đổi tên ở đây
+import { useAuth } from '../../context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

@@ -1,7 +1,7 @@
 // src/components/MainContentArea.js
 import React, { useState, useEffect } from 'react';
 import './MainContentArea.css';
-import { getAnimeStats } from '../services/api'; // Import service
+import { getAnimeStats } from '../../../services/api'; // Import service
 import CharactersSection from './CharactersSection';
 import StaffSection from './StaffSection';
 import RankingsSection from './RankingsSection';

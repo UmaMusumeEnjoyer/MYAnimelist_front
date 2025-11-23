@@ -3,7 +3,7 @@ import React from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css'; // Import CSS cho lịch
-import Header from '../components/Header';
+import Header from '../../components/Header';
 import './CalendarPage.css';
 
 // Thiết lập localizer để lịch biết cách xử lý ngày tháng
