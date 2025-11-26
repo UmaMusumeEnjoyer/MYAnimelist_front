@@ -1,0 +1,14 @@
+.activity-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.act-dot {
+  width: 12px;
+  height: 12px;
+  background-color: #2b384a;
+  border-radius: 2px;
+}
+.act-dot.active { 
+  background-color: var(--accent-green); 
+}

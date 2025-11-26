@@ -1,0 +1,13 @@
+.media-grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.media-item img {
+  width: 100%;
+  border-radius: 4px;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  transition: transform 0.2s;
+}
+.media-item img:hover { transform: scale(1.05); }

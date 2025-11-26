@@ -14,6 +14,7 @@ import CharacterPage from './pages/CharacterPage/CharacterPage'; // Sửa đư�
 import StaffPage from './pages/StaffPage/StaffPage';
 import { AuthProvider } from './context/AuthContext';
 import NewsDetailPage from './pages/NewsDetailPage/NewsDetailPage';
+import ProfilePage from './pages/ProfilePage/ProfilePage';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           <Route path="/privacy" element={<NewsDetailPage />} />
           <Route path="/contact" element={<NewsDetailPage />} />
           <Route path="/about" element={<NewsDetailPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
           {/* <Route path="/search/:type" element={<SearchPage />} /> */}
         </Routes>
       

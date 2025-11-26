@@ -1,0 +1,20 @@
+.genre-bar {
+  display: flex;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.genre-segment { height: 100%; }
+.genre-legend {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+.genre-badge {
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 5px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 4px;
+}
