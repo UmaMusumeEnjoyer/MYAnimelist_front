@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://localhost:8000/api' // Đảm bảo URL này đúng với backend của bạn
+  baseURL: 'http://localhost:8000/api' // Đảm bảo URL này đúng với backend của bạn
 });
 
 // =================================================================
@@ -10,126 +10,117 @@ const API = axios.create({
 // =================================================================
 
 const simpleCache = {};
-const defaultTTL = 1000 * 60 * 10; // 10 phút
+const defaultTTL = 1000 * 60 * 20; // 20 phút
 
-/**
- * Lấy dữ liệu từ cache nếu có và chưa hết hạn.
- * @param {string} key - Khóa cache
- * @returns {any | null} - Dữ liệu đã cache hoặc null
- */
 function getCached(key) {
-  const entry = simpleCache[key];
-  if (!entry) {
-    // console.log(`[Cache] MISS: ${key}`);
-    return null;
+  const entry = simpleCache[key];
+  if (!entry) return null;
+  if (Date.now() > entry.exp) {
+    delete simpleCache[key];
+    return null;
   }
-
-  if (Date.now() > entry.exp) {
-    // console.log(`[Cache] EXPIRED: ${key}`);
-    delete simpleCache[key];
-    return null;
-  }
-
-  // console.log(`[Cache] HIT: ${key}`);
-  return entry.val;
+  return entry.val;
 }
 
-/**
- * Lưu dữ liệu vào cache với một Time-To-Live (TTL).
- * @param {string} key - Khóa cache
- * @param {any} val - Dữ liệu cần cache
- * @param {number} ttl - Thời gian sống của cache (ms)
- */
 function setCached(key, val, ttl = defaultTTL) {
-  // console.log(`[Cache] SET: ${key} (TTL: ${ttl}ms)`);
-  simpleCache[key] = { val, exp: Date.now() + ttl };
+  simpleCache[key] = { val, exp: Date.now() + ttl };
 }
+
+// =================================================================
+// INTERCEPTOR (Đã chỉnh sửa để Debug lỗi 401)
+// =================================================================
+
+API.interceptors.request.use((config) => {
+  // 1. Kiểm tra đúng tên key bạn đã lưu lúc Login (VD: 'authToken' hoặc 'access_token')
+  const token = localStorage.getItem('authToken'); 
+  
+  // LOG DEBUG: Kiểm tra xem token có null không?
+  console.log(`[API Request] ${config.method.toUpperCase()} ${config.url} | Token:`, token ? "Found" : "Missing");
+
+  if (token) {
+    // ----------------------------------------------------------------
+    // QUAN TRỌNG: Chọn loại Header phù hợp với Backend của bạn
+    // ----------------------------------------------------------------
+    
+    // Cách 1: Dùng cho JWT (JSON Web Token) - Phổ biến
+    config.headers.Authorization = `Bearer ${token}`; 
+    
+    // Cách 2: Dùng cho DRF Token Authentication (Mặc định của Django REST Framework)
+    // Nếu Cách 1 bị lỗi 401, hãy comment dòng trên và bỏ comment dòng dưới này:
+    // config.headers.Authorization = `Token ${token}`;
+  }
+  
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
 
 
 // =================================================================
 // ANIME, CHARACTER & STAFF API (Đã áp dụng cache)
 // =================================================================
 
-/**
- * Lấy thông tin chi tiết của một anime dựa vào ID.
- */
 export const getAnimeById = (id) => {
-  console.log(`Requesting data for anime ID: ${id}`);
   const key = `anime:${id}:detail`;
   const cached = getCached(key);
   if (cached) return Promise.resolve({ data: cached });
 
-  return API.get(`/anilist/anime/${id}/`).then(res => {
+  return API.get(`/anilist/anime/${id}/`).then(res => {
     setCached(key, res.data);
     return res;
   });
 };
 
-/**
- * Lấy danh sách nhân vật của một anime dựa vào ID.
- */
 export const getAnimeCharacters = (id) => {
   const key = `anime:${id}:characters`;
   const cached = getCached(key);
   if (cached) return Promise.resolve({ data: cached });
 
-  return API.get(`/anilist/anime/${id}/characters/`).then(res => {
+  return API.get(`/anilist/anime/${id}/characters/`).then(res => {
     setCached(key, res.data);
     return res;
   });
 };
 
-/**
- * Lấy danh sách staff của một anime dựa vào ID.
- */
 export const getAnimeStaff = (id) => {
   const key = `anime:${id}:staff`;
   const cached = getCached(key);
   if (cached) return Promise.resolve({ data: cached });
 
-  return API.get(`/anilist/anime/${id}/staffs/`).then(res => {
+  return API.get(`/anilist/anime/${id}/staffs/`).then(res => {
     setCached(key, res.data);
     return res;
   });
 };
 
-/**
- * Lấy dữ liệu thống kê (rankings, distribution) của một anime.
- */
 export const getAnimeStats = (id) => {
   const key = `anime:${id}:stats`;
   const cached = getCached(key);
   if (cached) return Promise.resolve({ data: cached });
   
-  return API.get(`/anilist/anime/${id}/stats/`).then(res => {
+  return API.get(`/anilist/anime/${id}/stats/`).then(res => {
     setCached(key, res.data);
     return res;
   });
 };
 
-/**
- * Lấy thông tin chi tiết của một nhân vật.
- */
 export const getAnimeCharacter = (id) => {
   const key = `character:${id}:detail`;
   const cached = getCached(key);
   if (cached) return Promise.resolve({ data: cached });
 
-  return API.get(`/anilist/character/${id}/`).then(res => {
+  return API.get(`/anilist/character/${id}/`).then(res => {
     setCached(key, res.data);
     return res;
   });
 };
 
-/**
- * Lấy dữ liệu chi tiết của một staff (diễn viên, đạo diễn, etc.).
- */
 export const getStaffById = (id) => {
   const key = `staff:${id}:detail`;
   const cached = getCached(key);
   if (cached) return Promise.resolve({ data: cached });
 
-  return API.get(`/anilist/staff/${id}/`).then(res => {
+  return API.get(`/anilist/staff/${id}/`).then(res => {
     setCached(key, res.data);
     return res;
   });
@@ -140,17 +131,25 @@ export const getStaffById = (id) => {
 // AUTHENTICATION API (Không áp dụng cache)
 // =================================================================
 
-/**
- * Gửi yêu cầu đăng ký người dùng mới.
- */
 export const register = (userData) => {
-  return API.post('/auth/register/', userData);
+  return API.post('/auth/register/', userData);
 };
+
+export const login = (credentials) => {
+  return API.post('/auth/login/', credentials);
+};
+
+
+// =================================================================
+// USER ACTIVITY API
+// =================================================================
 
 /**
- * Gửi yêu cầu đăng nhập.
- */
-export const login = (credentials) => {
-  return API.post('/auth/login/', credentials);
+ * Cập nhật trạng thái theo dõi anime của người dùng
+ * @param {number|string} animeId - ID của anime (VD: 178701)
+ * @param {object} data - Dữ liệu body (status, progress, date, etc.)
+ */
+export const updateUserAnimeStatus = (animeId, data) => {
+  // Clear cache related to user stats if necessary (optional logic)
+  return API.post(`/follow/${animeId}/create/`, data);
 };
-

@@ -17,42 +17,48 @@ export const AuthProvider = ({ children }) => {
         }
     }, []);
 
-    const login = async (email, password) => {
+const login = async (email, password) => {
         try {
-            const response = await apiLogin({ email, password }); // Gọi hàm với tên alias
-            // Giả sử API trả về token khi thành công
-            // localStorage.setItem('authToken', response.data.token); 
-            setIsAuthenticated(true);
-            // Chuyển hướng về trang HomePagelogin sau khi đăng nhập thành công
-            navigate('/homepagelogin');
-            return { success: true, message: response.data.message || 'Login successful!' };
-        } catch (error) {
-            setIsAuthenticated(false);
-            let errorMessage = 'Login failed. Please try again.'; // Mặc định
-
-            if (error.response && error.response.data) {
-                const errorData = error.response.data;
-
-                // Kiểm tra lỗi chi tiết trong 'details' và 'non_field_errors'
-                if (errorData.details && errorData.details.non_field_errors && errorData.details.non_field_errors.length > 0) {
-                    errorMessage = errorData.details.non_field_errors[0]; // Lấy thông báo lỗi đầu tiên
-                } else if (errorData.error) {
-                    // Fallback nếu có trường 'error'
-                    errorMessage = errorData.error;
-                }
-            } else {
-                errorMessage = 'Unable to connect to the server.';
-            }
+            const response = await apiLogin({ email, password });
             
+            // --- PHẦN ĐÃ SỬA ---
+            // 1. Lấy token từ đúng cấu trúc JSON bạn cung cấp
+            const accessToken = response.data.tokens.access;
+            const refreshToken = response.data.tokens.refresh; 
+
+            // 2. Lưu token vào localStorage (Bỏ comment cũ)
+            if (accessToken) {
+                localStorage.setItem('authToken', accessToken);
+                // Lưu luôn refresh token để sau này dùng (tùy chọn)
+                localStorage.setItem('refreshToken', refreshToken); 
+                
+                setIsAuthenticated(true);
+                navigate('/homepagelogin');
+                return { success: true, message: 'Login successful!' };
+            } else {
+                 return { success: false, message: 'Token not found in response' };
+            }
+            // -------------------
+
+        } catch (error) {
+            // ... (Phần xử lý lỗi giữ nguyên như cũ)
+            setIsAuthenticated(false);
+            let errorMessage = 'Login failed. Please try again.';
+            // ... copy lại phần xử lý lỗi cũ của bạn vào đây
             return { success: false, message: errorMessage };
         }
     };
 
     const logout = () => {
-        // localStorage.removeItem('authToken');
-        setIsAuthenticated(false);
-        navigate('/login'); // Chuyển về trang đăng nhập
-    };
+            // --- PHẦN ĐÃ SỬA ---
+            // Bỏ comment để xóa token khi đăng xuất
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('refreshToken'); // Xóa cả refresh token nếu có lưu
+            // -------------------
+            
+            setIsAuthenticated(false);
+            navigate('/login'); 
+        };
 
     return (
         <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
