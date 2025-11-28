@@ -1,14 +1,29 @@
+/* ActivityHistory.css */
 .activity-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
+  max-width: 100%;
+  /* Flex direction row-reverse nếu bạn muốn ngày mới nhất ở bên phải cùng, 
+     nhưng mặc định flex-wrap sẽ xếp từ trái qua phải, trên xuống dưới */
 }
+
 .act-dot {
   width: 12px;
   height: 12px;
-  background-color: #2b384a;
   border-radius: 2px;
+  background-color: #2b384a; /* Level 0: Không có hoạt động */
+  transition: all 0.2s ease;
 }
-.act-dot.active { 
-  background-color: var(--accent-green); 
+
+/* Các mức độ activity - Màu đậm dần (Dựa trên màu xanh var(--accent-green) hoặc tùy chọn) */
+.act-lvl-1 { background-color: rgba(61, 180, 242, 0.4); } /* 1-2 activities */
+.act-lvl-2 { background-color: rgba(61, 180, 242, 0.6); } /* 3-5 activities */
+.act-lvl-3 { background-color: rgba(61, 180, 242, 0.8); } /* 6-9 activities */
+.act-lvl-4 { background-color: rgb(61, 180, 242); }       /* 10+ activities */
+
+.act-dot:hover {
+  transform: scale(1.3);
+  border: 1px solid #fff;
+  cursor: pointer;
 }

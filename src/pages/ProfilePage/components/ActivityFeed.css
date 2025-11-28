@@ -1,42 +1,96 @@
+.feed-container {
+  width: 100%;
+}
+
 .feed-item {
   display: flex;
-  gap: 15px;
-  background: var(--bg-card);
-  padding: 15px;
+  gap: 10px;
+  background: var(--bg-card); /* Đảm bảo biến màu này tồn tại */
+  padding: 12px 15px;
   border-radius: 4px;
-  margin-bottom: 15px;
-  align-items: flex-start;
+  margin-bottom: 10px;
+  align-items: center;
+  transition: background-color 0.2s ease;
 }
-.feed-thumb {
-  width: 48px;
-  height: 64px;
-  border-radius: 3px;
-  object-fit: cover;
-}
-.feed-content {
-  flex: 1;
-}
-.feed-text {
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--text-highlight);
-}
-.feed-text span.highlight {
-  color: var(--accent-blue);
-  font-weight: 600;
+
+.feed-item.clickable {
   cursor: pointer;
 }
+
+.feed-item.clickable:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.feed-content {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.feed-text {
+  font-size: 14px;
+  color: var(--text-highlight);
+  font-weight: 500;
+}
+
+/* Class chung cho highlight */
+.feed-text span.highlight {
+  font-weight: 600;
+  cursor: pointer;
+  /* Đã xóa dòng color cứng ở đây để các class con có thể override */
+}
+
+/* =================================================================
+   FIX MÀU SẮC (Tăng độ ưu tiên bằng cách thêm .feed-text phía trước)
+   ================================================================= */
+
+/* 1. Hành động thêm mới (followed_anime) -> Màu xanh lá */
+.feed-text .highlight.type-add {
+  color: #4ade80; /* Hoặc #2ecc71 */
+}
+
+/* 2. Hành động cập nhật (updated_followed_anime) -> Màu xanh dương */
+.feed-text .highlight.type-update {
+  color: #60a5fa; /* Hoặc #3db4f2 */
+}
+
+/* 3. Hành động mặc định -> Màu tím */
+.feed-text .highlight.type-default {
+  color: #a78bfa; 
+}
+
+/* ================================================================= */
+
 .feed-meta {
   font-size: 12px;
   color: var(--text-main);
-  margin-top: 5px;
+  margin-left: 10px;
+  white-space: nowrap;
 }
+
+.feed-loading, .feed-empty {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-main);
+    font-size: 14px;
+}
+
+/* Style cho nút Load More */
 .load-more-btn {
     text-align: center;
-    padding: 15px;
+    padding: 10px 15px;
+    margin-top: 10px;
     cursor: pointer;
-    color: #edf1f5;
-    background: transparent;
-    font-size: 14px;
+    color: var(--text-highlight, #edf1f5);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    font-size: 13px;
     font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.load-more-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--accent-blue, #3db4f2);
 }

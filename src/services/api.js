@@ -189,3 +189,21 @@ export const getUserAnimeStatus = (animeId) => {
   // Không cache API này để đảm bảo dữ liệu luôn mới nhất khi mở modal
   return API.get(`/follow/${animeId}/get`); 
 };
+
+/**
+ * [MỚI] Lấy dữ liệu heatmap activity của user
+ * URL: /api/user/{username}/overview/heatmap
+ */
+export const getUserHeatmap = (username) => {
+  // Không cache để đảm bảo dữ liệu mới nhất mỗi khi vào profile
+  return API.get(`/user/${username}/overview/heatmap`);
+};
+
+/**
+ * Lấy lịch sử hoạt động của user
+ * URL: /api/user/{username}/overview/activity
+ */
+export const getUserActivity = (username) => {
+  // Không cache để đảm bảo cập nhật mới nhất
+  return API.get(`/user/${username}/overview/activity`);
+};
