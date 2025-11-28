@@ -25,12 +25,15 @@ const login = async (email, password) => {
             // 1. Lấy token từ đúng cấu trúc JSON bạn cung cấp
             const accessToken = response.data.tokens.access;
             const refreshToken = response.data.tokens.refresh; 
-
+            const username = response.data.user ? response.data.user.username : null;
             // 2. Lưu token vào localStorage (Bỏ comment cũ)
             if (accessToken) {
                 localStorage.setItem('authToken', accessToken);
                 // Lưu luôn refresh token để sau này dùng (tùy chọn)
                 localStorage.setItem('refreshToken', refreshToken); 
+                if (username) {
+                localStorage.setItem('username', username);
+            }
                 
                 setIsAuthenticated(true);
                 navigate('/homepagelogin');
