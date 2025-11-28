@@ -153,3 +153,13 @@ export const updateUserAnimeStatus = (animeId, data) => {
   // Clear cache related to user stats if necessary (optional logic)
   return API.post(`/follow/${animeId}/create/`, data);
 };
+
+
+// =================================================================
+// USER API (MỚI)
+// =================================================================
+
+export const getUserAnimeList = (username) => {
+  // Không cache API này để cập nhật trạng thái xem mới nhất
+  return API.get(`/user/${username}/animelist`);
+};
