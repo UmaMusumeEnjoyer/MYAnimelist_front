@@ -1,11 +1,18 @@
 // src/components/EditorModal.js
 import React, { useState, useEffect } from 'react';
 import './EditorModal.css';
-import { updateUserAnimeFollow } from '../../../../services/api'; 
+import { updateUserAnimeFollow, deleteUserAnimeFollow } from '../../../../services/api';
+
+import EditorModalHeader from './EditorModalHeader';
+import EditorModalForm from './EditorModalForm';
+import EditorModalFooter from './EditorModalFooter';
 
 const EditorModal = ({ anime, isOpen, onClose, onSave, onDelete, initialData }) => {
   
-  const isEditMode = !!initialData;
+  // --- LOGIC MỚI: Xác định chế độ Edit ---
+  // Chỉ coi là Edit Mode nếu có data VÀ người dùng đang follow (is_following = true)
+  // Nếu API trả về data nhưng is_following = false => Coi như Create Mode
+  const isEditMode = !!initialData && initialData.is_following;
 
   const getTodayDate = () => {
     const today = new Date();
@@ -16,46 +23,33 @@ const EditorModal = ({ anime, isOpen, onClose, onSave, onDelete, initialData }) 
   };
 
   const [formData, setFormData] = useState({
-    status: 'plan_to_watch',
-    score: 0,
-    progress: 0,
-    startDate: getTodayDate(),
-    finishDate: '',
-    rewatches: 0,
-    notes: '',
-    private: false,
-    isFavorite: false 
+     status: 'plan_to_watch',
+     score: 0,
+     progress: 0,
+     startDate: getTodayDate(),
+     finishDate: '',
+     rewatches: 0,
+     notes: '',
+     private: false,
+     isFavorite: false
   });
 
+  // useEffect load data: Vẫn load data từ API vào form kể cả khi chưa follow (để lấy default values từ server nếu có)
   useEffect(() => {
-    if (isOpen) {
-      if (initialData) {
-        setFormData({
-          status: initialData.watch_status || 'plan_to_watch',
-          score: initialData.score || 0,
-          progress: initialData.episode_progress || 0,
-          startDate: initialData.start_date || '',
-          finishDate: initialData.finish_date || '',
-          rewatches: initialData.total_rewatch || 0,
-          notes: initialData.user_note || '',
-          private: initialData.private || false,
-          isFavorite: initialData.isFavorite || false
-        });
-      } else {
-        setFormData({
-          status: 'watching', 
-          score: 0,
-          progress: 0,
-          startDate: getTodayDate(),
-          finishDate: '',
-          rewatches: 0,
-          notes: '',
-          private: false,
-          isFavorite: false
-        });
-      }
+    if (initialData) {
+      setFormData({
+        status: initialData.watch_status || 'plan_to_watch',
+        score: initialData.score || 0,
+        progress: initialData.episode_progress || 0,
+        startDate: initialData.start_date || getTodayDate(),
+        finishDate: initialData.finish_date || '',
+        rewatches: initialData.total_rewatch || 0,
+        notes: initialData.user_note || '',
+        private: initialData.private || false, // Giả sử API có field này, nếu không thì false
+        isFavorite: initialData.isFavorite || false
+      });
     }
-  }, [isOpen, initialData]);
+  }, [initialData]);
 
   if (!isOpen) return null;
 
@@ -69,8 +63,9 @@ const EditorModal = ({ anime, isOpen, onClose, onSave, onDelete, initialData }) 
   };
 
   const handleSaveClick = async () => {
-    if (isEditMode) {
-      // --- LOGIC UPDATE ---
+      // Logic Save phụ thuộc vào biến isEditMode đã sửa ở trên
+      if (isEditMode) {
+      // --- LOGIC UPDATE (Chỉ chạy khi is_following = true) ---
       const updatePayload = {
         episode_progress: parseInt(formData.progress) || 0,
         watch_status: formData.status,
@@ -80,22 +75,16 @@ const EditorModal = ({ anime, isOpen, onClose, onSave, onDelete, initialData }) 
 
       try {
         await updateUserAnimeFollow(anime.id, updatePayload);
-        
-        // [QUAN TRỌNG] Gọi onSave để truyền dữ liệu mới ra ngoài cho cha (SummarySection) cập nhật UI
-        // Tham số thứ 2 là 'true' để đánh dấu đây là hành động Update
         onSave(updatePayload, true);
-        
-        // Không gọi onClose() ở đây nữa vì SummarySection sẽ gọi sau khi update state xong
-        // Hoặc có thể gọi onClose() luôn tùy luồng logic, nhưng ở đây để SummarySection quyết định
       } catch (error) {
         console.error("Failed to update anime status:", error);
         alert("Có lỗi xảy ra khi cập nhật!");
       }
 
     } else {
-      // --- LOGIC CREATE ---
+      // --- LOGIC CREATE (Chạy khi chưa có data HOẶC is_following = false) ---
       const apiPayload = {
-        notify_email: true, 
+        notify_email: true,
         episode_progress: parseInt(formData.progress) || 0,
         watch_status: formData.status,
         isFavorite: formData.isFavorite,
@@ -104,134 +93,54 @@ const EditorModal = ({ anime, isOpen, onClose, onSave, onDelete, initialData }) 
         total_rewatch: parseInt(formData.rewatches) || 0,
         user_note: formData.notes
       };
-      
-      // Gọi onSave, cha sẽ lo phần gọi API create
+
       onSave(apiPayload, false);
     }
   };
 
-  // ... (Phần return JSX giữ nguyên như cũ) ...
+  const handleDeleteClick = async () => {
+    if (!window.confirm(`Bạn có chắc chắn muốn xóa "${anime.title?.romaji || anime.title?.english || 'anime này'}" khỏi danh sách?`)) {
+      return;
+    }
+
+    try {
+      await deleteUserAnimeFollow(anime.id);
+      if (onDelete) {
+        onDelete(anime.id); 
+      }
+      onClose();
+    } catch (error) {
+      console.error("Failed to delete anime:", error);
+      alert("Có lỗi xảy ra khi xóa anime!");
+    }
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={e => e.stopPropagation()}>
         
-        <div className="modal-header">
-            <button className="btn-close" onClick={onClose}>×</button>
-            <div className="header-info">
-                <img src={anime.cover_image} alt="thumb" className="modal-thumb" />
-                <span className="modal-anime-title">{anime.name_romaji}</span>
-            </div>
-            <div className="header-actions">
-                 <button 
-                    className={`btn-icon ${formData.isFavorite ? 'active' : ''}`} 
-                    onClick={toggleFavorite}
-                 >
-                    ♥
-                 </button>
-                 
-                 <button className="btn-save" onClick={handleSaveClick}>Save</button>
-            </div>
-        </div>
+        <EditorModalHeader 
+          anime={anime}
+          onClose={onClose}
+          onSave={handleSaveClick}
+          isFavorite={formData.isFavorite}
+          toggleFavorite={toggleFavorite}
+        />
 
         <div className="modal-body">
-            {/* ... Giữ nguyên nội dung form ... */}
-            <div className="form-split-layout">
-                <div className="form-left-col">
-                    <div className="form-group">
-                        <label>Status</label>
-                        <select name="status" value={formData.status} onChange={handleChange}>
-                            <option value="plan_to_watch">Plan to watch</option>
-                            <option value="watching">Watching</option>
-                            <option value="completed">Completed</option>
-                            <option value="dropped">Dropped</option>
-                            <option value="on_hold">On Hold</option>
-                        </select>
-                    </div>
-                    
-                    <div className="form-group">
-                        <label>Score</label>
-                        <input 
-                          type="number" 
-                          name="score" 
-                          value={formData.score} 
-                          onChange={handleChange} 
-                          min="0" max="10" 
-                          disabled={isEditMode} 
-                          className={isEditMode ? 'input-disabled' : ''}
-                        />
-                    </div>
-                    
-                    <div className="form-group">
-                        <label>Episode Progress</label>
-                        <input type="number" name="progress" value={formData.progress} onChange={handleChange} />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Start Date</label>
-                        <input 
-                          type="date" 
-                          name="startDate" 
-                          value={formData.startDate} 
-                          onChange={handleChange}
-                          disabled={isEditMode}
-                          className={isEditMode ? 'input-disabled' : ''}
-                        />
-                    </div>
-                    
-                    <div className="form-group">
-                        <label>Finish Date</label>
-                        <input 
-                          type="date" 
-                          name="finishDate" 
-                          value={formData.finishDate} 
-                          onChange={handleChange}
-                          disabled={isEditMode}
-                          className={isEditMode ? 'input-disabled' : ''}
-                        />
-                    </div>
-                    
-                    <div className="form-group">
-                        <label>Total Rewatches</label>
-                        <input 
-                          type="number" 
-                          name="rewatches" 
-                          value={formData.rewatches} 
-                          onChange={handleChange}
-                          disabled={isEditMode}
-                          className={isEditMode ? 'input-disabled' : ''}
-                        />
-                    </div>
-                    
-                    <div className="form-group full-width">
-                        <label>Notes</label>
-                        <textarea name="notes" rows="3" value={formData.notes} onChange={handleChange}></textarea>
-                    </div>
-                </div>
-
-                <div className="form-right-col">
-                    <div className="form-group">
-                        <label>Custom Lists</label>
-                        <div className="custom-list-placeholder">No custom anime lists</div>
-                    </div>
-                    <div className="form-group checkbox-group">
-                        <label style={{ opacity: isEditMode ? 0.5 : 1 }}>
-                            <input 
-                              type="checkbox" 
-                              name="private" 
-                              checked={formData.private} 
-                              onChange={handleChange}
-                              disabled={isEditMode}
-                            />
-                            Private
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div className="modal-footer">
-                <button className="btn-delete" onClick={onDelete}>Delete</button>
-            </div>
+          <EditorModalForm 
+            formData={formData}
+            handleChange={handleChange}
+            // Truyền isEditMode mới vào Form
+            // Form sẽ disable input nếu isEditMode = true (logic cũ của bạn)
+            // Vì vậy với trường hợp is_following = false -> isEditMode = false -> Form Enable (cho phép sửa start date, rewatches...)
+            isEditMode={isEditMode}
+          />
+          
+          {/* Chỉ hiển thị nút Delete nếu đang ở chế độ Edit (đã follow) */}
+          {isEditMode && <EditorModalFooter onDelete={handleDeleteClick} />}
         </div>
+      
       </div>
     </div>
   );

@@ -163,6 +163,15 @@ export const updateUserAnimeFollow = (animeId, data) => {
   return API.put(`/follow/${animeId}/update/`, data);
 };
 
+/**
+ * [MỚI] Xóa anime khỏi danh sách theo dõi
+ * URL: /api/follow/{anilist_id}/delete/
+ */
+export const deleteUserAnimeFollow = (animeId) => {
+  // Sử dụng method DELETE (hoặc POST tùy vào backend của bạn cấu hình, nhưng chuẩn REST là DELETE)
+  return API.delete(`/follow/${animeId}/delete/`);
+};
+
 // =================================================================
 // USER API (MỚI)
 // =================================================================

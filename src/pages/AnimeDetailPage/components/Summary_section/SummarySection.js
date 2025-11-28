@@ -1,15 +1,14 @@
 // src/pages/components/SummarySection.js
 import React, { useState, useEffect } from 'react';
-import EditorModal from './EditorModal'; // Đảm bảo đường dẫn import đúng
+import EditorModal from './EditorModal'; 
 import { updateUserAnimeStatus, getUserAnimeStatus } from '../../../../services/api'; 
 import './SummarySection.css';
 
 const SummarySection = ({ anime, hasBanner }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentStatusData, setCurrentStatusData] = useState(null); // State lưu dữ liệu tracking
+  const [currentStatusData, setCurrentStatusData] = useState(null); 
   const [isLoadingStatus, setIsLoadingStatus] = useState(false);
 
-  // Map hiển thị Text trên Button dựa vào status
   const statusMap = {
     'watching': 'Watching',
     'plan_to_watch': 'Plan to Watch',
@@ -18,7 +17,6 @@ const SummarySection = ({ anime, hasBanner }) => {
     'on_hold': 'On Hold'
   };
 
-  // 1. [MỚI] Tự động lấy dữ liệu theo dõi khi load trang (mount)
   useEffect(() => {
     const fetchUserStatus = async () => {
       const authToken = localStorage.getItem('authToken');
@@ -28,11 +26,11 @@ const SummarySection = ({ anime, hasBanner }) => {
       try {
         const response = await getUserAnimeStatus(anime.id);
         if (response && response.data) {
+          // Lưu toàn bộ data trả về (bao gồm cả trường hợp is_following: false)
           setCurrentStatusData(response.data);
         }
       } catch (error) {
-        // Lỗi 404 nghĩa là chưa follow, không cần log error đỏ lòm
-        // console.log("User has not followed this anime yet.");
+        // Trường hợp lỗi mạng hoặc 404 thực sự
         setCurrentStatusData(null);
       } finally {
         setIsLoadingStatus(false);
@@ -51,27 +49,23 @@ const SummarySection = ({ anime, hasBanner }) => {
     setIsModalOpen(true);
   };
 
-  // 2. [CHỈNH SỬA] Hàm handleSave xử lý cả trường hợp Create và Update UI
   const handleSave = async (apiPayload, isUpdateMode = false) => {
     try {
       if (isUpdateMode) {
-        // TRƯỜNG HỢP UPDATE:
-        // EditorModal đã gọi API update rồi. 
-        // Ta chỉ cần cập nhật state UI bên ngoài để nút bấm đổi chữ ngay lập tức.
+        // UPDATE
         setCurrentStatusData(prev => ({
           ...prev,
-          ...apiPayload // Ghi đè các trường mới (status, score, progress...)
+          ...apiPayload
         }));
       } else {
-        // TRƯỜNG HỢP CREATE (Lần đầu add vào list):
-        // Gọi API tạo mới tại đây (như logic cũ)
+        // CREATE
         const response = await updateUserAnimeStatus(anime.id, apiPayload);
         
-        // Sau khi tạo xong, cập nhật state để nút chuyển từ "Add to List" -> Status
-        // Giả sử backend trả về data vừa tạo, hoặc ta tự construct object
+        // Cập nhật state UI: Quan trọng là set is_following = true
         setCurrentStatusData({
             ...apiPayload,
-            anime: anime.id
+            anime: anime.id,
+            is_following: true // Đánh dấu đã follow để đổi nút hiển thị
         });
         alert("Thêm vào danh sách thành công!");
       }
@@ -84,21 +78,20 @@ const SummarySection = ({ anime, hasBanner }) => {
   };
 
   const handleDelete = () => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa khỏi danh sách?")) {
-      // Gọi API xóa ở đây (nếu có)
-      // await deleteUserAnimeStatus(anime.id);
-      setCurrentStatusData(null); // Reset nút về trạng thái ban đầu
-      setIsModalOpen(false);
-    }
+    // Reset về null hoặc giữ data nhưng set is_following = false
+    setCurrentStatusData(null); 
+    setIsModalOpen(false);
   };
 
-  // Xác định label cho nút bấm
+  // --- LOGIC MỚI: Kiểm tra is_following ---
+  // Người dùng đã follow nếu có data VÀ is_following === true
+  const isFollowing = currentStatusData && currentStatusData.is_following;
+
   const buttonLabel = isLoadingStatus 
     ? 'Loading...' 
-    : (currentStatusData ? (statusMap[currentStatusData.watch_status] || 'Unknown') : 'Add to List');
+    : (isFollowing ? (statusMap[currentStatusData.watch_status] || 'Unknown') : 'Add to List');
 
-  // Xác định class màu cho nút bấm (Optional: custom màu theo status)
-  const buttonClass = currentStatusData ? 'btn-watching' : 'btn-watching'; // Có thể sửa thành 'btn-add' nếu muốn màu khác
+  const buttonClass =  'btn-watching'; // Bạn có thể tách class css nếu muốn 'btn-add' khác màu
 
   return (
     <>
