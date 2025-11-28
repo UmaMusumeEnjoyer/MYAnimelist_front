@@ -250,3 +250,11 @@ input[type="checkbox"] {
 .btn-icon:hover {
   transform: scale(1.1);
 }
+
+/* Thêm vào EditorModal.css */
+.input-disabled {
+  background-color: #0f1a26 !important;
+  color: #5c6877 !important;
+  cursor: not-allowed;
+  border-color: #1a2533 !important;
+}

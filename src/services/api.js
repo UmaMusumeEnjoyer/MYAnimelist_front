@@ -154,6 +154,14 @@ export const updateUserAnimeStatus = (animeId, data) => {
   return API.post(`/follow/${animeId}/create/`, data);
 };
 
+/**
+ * [MỚI] Cập nhật thông tin theo dõi (Update)
+ * Chỉ cập nhật: episode_progress, watch_status, isFavorite, user_note
+ */
+export const updateUserAnimeFollow = (animeId, data) => {
+  // Sử dụng PUT hoặc PATCH tùy vào cấu hình Backend của bạn (thường update là PUT)
+  return API.put(`/follow/${animeId}/update/`, data);
+};
 
 // =================================================================
 // USER API (MỚI)
