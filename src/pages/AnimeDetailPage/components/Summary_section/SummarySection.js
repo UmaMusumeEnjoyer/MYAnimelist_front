@@ -1,7 +1,7 @@
 // src/pages/components/SummarySection.js
 import React, { useState } from 'react';
 import EditorModal from './EditorModal';
-import { updateUserAnimeStatus } from '../../../services/api'; // Import hàm API mới
+import { updateUserAnimeStatus } from '../../../../services/api'; // Import hàm API mới
 import './SummarySection.css';
 
 const SummarySection = ({ anime, hasBanner }) => {

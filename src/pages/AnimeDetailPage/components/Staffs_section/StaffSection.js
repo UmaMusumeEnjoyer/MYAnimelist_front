@@ -1,6 +1,6 @@
 // src/components/StaffSection.js
 import React, { useState, useEffect } from 'react';
-import { getAnimeStaff } from '../../../services/api';
+import { getAnimeStaff } from '../../../../services/api';
 import StaffCard from './StaffCard';
 import './StaffSection.css';
 

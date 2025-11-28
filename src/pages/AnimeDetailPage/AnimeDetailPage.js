@@ -2,8 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getAnimeById } from '../../services/api';
-import Header from '../../components/Header';
-import SummarySection from './components/SummarySection';
+import SummarySection from './components/Summary_section/SummarySection';
 import InfoSidebar from './components/InfoSidebar'; // Component mới cho cột trái
 import MainContentArea from './components/MainContentArea'; // Component mới cho cột phải
 import './AnimeDetailPage.css';
@@ -33,9 +32,7 @@ const AnimeDetailPage = () => {
   if (loading) return <div>Loading...</div>;
   if (!anime) return <div>Không tìm thấy dữ liệu anime.</div>;
   
-  const bannerStyle = {
-      backgroundImage: `url(${anime.banner_image || anime.cover_image})`,
-  };
+
   const hasBanner = !!anime.banner_image;
   return (
     <>

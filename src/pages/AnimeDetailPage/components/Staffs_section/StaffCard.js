@@ -1,7 +1,7 @@
 // src/components/StaffCard.js
 import React from 'react';
 import './StaffCard.css';
-import { Link } from 'react-router-dom'; // 1. Import Link
+
 
 
 const StaffCard = ({ staffMember }) => {

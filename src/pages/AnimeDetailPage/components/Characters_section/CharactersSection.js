@@ -1,6 +1,6 @@
 // src/components/CharactersSection.js
 import React, { useState, useEffect } from 'react';
-import { getAnimeCharacters } from '../../../services/api';
+import { getAnimeCharacters } from '../../../../services/api';
 import CharacterCard from './CharacterCard';
 import './CharactersSection.css';
 

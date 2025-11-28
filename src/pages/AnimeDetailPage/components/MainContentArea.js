@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import './MainContentArea.css';
 import { getAnimeStats } from '../../../services/api'; // Import service
-import CharactersSection from './CharactersSection';
-import StaffSection from './StaffSection';
-import RankingsSection from './RankingsSection';
-import StatusDistribution from './StatusDistribution'; 
-import ScoreDistribution from './ScoreDistribution'; 
+import CharactersSection from './Characters_section/CharactersSection';
+import StaffSection from './Staffs_section/StaffSection';
+import RankingsSection from './Ranking_section/RankingsSection';
+import StatusDistribution from './Statistics_section/StatusDistribution'; 
+import ScoreDistribution from './Statistics_section/ScoreDistribution'; 
 
 const Section = ({ title, children }) => (
   <section className="content-section">
