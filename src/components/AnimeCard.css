@@ -55,3 +55,55 @@
   background-color: #E84F63; /* Màu của thanh progress */
   border-radius: 2px;
 }
+
+/* src/components/AnimeCard.css */
+
+/* ... Giữ nguyên các class cũ ... */
+
+.anime-card {
+  /* ... giữ nguyên ... */
+  display: flex;
+  flex-direction: column; /* Đảm bảo ảnh và info xếp dọc */
+  background-color: #152232; 
+  height: 100%; /* Cố định chiều cao nếu cần */
+}
+
+/* [MỚI] Wrapper cho phần nội dung bên dưới ảnh */
+.anime-details {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+/* [MỚI] Style cho tên Anime */
+.anime-title-text {
+  margin: 0 0 8px 0; /* Khoảng cách với progress bar */
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #e5e7eb; /* Màu chữ sáng */
+  line-height: 1.4;
+  
+  /* Giới hạn số dòng hiển thị (tránh tên quá dài phá vỡ layout) */
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Chỉ hiện tối đa 2 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Chỉnh lại padding cũ của .airing-info để không bị trùng lặp padding */
+.airing-info {
+  padding: 0; /* Bỏ padding vì cha (.anime-details) đã có */
+  margin-top: auto; /* Đẩy xuống dưới cùng nếu card có chiều cao cố định */
+}
+
+.episode-time {
+  margin: 0 0 5px 0; /* Giảm margin một chút cho gọn */
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #a0aec0; /* Màu xám nhạt hơn title */
+}
+
+/* ... Giữ nguyên progress bar ... */
