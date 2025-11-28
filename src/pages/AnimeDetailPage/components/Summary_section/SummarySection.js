@@ -1,34 +1,44 @@
 // src/pages/components/SummarySection.js
 import React, { useState } from 'react';
 import EditorModal from './EditorModal';
-import { updateUserAnimeStatus } from '../../../../services/api'; // Import hàm API mới
+import { updateUserAnimeStatus, getUserAnimeStatus } from '../../../../services/api'; // Import thêm getUserAnimeStatus
 import './SummarySection.css';
 
 const SummarySection = ({ anime, hasBanner }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentStatusData, setCurrentStatusData] = useState(null); // State lưu dữ liệu lấy từ API
 
-  const handleBtnClick = () => {
-    // Check Auth Token
+  const handleBtnClick = async () => {
+    // 1. Check Auth Token
     const authToken = localStorage.getItem('authToken');
     if (!authToken) {
       alert("Vui lòng đăng nhập để sử dụng tính năng này.");
       return;
     }
+
+    // 2. Gọi API lấy trạng thái trước khi mở Modal
+    try {
+      const response = await getUserAnimeStatus(anime.id);
+      if (response && response.data) {
+        console.log("Đã tìm thấy dữ liệu tracking:", response.data);
+        setCurrentStatusData(response.data); // Lưu dữ liệu vào state để truyền cho Modal
+      }
+    } catch (error) {
+      // 3. Nếu không có kết quả hoặc lỗi (404), không báo lỗi, coi như chưa theo dõi
+      console.log("Chưa có dữ liệu tracking hoặc lỗi:", error);
+      setCurrentStatusData(null); // Reset về null để Modal hiển thị form trống
+    }
+
+    // 4. Mở Modal
     setIsModalOpen(true);
   };
 
-  // Hàm xử lý khi nút SAVE trong modal được bấm
   const handleSave = async (apiPayload) => {
     try {
       console.log("Sending data to API:", apiPayload);
-      
-      // Gọi API: updateUserAnimeStatus(animeId, data)
       await updateUserAnimeStatus(anime.id, apiPayload);
-      
       alert("Cập nhật thành công!");
-      setIsModalOpen(false); // Đóng modal sau khi thành công
-      
-      // TODO: Có thể reload lại dữ liệu page để cập nhật UI nếu cần
+      setIsModalOpen(false);
     } catch (error) {
       console.error("Lỗi khi lưu trạng thái:", error);
       alert("Có lỗi xảy ra, vui lòng thử lại.");
@@ -38,7 +48,6 @@ const SummarySection = ({ anime, hasBanner }) => {
   const handleDelete = () => {
     if (window.confirm("Bạn có chắc chắn muốn xóa khỏi danh sách?")) {
       console.log("Thực hiện xóa...");
-      // Gọi API xóa (nếu có)
       setIsModalOpen(false);
     }
   };
@@ -65,6 +74,7 @@ const SummarySection = ({ anime, hasBanner }) => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         anime={anime}
+        initialData={currentStatusData} /* Truyền dữ liệu lấy được vào Modal */
         onSave={handleSave} 
         onDelete={handleDelete}
       />

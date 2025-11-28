@@ -163,3 +163,12 @@ export const getUserAnimeList = (username) => {
   // Không cache API này để cập nhật trạng thái xem mới nhất
   return API.get(`/user/${username}/animelist`);
 };
+
+/**
+ * [MỚI] Lấy trạng thái theo dõi hiện tại của người dùng đối với anime
+ * URL: /api/follow/{anilist_id}/get
+ */
+export const getUserAnimeStatus = (animeId) => {
+  // Không cache API này để đảm bảo dữ liệu luôn mới nhất khi mở modal
+  return API.get(`/follow/${animeId}/get`); 
+};
