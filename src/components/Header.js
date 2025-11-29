@@ -31,6 +31,7 @@ const Header = () => {
             <Link to="/calendar">Calendar</Link>
             <Link to="/profile">Profile</Link>
             <Link to="/animelist">Anime List</Link>
+            <Link to="/list">List</Link>
           </>
         )}
       </nav>

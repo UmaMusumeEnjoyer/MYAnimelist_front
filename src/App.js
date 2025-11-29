@@ -16,6 +16,7 @@ import { AuthProvider } from './context/AuthContext';
 import NewsDetailPage from './pages/NewsDetailPage/NewsDetailPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import AnimeSearchPage from './pages/AnimeSearch/AnimeSearchPage';
+import AnimeListPage from './pages/AnimeListPage/AnimeListPage';
 
 function App() {
   return (
@@ -45,6 +46,8 @@ function App() {
           <Route path="/about" element={<NewsDetailPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/browse" element={<AnimeSearchPage />} />
+
+          <Route path="/list" element={<AnimeListPage />} />
           {/* <Route path="/search/:type" element={<SearchPage />} /> */}
         </Routes>
       
