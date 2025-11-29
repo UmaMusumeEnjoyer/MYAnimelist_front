@@ -1,109 +1,90 @@
 /* src/components/AnimeCard.css */
+
 .anime-card-link {
   text-decoration: none;
   color: inherit;
-  display: block; /* Giúp thẻ Link có kích thước */
+  display: block; 
+  height: 100%; /* Bắt buộc thẻ Link cao bằng ô Grid */
 }
 
 .anime-card {
-  /* Bỏ position: relative */
-  cursor: pointer;
-  background-color: #152232; /* Thêm màu nền cho card */
+  display: flex;
+  flex-direction: column; 
+  background-color: #152232;
   border-radius: 8px;
-  overflow: hidden; /* Ẩn các phần thừa của ảnh và progress bar */
+  overflow: hidden;
   transition: transform 0.2s ease-in-out;
+  
+  /* QUAN TRỌNG: Card dãn hết chiều cao nhưng KHÔNG dãn khoảng cách nội dung bên trong */
+  height: 100%; 
+  position: relative;
 }
 
 .anime-card:hover {
-  transform: scale(1.05);
+  transform: translateY(-5px);
 }
 
 .anime-poster {
   width: 100%;
-  height: 230px;
+  height: 230px; /* Chiều cao ảnh cố định */
   object-fit: cover;
-  display: block; /* Loại bỏ khoảng trống thừa bên dưới ảnh */
+  display: block;
+  flex-shrink: 0; /* Đảm bảo ảnh không bị co lại khi card ngắn */
 }
 
-/* Loại bỏ style cho overlay và title cũ */
-/*
-.anime-overlay { ... }
-.anime-title { ... }
-*/
+/* Container chứa thông tin */
+.anime-details {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  /* BỎ justify-content: space-between (Nguyên nhân gây lệch bố cục khi có progress) */
+  justify-content: flex-start; 
+  flex-grow: 1; /* Để phần background màu tối phủ hết chiều cao còn lại */
+}
 
-/* --- Style mới cho thông tin bên dưới --- */
+/* XỬ LÝ TIÊU ĐỀ - TRÁI TIM CỦA GIẢI PHÁP */
+.anime-title-text {
+  margin: 0 0 10px 0; /* Khoảng cách cố định xuống phần info bên dưới */
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #e5e7eb;
+  line-height: 1.4; 
+  
+  /* 1. Giới hạn hiển thị 2 dòng */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* 2. QUAN TRỌNG: Luôn dành chỗ cho 2 dòng chữ */
+  /* Cách tính: line-height (1.4) * font-size (0.95rem) * 2 dòng = ~2.66rem */
+  min-height: 2.7rem; 
+}
+
+/* Phần thông tin (Episode / Progress) */
 .airing-info {
-  padding: 8px 10px;
+  /* Không dùng margin-top: auto để tránh bị đẩy xuống đáy card */
+  padding: 0;
+  font-size: 0.85rem;
 }
 
 .episode-time {
-  margin: 0 0 8px 0;
-  font-size: 0.85rem;
+  margin: 0 0 6px 0;
+  font-size: 0.8rem;
   font-weight: 500;
-  color: #c2c2c2;
+  color: #a0aec0;
 }
 
 .progress-bar-container {
   width: 100%;
   height: 4px;
-  background-color: #2d3748; /* Màu nền của thanh progress */
+  background-color: #2d3748;
   border-radius: 2px;
 }
 
 .progress-bar-fill {
   height: 100%;
-  background-color: #E84F63; /* Màu của thanh progress */
+  background-color: #E84F63;
   border-radius: 2px;
 }
-
-/* src/components/AnimeCard.css */
-
-/* ... Giữ nguyên các class cũ ... */
-
-.anime-card {
-  /* ... giữ nguyên ... */
-  display: flex;
-  flex-direction: column; /* Đảm bảo ảnh và info xếp dọc */
-  background-color: #152232; 
-  height: 100%; /* Cố định chiều cao nếu cần */
-}
-
-/* [MỚI] Wrapper cho phần nội dung bên dưới ảnh */
-.anime-details {
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex-grow: 1;
-}
-
-/* [MỚI] Style cho tên Anime */
-.anime-title-text {
-  margin: 0 0 8px 0; /* Khoảng cách với progress bar */
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #e5e7eb; /* Màu chữ sáng */
-  line-height: 1.4;
-  
-  /* Giới hạn số dòng hiển thị (tránh tên quá dài phá vỡ layout) */
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* Chỉ hiện tối đa 2 dòng */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Chỉnh lại padding cũ của .airing-info để không bị trùng lặp padding */
-.airing-info {
-  padding: 0; /* Bỏ padding vì cha (.anime-details) đã có */
-  margin-top: auto; /* Đẩy xuống dưới cùng nếu card có chiều cao cố định */
-}
-
-.episode-time {
-  margin: 0 0 5px 0; /* Giảm margin một chút cho gọn */
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #a0aec0; /* Màu xám nhạt hơn title */
-}
-
-/* ... Giữ nguyên progress bar ... */
