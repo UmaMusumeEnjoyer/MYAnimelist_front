@@ -3,77 +3,97 @@
 // 1. Dữ liệu cho Hero Section (Banner lớn đầu trang)
 export const heroList = [
   {
-    id: 101,
-    title: "Jujutsu Kaisen Season 2",
-    description: "Satoru Gojo và Suguru Geto, hai pháp sư Jujutsu không thể tách rời, được giao nhiệm vụ hộ tống một cô gái trẻ. Nhưng một kẻ thù với mục đích đen tối xuất hiện...",
-    bannerUrl: "https://images4.alphacoders.com/132/1329974.jpeg",
-    coverUrl: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx145064-um8Z8x0q8CjW.jpg"
+    id: 164212,
+    title: "GIRLS BAND CRY",
+    description: "Feeling out of place in the countryside, high school dropout Nina Iseri moves to Tokyo. After a rough first day and getting locked out of her apartment, she meets her favorite guitarist.",
+    bannerUrl: "https://s4.anilist.co/file/anilistcdn/media/anime/banner/164212-yZcGovywtUm4.jpg"
   },
   {
-    id: 102,
-    title: "Kimetsu no Yaiba: Katanakaji no Sato-hen",
-    description: "Hành trình của Tanjiro dẫn cậu đến Làng Thợ Rèn, nơi cậu gặp lại Hà Trụ Muichiro Tokito và Luyến Trụ Mitsuri Kanroji để chuẩn bị cho trận chiến mới.",
-    bannerUrl: "https://images.alphacoders.com/131/1315239.jpeg",
-    coverUrl: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx145139-0vb990k9y7nK.jpg"
+    id: 21519,
+    title: "Your Name",
+    description: "Mitsuha Miyamizu, a high school girl, yearns to live the life of a boy in the bustling city of Tokyo—a dream that stands in stark contrast to her present life in the countryside. Meanwhile in the city, Taki Tachibana lives a busy life as a high school student.",
+    bannerUrl: "https://s4.anilist.co/file/anilistcdn/media/anime/banner/21519-1ayMXgNlmByb.jpg"
   },
   {
-    id: 103,
-    title: "One Piece",
-    description: "Monkey D. Luffy cùng băng hải tặc Mũ Rơm tiếp tục hành trình tại vùng đất Wano quốc, đối đầu với Tứ Hoàng Kaido hùng mạnh.",
-    bannerUrl: "https://images.alphacoders.com/133/1330663.png",
-    coverUrl: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21-YCDuyNY6F7bI.jpg"
+    id: 100178,
+    title: "Liz and the Blue Bird",
+    description: "Students and best friends Mizore Yoroizuka and Nozomi Kasaki prepare to play a complex musical duet, Liz and the Blue Bird, for oboe and flute. Though they play beautifully together and have been friends since childhood...",
+    bannerUrl: "https://s4.anilist.co/file/anilistcdn/media/anime/banner/100178-pneDY2KoVnbz.jpg"
   },
   {
-    id: 104,
-    title: "Bleach: Sennen Kessen-hen",
-    description: "Cuộc chiến cuối cùng ngàn năm huyết chiến bắt đầu. Ichigo Kurosaki một lần nữa cầm kiếm để bảo vệ Soul Society khỏi sự xâm lăng của Quincy.",
-    bannerUrl: "https://images7.alphacoders.com/128/1283857.jpg",
-    coverUrl: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx133845-f3p4554k6oQp.jpg"
+    id: 98658,
+    title: "Revue Starlight",
+    description: "The franchise centers on \"Starlight\" — the song and dance revue troupe loved throughout the world. Karen and Hikari make a promise with each other when they're young that one day they'll stand on that stage together.",
+    bannerUrl: "https://s4.anilist.co/file/anilistcdn/media/anime/banner/98658-YifB5qgBgnGQ.jpg"
   },
   {
-    id: 105,
-    title: "Mushoku Tensei II",
-    description: "Rudeus Greyrat tiếp tục hành trình tìm kiếm mẹ mình. Cậu đăng ký vào Học viện Phép thuật Ranoa và gặp gỡ những người bạn mới.",
-    bannerUrl: "https://images5.alphacoders.com/132/1320491.jpeg",
-    coverUrl: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx146065-C2yI4p1W1s6u.jpg"
+    id: 131912,
+    title: "Fuuto PI",
+    description: "In the ecologically-minded city of Fuuto, mysterious devices resembling USB flash drives called Gaia Memories are used by criminals and other interested parties to become monsters called Dopants, committing crimes with the police force powerless to stop them. ",
+    bannerUrl: "https://s4.anilist.co/file/anilistcdn/media/anime/banner/131912-YPKK1NQel4Yd.jpg"
   }
 ];
 
 // 2. Dữ liệu: TRENDING NOW
 export const trendingAnime = [
-  { id: 1, title_romaji: "Jujutsu Kaisen Season 2", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx145064-um8Z8x0q8CjW.jpg" },
-  { id: 2, title_romaji: "Mushoku Tensei II", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx146065-C2yI4p1W1s6u.jpg" },
-  { id: 3, title_romaji: "Zom 100: Zombie ni Naru made ni Shitai 100 no Koto", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx159831-V5w5QZj6LhWJ.jpg" },
-  { id: 4, title_romaji: "Bleach: Sennen Kessen-hen - Ketsubetsu-tan", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx159629-s3g4j4s4f4h4.jpg" },
-  { id: 5, title_romaji: "Horimiya: piece", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx163132-o1b2n3m4.jpg" },
-  { id: 6, title_romaji: "Watashi no Shiawase na Kekkon", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx155963-J9K8L7M6N5.jpg" },
+  { id: 184322, title_romaji: "My Gift Lvl 9999 Unlimited Gacha: Backstabbed in a Backwater Dungeon, I'm Out for Revenge!", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx184322-rRkaMQ7J1zOI.jpg" },
+  { id: 181447, title_romaji: "May I Ask for One Final Thing?", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx181447-aCmaQmtdwuU5.jpg" },
+  { id: 179302, title_romaji: "SANDA", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx179302-gWWAh5BfQyl4.jpg" },
+  { id: 186794, title_romaji: "My Status as an Assassin Obviously Exceeds the Hero’s", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx186794-Ns8xWNdMdOxq.jpg" },
+  { id: 182896, title_romaji: "My Hero Academia FINAL SEASON", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx182896-mvxTVHGdDB4q.jpg" },
+  { id: 153800, title_romaji: "One-Punch Man Season 3", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx153800-8SpzdHOaZCoU.jpg" },
 ];
 
 // 3. Dữ liệu: POPULAR THIS SEASON
 export const popularSeason = [
-  { id: 7, title_romaji: "Oshi no Ko", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx150672-0275J54s00yN.jpg" },
-  { id: 8, title_romaji: "Kimetsu no Yaiba: Katanakaji no Sato-hen", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx145139-0vb990k9y7nK.jpg" },
-  { id: 9, title_romaji: "Jigokuraku", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx128893-F5E6D7C8B9A0.jpg" },
-  { id: 10, title_romaji: "Dr. STONE: NEW WORLD", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx131518-A1B2C3D4E5.jpg" },
-  { id: 11, title_romaji: "Mashle", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx151801-F6G7H8I9J0.jpg" },
-  { id: 12, title_romaji: "Tengoku Daimakyou", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx155783-K1L2M3N4O5.jpg" },
+  { id: 183385, title_romaji: "This Monster Wants to Eat Me", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx183385-f1TgnttLckBT.jpg" },
+  { id: 173523, title_romaji: "A Mangaka's Weirdly Wonderful Workplace", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx173523-wy1rDK1NaKuc.png" },
+  { id: 195240, title_romaji: "Umamusume: Cinderella Gray 2nd Cour", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx195240-hKcmllV6YHQT.jpg" },
+  { id: 177175, title_romaji: "Arknights: RISE FROM EMBER", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx177175-cr5tlJIj7dEi.jpg" },
+  { id: 185939, title_romaji: "Food for the Soul", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx185939-hqt1He153el8.jpg" },
+  { id: 180825, title_romaji: "Maebashi Witches", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx180825-trzjP1VDF19U.jpg" },
 ];
 
 // 4. Dữ liệu: UPCOMING NEXT SEASON
 export const upcomingNext = [
-  { id: 13, title_romaji: "Sousou no Frieren", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx154587-n1o2p3q4r5.jpg" },
-  { id: 14, title_romaji: "Spy x Family Season 2", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx158928-s1t2u3v4w5.jpg" },
-  { id: 15, title_romaji: "Tate no Yuusha no Nariagari Season 3", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx111321-x1y2z3a4b5.jpg" },
-  { id: 16, title_romaji: "Goblin Slayer II", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx146522-c1d2e3f4g5.jpg" },
-  { id: 17, title_romaji: "Kage no Jitsuryokusha ni Naritakute! 2nd Season", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx161962-h1i2j3k4l5.jpg" },
+  { id: 166617, title_romaji: "Fate/strange Fake", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx166617-34fpC9y47tTx.png" },
+  { id: 187942, title_romaji: "Mayonaka Heart Tune", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx187942-Zd8lQfWnOpVH.jpg" },
+  { id: 201903, title_romaji: "Cosmic Princess Kaguya!", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx201903-qomgdBUH9qKY.png" },
+  { id: 194028, title_romaji: "Kirei ni Shitemoraemasu ka", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx194028-10OuLhycYNrb.png" },
+  { id: 147105, title_romaji: "Witch Hat Atelier", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx147105-fNMGNpV19G47.jpg" },
+  { id: 194167, title_romaji: "Love Live! Hasu no Sora Jogakuin School Idol Club: Bloom Garden Party", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx194167-JVRxTGthYR4W.png" }
 ];
 
 // 5. Dữ liệu: ALL TIME POPULAR
 export const allTimePopular = [
-  { id: 18, title_romaji: "Shingeki no Kyojin", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx16498-m5n6o7p8q9.jpg" },
-  { id: 19, title_romaji: "Death Note", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx1535-r1s2t3u4v5.jpg" },
-  { id: 20, title_romaji: "Fullmetal Alchemist: Brotherhood", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx5114-w1x2y3z4a5.jpg" },
-  { id: 21, title_romaji: "One Punch Man", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21087-b1c2d3e4f5.jpg" },
-  { id: 22, title_romaji: "Sword Art Online", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx11757-g1h2i3j4k5.jpg" },
-  { id: 23, title_romaji: "Boku no Hero Academia", cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21459-l1m2n3o4p5.jpg" },
+  { id: 130003, title_romaji: "BOCCHI THE ROCK!", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx130003-HTDmeL4RGeJ4.png" },
+  { id: 128546, title_romaji: "Vivy -Fluorite Eye's Song-", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx128546-UIwyhuhjxmL0.jpg" },
+  { id: 15051, title_romaji: "Love Live! School Idol Project", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b15051-lwm0wVRWjKub.jpg" },
+  { id: 20912, title_romaji: "Sound! Euphonium", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20912-SiiG4HPrjQlX.jpg" },
+  { id: 160181, title_romaji: "Whisper Me a Love Song", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx160181-EGC0Scngy5In.jpg" },
+  { id: 87435, title_romaji: "BanG Dream!", 
+    cover_image: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx87435-yHlVTP1HFiXH.png" },
 ];
