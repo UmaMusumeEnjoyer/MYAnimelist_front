@@ -38,35 +38,78 @@
   color: #3DB4F2;
 }
 
-/* --- Phần Phải (Không đổi) --- */
+/* src/components/Header.css */
+
+/* ... (Giữ nguyên phần Header Left và Header Center cũ của bạn) ... */
+
+
+/* --- Phần Phải (Đã cập nhật Avatar và Logout) --- */
 .header-right {
   display: flex;
   align-items: center;
   gap: 15px; 
 }
 
-.header-right a {
+/* Định dạng chung cho thẻ a và button trong header-right để đồng bộ size chữ */
+.header-right a,
+.header-right button {
     text-decoration: none;
     font-weight: 500;
     font-size: 1rem;
     padding: 8px 18px;
     border-radius: 8px; 
     transition: all 0.2s ease-in-out;
+    border: none; /* Xóa viền mặc định của button */
+    cursor: pointer; /* Thêm con trỏ tay cho button */
+    font-family: inherit; /* Kế thừa font chữ của web */
 }
 
+/* --- Style cho nút Login (Giữ nguyên) --- */
 .header-right .btn-login {
     color: #c2c2c2;
+    background-color: transparent;
 }
-
 .header-right .btn-login:hover {
     color: #fff;
 }
 
+/* --- Style cho nút Sign Up (Giữ nguyên) --- */
 .header-right .btn-signup {
     background-color: #3578E5; 
     color: white;
 }
-
 .header-right .btn-signup:hover {
     background-color: #2a62bc; 
+}
+
+/* --- Style MỚI cho nút Logout --- */
+.header-right .btn-logout {
+    background-color: transparent; /* Nền trong suốt giống Login */
+    color: #c2c2c2;
+}
+
+.header-right .btn-logout:hover {
+    background-color: #1a2b3c; /* Nền tối nhẹ khi hover */
+    color: #EF5D5D; /* Màu đỏ nhạt để báo hiệu hành động "Thoát" */
+    /* Nếu bạn muốn màu trắng giống nút Login thì đổi #EF5D5D thành #fff */
+}
+
+/* --- Style MỚI cho Avatar --- */
+.header-right .user-avatar-link {
+    padding: 0; /* Xóa padding mặc định của thẻ a trong header-right */
+    display: flex; /* Để ảnh căn giữa */
+    border-radius: 50%; /* Bo tròn thẻ a */
+}
+
+.header-right .user-avatar-img {
+    width: 40px;  /* Kích thước avatar */
+    height: 40px;
+    border-radius: 5px; /* Bo góc vuông nhẹ giống phong cách AniList (hoặc 50% nếu muốn tròn vo) */
+    object-fit: cover; /* Cắt ảnh đẹp nếu ảnh gốc không vuông */
+    border: 2px solid transparent; /* Tạo viền trong suốt để tránh nhảy layout khi hover */
+    transition: border-color 0.2s;
+}
+
+.header-right .user-avatar-link:hover .user-avatar-img {
+    border-color: #3578E5; /* Viền xanh khi di chuột vào avatar */
 }

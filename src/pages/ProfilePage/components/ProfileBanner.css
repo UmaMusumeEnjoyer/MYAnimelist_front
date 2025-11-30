@@ -1,51 +1,177 @@
-.banner-container {
-  position: relative;
+/* src/components/ProfileBanner.css */
+
+/* --- Cấu trúc chung --- */
+.banner-wrapper {
+  width: 100%;
+  background-color: var(--bg-card); /* Màu nền trùng với nav bar */
   margin-bottom: 20px;
 }
+
+/* --- Phần Hình ảnh Banner --- */
+.banner-image-container {
+  position: relative;
+  width: 100%;
+  height: 300px; /* Chiều cao banner */
+  overflow: hidden;
+}
+
 .banner-img {
   width: 100%;
-  height: 330px;
+  height: 100%;
   object-fit: cover;
-  background-color: #333;
+  object-position: center;
 }
-.banner-nav {
-  background-color: var(--bg-card);
-  padding: 0 20px 0 320px;
-  display: flex;
-  gap: 30px;
-  height: 60px;
-  align-items: center;
-}
-.nav-item {
-  color: var(--text-main);
-  text-decoration: none;
-  font-weight: 500;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-.nav-item:hover, .nav-item.active {
-  color: var(--text-highlight);
-}
-.user-avatar-container {
+
+/* Lớp phủ gradient đen ở dưới đáy ảnh để làm nổi bật tên và avatar */
+.banner-overlay {
   position: absolute;
-  bottom: 0px;
-  left: 50px;
-  width: 160px;
-  height: 160px;
-}
-.user-avatar {
+  bottom: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  border-radius: 4px;
-  border: 3px solid var(--bg-card);
-  object-fit: cover;
+  background: linear-gradient(to top, rgba(11, 22, 34, 0.8) 0%, transparent 50%);
+  pointer-events: none;
 }
-.user-name {
+
+/* Container giới hạn chiều rộng nội dung (giống layout trang chính) */
+.banner-content {
   position: absolute;
-  bottom: 70px;
-  left: 230px;
-  font-size: 24px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 1100px; /* Căn chỉnh theo width của trang ProfilePage */
+  margin: 0 auto;
+  left: 0; 
+  right: 0; /* Mẹo căn giữa thẻ absolute */
+  display: flex;
+  align-items: flex-end; /* Đẩy nội dung xuống đáy banner */
+  padding-bottom: 20px; /* Khoảng cách từ đáy banner lên */
+  padding-left: 20px; /* Cách lề trái một chút */
+  box-sizing: border-box;
+}
+
+/* --- Avatar và Tên --- */
+.user-info {
+  display: flex;
+  align-items: center; /* Căn giữa avatar và tên theo chiều dọc */
+  gap: 20px; /* Khoảng cách giữa avatar và tên */
+}
+
+.user-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 4px; /* Bo góc nhẹ giống screenshot */
+  object-fit: cover;
+  background-color: var(--bg-card);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  /* Nếu muốn avatar có viền trắng mỏng như ảnh mẫu thì thêm dòng dưới */
+  /* border: 2px solid rgba(255,255,255,0.1); */
+}
+
+.user-name {
+  font-size: 20px;
   font-weight: 700;
   color: var(--text-highlight);
-  text-shadow: 0 0 10px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+/* --- Thanh Nav Bar --- */
+.banner-nav {
+  background-color: var(--bg-card);
+  height: 50px;
+  display: flex;
+  justify-content: center; /* Căn giữa thanh menu theo chiều ngang */
+  border-bottom: 1px solid rgba(255,255,255,0.05); /* Đường kẻ mờ bên dưới nếu cần */
+}
+
+.nav-container {
+  width: 100%;
+  max-width: 1100px; /* Đồng bộ chiều rộng với nội dung trên */
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 0 20px;
+  /* Nếu bạn muốn căn menu ra giữa trang thay vì căn trái theo avatar: */
+  justify-content: center; 
+}
+
+.nav-item {
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0 5px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+  position: relative;
+}
+
+.nav-item:hover, .nav-item.active {
+  color: var(--accent-green); /* Dùng màu xanh highlight giống screenshot (Overview xanh lá) */
+}
+
+/* Dấu gạch dưới khi active (tuỳ chọn cho giống style hiện đại) */
+/*
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--accent-green);
+  border-radius: 2px 2px 0 0;
+}
+*/
+
+/* ... Các code CSS cũ giữ nguyên ... */
+
+/* --- [MỚI] Phần hiển thị Favorites Grid --- */
+.favorites-container {
+  max-width: 1200px; /* Căn theo chiều rộng trang */
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+.anime-grid-6 {
+  display: grid;
+  /* Tạo đúng 6 cột bằng nhau */
+  grid-template-columns: repeat(6, 1fr); 
+  /* Khoảng cách giữa các card */
+  gap: 20px 15px; 
+}
+
+/* Tùy chọn: Responsive cho màn hình nhỏ hơn (nếu cần) */
+@media (max-width: 1024px) {
+  .anime-grid-6 {
+    grid-template-columns: repeat(4, 1fr); /* Giảm xuống 4 cột trên tablet */
+  }
+}
+
+@media (max-width: 768px) {
+  .anime-grid-6 {
+    grid-template-columns: repeat(3, 1fr); /* Giảm xuống 3 cột trên mobile lớn */
+  }
+}
+
+@media (max-width: 480px) {
+  .anime-grid-6 {
+    grid-template-columns: repeat(2, 1fr); /* Giảm xuống 2 cột trên mobile nhỏ */
+  }
+}
+
+/* Loading & Empty state styling */
+.loading-text, .empty-text {
+  color: var(--text-main);
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+}
+
+.grid-item {
+  /* Đảm bảo chiều cao item đồng nhất */
+  height: 100%; 
 }

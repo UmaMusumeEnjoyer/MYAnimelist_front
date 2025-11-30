@@ -3,22 +3,19 @@ import React from 'react';
 import './Header.css';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-// Đừng quên import ảnh logo của bạn vào đây
-// Ví dụ: import logoImg from '../assets/logo.png'; 
-// Hoặc dùng đường dẫn chuỗi nếu ảnh để trong thư mục public
 
 const Header = () => {
   const { isAuthenticated, logout } = useAuth();
 
+  // URL ảnh avatar mặc định (bạn có thể thay bằng URL thật từ user data)
+  const defaultAvatar = "https://media.gametora.com/umamusume/characters/profile/1114.png";
+
   return (
     <header className="app-header">
-      {/* PHẦN BÊN TRÁI */}
+      {/* --- PHẦN BÊN TRÁI --- */}
       <div className="header-left">
         <div className="logo">
             <Link to="/">
-                {/* Thay thế chữ 'A' bằng thẻ img */}
-                {/* Cách 1: Nếu import ảnh: src={logoImg} */}
-                {/* Cách 2: Nếu ảnh trong folder public: src="/logo.png" */}
                 <img 
                   src="/unnamed__1_-removebg-preview.png" 
                   alt="Logo" 
@@ -28,12 +25,13 @@ const Header = () => {
         </div>
       </div>
 
-      {/* PHẦN Ở GIỮA - GIỮ NGUYÊN */}
+      {/* --- PHẦN Ở GIỮA --- */}
       <nav className="header-center">
-        {isAuthenticated && (
-          <Link to="/homepagelogin">Home</Link>
+        {isAuthenticated ? (
+           <Link to="/homepagelogin">Home</Link>
+        ) : (
+           <Link to="/">Home</Link>
         )}
-        {!isAuthenticated && <Link to="/">Home</Link>} 
         <Link to="/browse">Browse</Link>
         {isAuthenticated && (
           <>
@@ -45,12 +43,23 @@ const Header = () => {
         )}
       </nav>
 
-      {/* PHẦN BÊN PHẢI - GIỮ NGUYÊN */}
+      {/* --- PHẦN BÊN PHẢI (ĐÃ CHỈNH SỬA) --- */}
       <div className="header-right">
         {isAuthenticated ? (
           <>
-            <div className="user-avatar">AVATAR</div>
-            <button onClick={logout} className="btn-logout">Logout</button>
+            {/* Avatar - Click vào sẽ dẫn tới trang Profile */}
+            <Link to="/profile" className="user-avatar-link">
+               <img 
+                 src={defaultAvatar} 
+                 alt="User Avatar" 
+                 className="user-avatar-img" 
+               />
+            </Link>
+            
+            {/* Nút Logout - Style giống nút Login nhưng đổi màu hover */}
+            <button onClick={logout} className="btn-logout">
+              Logout
+            </button>
           </>
         ) : (
           <>

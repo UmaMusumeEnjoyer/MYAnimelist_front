@@ -1,11 +1,23 @@
 // src/pages/AnimeListPage.js
-import React from 'react';
+import React, { useState } from 'react'; // [1] Import useState
 import AnimeCard from '../../components/AnimeCard';
 import Sidebar from './components/Sidebar';
 import { animeList, collaborators } from '../../data/mockDataSearchPage';
 import './AnimeListPage.css';
 
 const AnimeListPage = () => {
+  // [2] Tạo state để lưu từ khóa tìm kiếm
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // [3] Logic lọc danh sách Anime
+  // Giả sử trong object anime có thuộc tính 'title'. 
+  // Nếu trong data của bạn tên thuộc tính khác (ví dụ: 'name', 'title_english'), hãy đổi 'anime.title' thành tên tương ứng.
+  const filteredAnimeList = animeList.filter((anime) => {
+    if (!searchTerm) return true; // Nếu không nhập gì thì lấy hết
+    const title = anime.title_romaji || ""; // Lấy title, phòng trường hợp null
+    return title.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
   return (
     <div className="page-container">
       <div className="main-layout">
@@ -19,7 +31,6 @@ const AnimeListPage = () => {
               <h1 className="page-title">Our Top Shonen Series</h1>
               <p className="page-description">A collaborative list of the best shonen anime to watch.</p>
             </div>
-            {/* Đã xóa action-buttons ở đây */}
           </div>
 
           {/* Filter Bar */}
@@ -29,7 +40,11 @@ const AnimeListPage = () => {
               <input 
                 type="text" 
                 className="search-input" 
-                placeholder="Search by title, status, or genre..." 
+                placeholder="Search by title, status, or genre..."
+                
+                // [4] Binding giá trị và sự kiện
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             
@@ -44,19 +59,25 @@ const AnimeListPage = () => {
 
           {/* Anime Grid */}
           <div className="anime-grid">
-            {animeList.map(anime => (
-              <div className="grid-item" key={anime.id}>
-                <AnimeCard anime={anime} />
+            {/* [5] Render danh sách ĐÃ ĐƯỢC LỌC */}
+            {filteredAnimeList.length > 0 ? (
+              filteredAnimeList.map(anime => (
+                <div className="grid-item" key={anime.id}>
+                  <AnimeCard anime={anime} />
+                </div>
+              ))
+            ) : (
+              // Hiển thị thông báo nếu không tìm thấy kết quả
+              <div style={{ color: '#94a3b8', gridColumn: '1 / -1', textAlign: 'center', padding: '20px' }}>
+                No anime found matching "{searchTerm}"
               </div>
-            ))}
+            )}
           </div>
 
         </main>
 
         {/* RIGHT COLUMN: Sidebar + Buttons */}
         <div className="sidebar-area">
-          
-          {/* [NEW LOCATION] Action Buttons moved here */}
           <div className="action-buttons sidebar-actions">
               <button className="btn btn-primary">Share</button>
               <button className="btn btn-secondary">Add Anime</button>
@@ -66,7 +87,6 @@ const AnimeListPage = () => {
               </button>
           </div>
 
-          {/* Owner/Collaborators Section */}
           <Sidebar data={collaborators} />
         </div>
 
