@@ -31,10 +31,26 @@
   color: #fff; font-weight: 600; font-size: 0.85rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); outline: none; box-sizing: border-box; 
   transition: all 0.2s ease;
+  
 }
 .search-icon {
-  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-  color: #8BA0B2; font-size: 0.9rem; pointer-events: none;
+position: absolute; 
+  left: 12px; 
+  top: 50%; 
+  transform: translateY(-50%);
+  color: #8BA0B2; 
+  font-size: 0.9rem; 
+  
+  /* [QUAN TRỌNG] Giữ nguyên phần này để click được */
+  cursor: pointer;
+  z-index: 10;
+  pointer-events: auto; /* Đảm bảo nhận sự kiện click */
+  
+  transition: color 0.2s;
+}
+
+.search-icon:hover {
+  color: #fff;
 }
 
 /* SELECT STYLE */

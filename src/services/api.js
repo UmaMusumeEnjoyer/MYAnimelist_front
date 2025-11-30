@@ -135,9 +135,13 @@ export const getAnimeWatchInfo = (id) => {
   return API.get(`/anilist/anime/${id}/watch/`);
 };
 
-export const searchAnimeByName = (name) => {
+export const searchAnimeByName = (keyword) => {
   // POST /api/anilist/search/name/
-  return API.post('/anilist/search/name/', { search: name });
+  // Backend yêu cầu bắt buộc phải có field "name"
+  return API.post('/anilist/search/name/', { 
+    name: keyword,  // <-- Dùng "name" (không dùng "search")
+    manual: true 
+  });
 };
 
 export const getTrendingAnime = () => {
