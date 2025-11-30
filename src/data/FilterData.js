@@ -3,7 +3,7 @@
 // 1. Tạo danh sách Năm (từ năm hiện tại lùi về 2010)
 const currentYear = new Date().getFullYear();
 const yearsList = [];
-for (let i = currentYear; i >= 2010; i--) {
+for (let i = currentYear+2; i >= 2010; i--) {
   yearsList.push(i);
 }
 
@@ -39,8 +39,12 @@ genres: [
 
   // Ví dụ: API yêu cầu gửi số (1, 2, 3) thay vì chữ
   formats: [
-    { label: "TV Show", value: "tv" },
-    { label: "Movie",   value: "movie" },
-    { label: "OVA",     value: "ova" }
+    { label: "TV Show", value: "TV" },
+    { label: "TV Short",   value: "TV_SHORT" },
+    { label: "Movie",     value: "MOVIE" },
+    { label: "Special",     value: "SPECIAL" },
+    { label: "Ova",     value: "OVA" },
+    { label: "Ona",     value: "ONA" },
+    { label: "Music",     value: "MUSIC" }
   ]
 };

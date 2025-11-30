@@ -1,18 +1,26 @@
 import React from 'react';
-// Import AnimeCard từ thư mục components chung của dự án
-// Lưu ý: Đường dẫn này phụ thuộc vào vị trí thực tế của AnimeCard so với file này
-import AnimeCard from '../../../components/AnimeCard'; 
-import './SectionGrid.css';
+import AnimeCard from '../../../components/AnimeCard'; // Đảm bảo đường dẫn đúng
+import './SectionGrid.css'; // Giữ nguyên CSS
 
-const SectionGrid = ({ title, data, linkText = "View All" }) => {
+const SectionGrid = ({ title, data, onViewAll }) => {
   return (
-    <div className="anime-section container">
+    <div className="container anime-section">
       <div className="section-header">
         <h2 className="section-title">{title}</h2>
-        <a href="#" className="view-all">{linkText}</a>
+        {/* [MỚI] Thêm sự kiện onClick cho View All */}
+        <a 
+          href="#!" 
+          className="view-all-btn" 
+          onClick={(e) => {
+            e.preventDefault(); // Ngăn chặn reload trang
+            if (onViewAll) onViewAll();
+          }}
+        >
+          View All
+        </a>
       </div>
       <div className="anime-grid">
-        {data && data.map((anime) => (
+        {data.map((anime) => (
           <div key={anime.id} className="grid-item">
             <AnimeCard anime={anime} />
           </div>

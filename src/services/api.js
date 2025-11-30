@@ -152,7 +152,7 @@ export const getTrendingAnime = () => {
 export const searchAnimeByCriteria = (criteria) => {
   // POST /api/anilist/search/criteria
   // criteria object VD: { year: 2023, season: 'WINTER', genre: 'Action' }
-  return API.post('/anilist/search/criteria', criteria);
+  return API.post('/anilist/search/criteria/', criteria);
 };
 
 

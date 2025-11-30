@@ -19,16 +19,24 @@
   letter-spacing: 0.5px;
 }
 
-.view-all {
+.view-all-btn {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #8BA0B2;
+  color: #8BA0B2;     /* Màu xám xanh nhạt */
   text-decoration: none;
-  transition: color 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  /* Thêm chút padding để vùng bấm rộng hơn */
+  padding: 5px 10px;
+  border-radius: 4px;
 }
 
-.view-all:hover {
-  color: #fff;
+.view-all-btn:hover {
+  color: #ffffff;           /* Sáng lên khi hover */
+  background-color: #151f2e; /* Thêm nền tối nhẹ để nổi bật nút */
 }
 
 .anime-grid {
