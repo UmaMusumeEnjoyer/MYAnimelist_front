@@ -4,12 +4,12 @@
 
 .feed-item {
   display: flex;
-  gap: 10px;
-  background: var(--bg-card); /* Đảm bảo biến màu này tồn tại */
-  padding: 12px 15px;
+  gap: 12px; /* Khoảng cách giữa ảnh và nội dung text */
+  background: var(--bg-card, #151f2e); /* Fallback màu nền */
+  padding: 10px;
   border-radius: 4px;
   margin-bottom: 10px;
-  align-items: center;
+  align-items: center; /* Căn giữa theo chiều dọc */
   transition: background-color 0.2s ease;
 }
 
@@ -21,52 +21,54 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
+/* --- Style cho Thumbnail --- */
+.feed-image-wrapper {
+  flex-shrink: 0; /* Không cho ảnh bị co lại */
+}
+
+.feed-thumbnail {
+  width: 48px;  /* Kích thước ảnh nhỏ gọn */
+  height: 64px; /* Tỉ lệ poster dọc */
+  object-fit: cover;
+  border-radius: 3px;
+  display: block;
+}
+
+/* --- Phần chứa Text và Time --- */
 .feed-content {
   flex: 1;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column; /* Xếp text và time theo chiều dọc hoặc ngang tùy ý */
+  justify-content: center;
+  gap: 4px;
+  overflow: hidden; /* Tránh text tràn */
 }
 
-.feed-text {
+.feed-main-info {
   font-size: 14px;
-  color: var(--text-highlight);
-  font-weight: 500;
+  color: var(--text-main, #9fadbd);
+  line-height: 1.4;
 }
 
-/* Class chung cho highlight */
-.feed-text span.highlight {
+/* Các class màu sắc hành động (Giữ nguyên) */
+.highlight {
   font-weight: 600;
-  cursor: pointer;
-  /* Đã xóa dòng color cứng ở đây để các class con có thể override */
+  margin: 0 4px;
 }
+.highlight.type-add { color: #4ade80; }
+.highlight.type-update { color: #60a5fa; }
+.highlight.type-default { color: #a78bfa; }
 
-/* =================================================================
-   FIX MÀU SẮC (Tăng độ ưu tiên bằng cách thêm .feed-text phía trước)
-   ================================================================= */
-
-/* 1. Hành động thêm mới (followed_anime) -> Màu xanh lá */
-.feed-text .highlight.type-add {
-  color: #4ade80; /* Hoặc #2ecc71 */
+/* --- [MỚI] Style cho tên Anime --- */
+.feed-anime-name {
+  font-weight: 700; /* Tô đậm */
+  color: var(--text-highlight, #edf1f5); /* Màu sáng hơn text thường */
+  margin-left: 4px;
 }
-
-/* 2. Hành động cập nhật (updated_followed_anime) -> Màu xanh dương */
-.feed-text .highlight.type-update {
-  color: #60a5fa; /* Hoặc #3db4f2 */
-}
-
-/* 3. Hành động mặc định -> Màu tím */
-.feed-text .highlight.type-default {
-  color: #a78bfa; 
-}
-
-/* ================================================================= */
 
 .feed-meta {
   font-size: 12px;
-  color: var(--text-main);
-  margin-left: 10px;
-  white-space: nowrap;
+  color: var(--text-dim, #8ba0b2); /* Màu nhạt hơn */
 }
 
 .feed-loading, .feed-empty {
@@ -76,7 +78,7 @@
     font-size: 14px;
 }
 
-/* Style cho nút Load More */
+/* Style cho nút Load More (Giữ nguyên) */
 .load-more-btn {
     text-align: center;
     padding: 10px 15px;
@@ -89,7 +91,6 @@
     font-weight: 600;
     transition: all 0.2s ease;
 }
-
 .load-more-btn:hover {
     background: rgba(255, 255, 255, 0.1);
     color: var(--accent-blue, #3db4f2);
