@@ -4,8 +4,8 @@ import './ProfileBanner.css';
 const ProfileBanner = () => {
   const user = {
     name: "TranQuangDung",
-    avatar: "https://s4.anilist.co/file/anilistcdn/user/avatar/large/b588365-C6C5u8S8G8Xp.png",
-    banner: "https://s4.anilist.co/file/anilistcdn/user/banner/b588365-d41d8cd98f00b204e9800998ecf8427e.jpg"
+    avatar: "https://gametora.com/images/umamusume/supports/tex_support_card_30248.png",
+    banner: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEZmorQbm1gSVgk4ITRR_ti26w3CfxsYefZw&s"
   };
 
   return (
@@ -18,9 +18,7 @@ const ProfileBanner = () => {
       <div className="banner-nav">
         <div className="nav-item active">Overview</div>
         <div className="nav-item">Anime List</div>
-        <div className="nav-item">Manga List</div>
         <div className="nav-item">Favorites</div>
-        <div className="nav-item">Stats</div>
       </div>
     </div>
   );

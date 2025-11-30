@@ -1,5 +1,5 @@
 // src/App.js
-import React from 'react';
+import React, { useEffect } from 'react'; // 1. Thêm useEffect ở đây
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
@@ -19,6 +19,29 @@ import AnimeSearchPage from './pages/AnimeSearch/AnimeSearchPage';
 import AnimeListPage from './pages/AnimeListPage/AnimeListPage';
 
 function App() {
+  
+  // 2. Thêm đoạn code này để đổi Title và Logo
+  useEffect(() => {
+    // --- Thay đổi Tiêu đề (Title) ---
+    document.title = "MyAnilist"; // <--- Sửa tên web tại đây
+
+    // --- Thay đổi Logo (Favicon) ---
+    const updateFavicon = (url) => {
+      let link = document.querySelector("link[rel~='icon']");
+      if (!link) {
+        link = document.createElement('link');
+        link.rel = 'icon';
+        document.getElementsByTagName('head')[0].appendChild(link);
+      }
+      link.href = url;
+    };
+
+    // Điền đường dẫn logo của bạn vào dưới đây (Link ảnh online hoặc đường dẫn file trong public)
+    // Ví dụ: '/logo.png' nếu để ảnh trong thư mục public
+    updateFavicon('/logo.ico'); 
+
+  }, []); // Dấu [] giúp code này chỉ chạy 1 lần khi web vừa mở
+
   return (
     <Router>
       {/* Header được đặt ở đây, bên ngoài <Routes>, 
