@@ -56,7 +56,7 @@ const FilterBar = ({ onSearch }) => {
             onKeyDown={handleKeyDown} 
           />
           <div className="search-btn" onClick={handleSearchAction}>
-          <FaSearch className="search-icon" onClick={handleSearchAction} />
+          <FaSearch />
           </div>
         </div>
       </div>
