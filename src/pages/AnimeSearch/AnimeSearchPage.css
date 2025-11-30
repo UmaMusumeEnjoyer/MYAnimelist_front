@@ -51,3 +51,36 @@
 .btn-see-more:active {
   transform: translateY(0);
 }
+
+.search-results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px; /* Khoảng cách giữa nút Back và Tiêu đề */
+  margin-bottom: 25px;
+}
+
+/* Nút Back */
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Khoảng cách giữa mũi tên và chữ Back */
+  
+  background-color: transparent;
+  border: none;
+  color: #8BA0B2;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 12px 8px 0; /* Padding phải rộng ra tí cho dễ bấm */
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  color: #E84F63; /* Màu đỏ hồng điểm nhấn (hoặc màu trắng #fff tuỳ bạn) */
+  transform: translateX(-3px); /* Hiệu ứng lùi nhẹ về trái */
+}
+
+.back-btn svg {
+  font-size: 0.9rem;
+}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FaArrowLeft } from 'react-icons/fa'; // [MỚI] Import Icon Back
 import './AnimeSearchPage.css';
 
 // Import Components
@@ -8,9 +9,9 @@ import SectionGrid from './components/SectionGrid';
 import AnimeCard from '../../components/AnimeCard'; 
 
 // Import API
-import { searchAnimeByName, searchAnimeByCriteria } from '../../services/api'; 
+import { searchAnimeByName, searchAnimeByCriteria, getTrendingAnime } from '../../services/api'; 
 
-// [MỚI] Import Utils xử lý mùa
+// Import Utils
 import { getCurrentSeasonInfo, getNextSeasonInfo } from '../../utils/seasonUtils';
 
 // Import Data
@@ -26,14 +27,15 @@ const AnimeSearchPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [loading, setLoading] = useState(false);
+  
+  // State hiển thị tiêu đề động (Ví dụ: Trending Now, Search Results...)
+  const [viewTitle, setViewTitle] = useState('Search Results');
 
   const [page, setPage] = useState(1);
   const [canLoadMore, setCanLoadMore] = useState(false);
-  
   const [currentFilters, setCurrentFilters] = useState(null); 
 
-  // --- [ĐÃ XÓA] Hàm calculateSeason cũ vì đã chuyển sang file utils ---
-
+  // --- MAP DATA HELPER ---
   const mapAnimeData = (rawItem) => ({
     id: rawItem.id,
     anilist_id: rawItem.id,
@@ -48,6 +50,7 @@ const AnimeSearchPage = () => {
     next_airing_ep: null 
   });
 
+  // --- SEARCH HANDLER ---
   const handleSearch = async (keyword, filters) => {
     const { genre, year, season, format } = filters;
     
@@ -57,14 +60,15 @@ const AnimeSearchPage = () => {
       (season && season !== 'Any') ||
       (format && format !== 'Any');
 
+    // Nếu không có gì để search -> Về trang chủ
     if ((!keyword || keyword.trim() === "") && !hasFilter) {
-      setIsSearching(false);
-      setSearchResults([]);
+      handleBackToHome(); // [MỚI] Dùng chung logic back
       return;
     }
 
     setLoading(true);
     setIsSearching(true);
+    setViewTitle('Search Results'); // Mặc định là Search Results
     setSearchResults([]); 
     setPage(1);
     
@@ -103,26 +107,65 @@ const AnimeSearchPage = () => {
     }
   };
 
-  // === [CẬP NHẬT] SỬ DỤNG UTILS MỚI ===
-  const handleViewAllClick = (type) => {
+  // --- VIEW ALL HANDLER ---
+  const handleViewAllClick = async (type) => {
+    // 1. Trending Now
+    if (type === 'TRENDING_NOW') {
+        setLoading(true);
+        setIsSearching(true);
+        setViewTitle('Trending Now'); // [MỚI] Cập nhật tiêu đề
+        setSearchResults([]);
+        setPage(1);
+        setCurrentFilters(null); 
+        
+        try {
+            const response = await getTrendingAnime();
+            const rawResults = response.data.trending || []; 
+            setSearchResults(rawResults.map(mapAnimeData));
+            setCanLoadMore(false); 
+        } catch (error) {
+            console.error("Fetch trending failed:", error);
+        } finally {
+            setLoading(false);
+        }
+        window.scrollTo({ top: 400, behavior: 'smooth' });
+        return; 
+    }
+
+    // 2. Filter-based Views
     let targetFilters = { genre: 'Any', year: 'Any', season: 'Any', format: 'Any' };
 
     if (type === 'POPULAR_THIS_SEASON') {
-      // Sử dụng hàm từ utils
       const { year, season } = getCurrentSeasonInfo();
       targetFilters = { ...targetFilters, year, season };
+      // Gọi search nhưng ta sẽ override title sau một chút (hoặc để handleSearch set mặc định)
+      // Để đơn giản, handleSearch sẽ set là "Search Results", ta chấp nhận hoặc sửa logic handleSearch.
     } 
     else if (type === 'UPCOMING_NEXT_SEASON') {
-      // Sử dụng hàm từ utils (đã bao gồm logic chuyển năm)
       const { year, season } = getNextSeasonInfo();
       targetFilters = { ...targetFilters, year, season };
     }
 
-    // Gọi hàm search với bộ lọc mới
     handleSearch('', targetFilters);
     
-    // Cuộn lên đầu trang (FilterBar)
+    // Override tiêu đề cho đẹp
+    if (type === 'POPULAR_THIS_SEASON') setViewTitle('Popular This Season');
+    if (type === 'UPCOMING_NEXT_SEASON') setViewTitle('Upcoming Next Season');
+
     window.scrollTo({ top: 400, behavior: 'smooth' });
+  };
+
+  // --- [MỚI] BACK BUTTON HANDLER ---
+  const handleBackToHome = () => {
+    setIsSearching(false);
+    setSearchResults([]);
+    setPage(1);
+    
+    // Reset FilterBar về trạng thái "Any"
+    setCurrentFilters({
+      keyword: '',
+      filters: { genre: 'Any', year: 'Any', season: 'Any', format: 'Any' }
+    });
   };
 
   const handleLoadMore = async () => {
@@ -165,8 +208,14 @@ const AnimeSearchPage = () => {
       <div className="page-content">
         {isSearching ? (
           <div className="container anime-section">
-            <div className="section-header">
-              <h2 className="section-title">Search Results</h2>
+            
+            {/* [MỚI] HEADER VỚI NÚT BACK */}
+            <div className="search-results-header">
+              <h2 className="section-title">{viewTitle}</h2>
+              <button className="back-btn" onClick={handleBackToHome}>
+                <FaArrowLeft /> Back
+              </button>
+              
             </div>
             
             <div className="anime-grid">
@@ -195,7 +244,11 @@ const AnimeSearchPage = () => {
           </div>
         ) : (
           <>
-            <SectionGrid title="TRENDING NOW" data={trendingAnime} />
+            <SectionGrid 
+                title="TRENDING NOW" 
+                data={trendingAnime} 
+                onViewAll={() => handleViewAllClick('TRENDING_NOW')}
+            />
             
             <SectionGrid 
               title="POPULAR THIS SEASON" 
