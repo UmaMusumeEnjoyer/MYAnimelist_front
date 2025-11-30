@@ -4,7 +4,7 @@
   text-decoration: none;
   color: inherit;
   display: block; 
-  height: 100%; /* Bắt buộc thẻ Link cao bằng ô Grid */
+  height: 100%;
 }
 
 .anime-card {
@@ -14,8 +14,6 @@
   border-radius: 8px;
   overflow: hidden;
   transition: transform 0.2s ease-in-out;
-  
-  /* QUAN TRỌNG: Card dãn hết chiều cao nhưng KHÔNG dãn khoảng cách nội dung bên trong */
   height: 100%; 
   position: relative;
 }
@@ -26,47 +24,59 @@
 
 .anime-poster {
   width: 100%;
-  height: 230px; /* Chiều cao ảnh cố định */
+  height: 250px; 
   object-fit: cover;
   display: block;
-  flex-shrink: 0; /* Đảm bảo ảnh không bị co lại khi card ngắn */
+  flex-shrink: 0; 
 }
 
-/* Container chứa thông tin */
+/* --- Container chứa thông tin --- */
 .anime-details {
   padding: 12px;
   display: flex;
   flex-direction: column;
-  /* BỎ justify-content: space-between (Nguyên nhân gây lệch bố cục khi có progress) */
   justify-content: flex-start; 
-  flex-grow: 1; /* Để phần background màu tối phủ hết chiều cao còn lại */
+  flex-grow: 1; /* Phủ hết chiều cao còn lại */
 }
 
-/* XỬ LÝ TIÊU ĐỀ - TRÁI TIM CỦA GIẢI PHÁP */
+/* --- [MỚI] Tùy chỉnh riêng cho trường hợp KHÔNG có thông tin phụ --- */
+.anime-details.no-info {
+  /* Căn giữa tiêu đề theo chiều dọc để nhìn đỡ trống */
+  justify-content: center;
+  /* Giảm padding một chút */
+  padding: 8px 12px; 
+}
+
+/* --- TIÊU ĐỀ --- */
 .anime-title-text {
-  margin: 0 0 10px 0; /* Khoảng cách cố định xuống phần info bên dưới */
+  margin: 0 0 10px 0; 
   font-size: 0.95rem;
   font-weight: 600;
   color: #e5e7eb;
   line-height: 1.4; 
   
-  /* 1. Giới hạn hiển thị 2 dòng */
+  /* Giới hạn 2 dòng */
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
 
-  /* 2. QUAN TRỌNG: Luôn dành chỗ cho 2 dòng chữ */
-  /* Cách tính: line-height (1.4) * font-size (0.95rem) * 2 dòng = ~2.66rem */
+  /* Giữ chỗ cho 2 dòng text để card đều nhau */
   min-height: 2.7rem; 
 }
 
-/* Phần thông tin (Episode / Progress) */
+/* [MỚI] Xử lý tiêu đề bên trong thẻ no-info */
+.anime-details.no-info .anime-title-text {
+  margin-bottom: 0; /* Xóa khoảng cách dưới vì không có nội dung tiếp theo */
+}
+
+/* --- Phần thông tin (Episode / Progress) --- */
 .airing-info {
-  /* Không dùng margin-top: auto để tránh bị đẩy xuống đáy card */
   padding: 0;
   font-size: 0.85rem;
+  /* Đảm bảo phần này luôn nằm gọn bên dưới title */
+  margin-top: auto; 
 }
 
 .episode-time {

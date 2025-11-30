@@ -1,4 +1,3 @@
-// src/components/AnimeCard.js
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './AnimeCard.css';
@@ -7,13 +6,13 @@ const AnimeCard = ({ anime }) => {
   let displayInfo = null;
   let progressPercent = 0;
 
-  // 1. [FIX] Logic lấy tên: Ưu tiên title_romaji, nếu không có thì lấy name_romaji
+  // 1. Logic lấy tên
   const title = anime.title_romaji || anime.name_romaji || "Unknown Title";
 
   // 2. Xử lý ID
   const linkId = anime.anilist_id || anime.id;
 
-  // 3. LOGIC HIỂN THỊ (Giữ nguyên logic của bạn)
+  // 3. LOGIC HIỂN THỊ
   if (anime.episode_progress !== undefined) {
     const currentEp = anime.episode_progress;
     const totalEp = anime.episodes || '?';
@@ -26,10 +25,7 @@ const AnimeCard = ({ anime }) => {
   } 
   else if (anime.next_airing_ep) {
     const { episode, timeUntilAiring } = anime.next_airing_ep;
-    // ... (Giữ nguyên logic tính thời gian của bạn) ...
-    const timeSinceAired = 604800 - timeUntilAiring;
-    progressPercent = Math.max(0, Math.min(100, (timeSinceAired / 604800) * 100));
-
+    // Tính toán thời gian
     const days = Math.floor(timeUntilAiring / 86400);
     const hours = Math.floor((timeUntilAiring % 86400) / 3600);
     const minutes = Math.floor(((timeUntilAiring % 86400) % 3600) / 60);
@@ -39,7 +35,14 @@ const AnimeCard = ({ anime }) => {
       timeString = `${hours}h ${minutes}m`;
     }
     displayInfo = `Ep ${episode} - ${timeString}`;
+    
+    // Thanh thời gian chờ (đảo ngược logic visual một chút cho đẹp mắt nếu cần)
+    const timeSinceAired = 604800 - timeUntilAiring;
+    progressPercent = Math.max(0, Math.min(100, (timeSinceAired / 604800) * 100));
   }
+
+  // Logic class: Thêm 'no-info' nếu không có displayInfo
+  const detailsClass = displayInfo ? 'anime-details' : 'anime-details no-info';
 
   return (
     <Link to={`/anime/${linkId}`} className="anime-card-link">
@@ -50,12 +53,9 @@ const AnimeCard = ({ anime }) => {
           className="anime-poster" 
         />
         
-        {/* [FIX] Container chứa thông tin (Tên + Progress) */}
-        <div className="anime-details">
-            {/* [FIX] Thêm dòng này để hiển thị Tên Anime */}
+        <div className={detailsClass}>
             <h3 className="anime-title-text">{title}</h3>
 
-            {/* Hiển thị thông tin progress nếu có */}
             {displayInfo && (
             <div className="airing-info">
                 <p className="episode-time">{displayInfo}</p>

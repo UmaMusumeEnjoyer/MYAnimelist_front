@@ -1,4 +1,5 @@
-/* Chỉ giữ lại các style chung cho Layout của Page */
+/* src/AnimeSearchPage.css */
+
 .anime-search-page {
   background-color: #0B1622;
   color: #9FADBD;
@@ -7,9 +8,9 @@
   padding-bottom: 50px;
 }
 
-/* Class container dùng chung cho các component con */
 .container {
-  max-width: 1100px;
+  /* [THAY ĐỔI] Tăng từ 1100px lên 1250px để đủ chỗ chứa 6 thẻ thoải mái hơn */
+  max-width: 1250px; 
   margin: 0 auto;
   padding: 0 20px;
 }

@@ -1,11 +1,51 @@
-.anime-section { margin-bottom: 50px; }
-.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.section-title { font-size: 1.1rem; font-weight: 700; color: #8BA0B2; text-transform: uppercase; letter-spacing: 0.8px; }
-.view-all { font-size: 0.85rem; font-weight: 600; color: #8BA0B2; text-decoration: none; transition: color 0.2s; }
-.view-all:hover { color: #fff; }
-.anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 25px 20px; }
-.grid-item { min-width: 0; }
+/* src/components/SectionGrid.css */
 
-@media (max-width: 576px) {
-  .anime-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 20px 15px; }
+.anime-section {
+  margin-bottom: 50px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #8BA0B2;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+}
+
+.view-all {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #8BA0B2;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.view-all:hover {
+  color: #fff;
+}
+
+.anime-grid {
+  display: grid;
+  /* Mặc định cho Mobile/Tablet: Giảm minmax xuống một chút (150px) để linh hoạt */
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 25px 20px;
+}
+
+/* [MỚI] Media query dành cho Desktop để ép cứng 6 cột */
+@media (min-width: 1100px) {
+  .anime-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+.grid-item {
+  min-width: 0;
+  height: 100%;
 }
