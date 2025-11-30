@@ -17,7 +17,7 @@ const Header = () => {
         <div className="logo">
             <Link to="/">
                 <img 
-                  src="/unnamed__1_-removebg-preview.png" 
+                  src="/images/Gemini_Generated_Image_eg5d1qeg5d1qeg5d (1).png" 
                   alt="Logo" 
                   className="logo-img"
                 /> 

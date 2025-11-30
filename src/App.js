@@ -38,7 +38,7 @@ function App() {
 
     // Điền đường dẫn logo của bạn vào dưới đây (Link ảnh online hoặc đường dẫn file trong public)
     // Ví dụ: '/logo.png' nếu để ảnh trong thư mục public
-    updateFavicon('/logo.ico'); 
+    updateFavicon('/Gemini_Generated_Image_eg5d1qeg5d1qeg5d (1).ico'); 
 
   }, []); // Dấu [] giúp code này chỉ chạy 1 lần khi web vừa mở
 
