@@ -100,26 +100,15 @@
   background-color: #1b2636; color: #fff; box-shadow: 0 0 0 2px rgba(100, 37, 208, 0.5);
 }
 
-/* TOGGLE BUTTON */
-.filter-toggle {
-  height: 40px; width: 40px; display: flex; align-items: center; justify-content: center;
-  background: #151f2e; color: #8BA0B2; border-radius: 6px; cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: all 0.2s ease;
-}
-.filter-toggle:hover {
-  background-color: #1b2636; color: #fff; transform: translateY(-2px);
-}
 
 /* RESPONSIVE */
 @media (max-width: 1024px) {
   .filter-bar { grid-template-columns: repeat(5, 1fr); }
   .filter-search { grid-column: 1 / -1; }
-  .filter-toggle { grid-column: 5; margin-left: auto; }
   .filter-group select { width: 100%; min-width: unset; }
 }
 
 @media (max-width: 600px) {
   .filter-bar { grid-template-columns: 1fr 1fr; gap: 15px; }
   .filter-search { grid-column: 1 / -1; }
-  .filter-toggle { grid-column: 2; }
 }

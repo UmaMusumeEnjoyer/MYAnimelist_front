@@ -2,7 +2,7 @@
 import React from 'react';
 import AnimeCard from '../../components/AnimeCard';
 import Sidebar from './components/Sidebar';
-import { animeList, collaborators } from '../../data/mockData';
+import { animeList, collaborators } from '../../data/mockDataSearchPage';
 import './AnimeListPage.css';
 
 const AnimeListPage = () => {
