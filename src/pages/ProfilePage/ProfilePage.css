@@ -133,3 +133,205 @@ body {
   text-transform: uppercase;
   font-size: 10px;
 }
+
+/* --- [MỚI] Create List Button & Header --- */
+.list-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-heading {
+  font-size: 18px;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.btn-create-list {
+  background-color: var(--accent-blue);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-create-list:hover {
+  background-color: #3299d1;
+  transform: translateY(-1px);
+}
+
+.btn-create-list:active {
+  transform: translateY(0);
+}
+
+/* --- [MỚI] Modal Dialog Styling --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7); /* Background tối */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.modal-content {
+  background-color: var(--bg-card); /* Màu nền giống Card */
+  width: 100%;
+  max-width: 500px;
+  border-radius: 6px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-main);
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.close-btn:hover {
+  color: var(--text-highlight);
+}
+
+/* Form Styling */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  color: var(--text-highlight);
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: uppercase;    /* In hoa chữ cái đầu tiêu đề */
+  letter-spacing: 1px;          /* Khoảng cách chữ thoáng hơn */
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+  width: 100%;
+  background-color: var(--bg-dark); /* Màu nền input đậm hơn modal */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-highlight);
+  padding: 10px;
+  border-radius: 4px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+}
+
+.form-row {
+  display: flex;
+  gap: 30px;
+  align-items: flex-end;
+}
+
+.color-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.color-input-wrapper input[type="color"] {
+  border: none;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  background: none;
+}
+
+.color-value {
+  color: var(--text-main);
+  font-family: monospace;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-top: 0;
+  padding-bottom: 18px;
+}
+
+.checkbox-label {
+display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  color: var(--text-highlight);
+  font-size: 15px; /* Tăng kích thước chữ cho cân xứng */
+  font-weight: 600;
+}
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--accent-blue); /* Đổi màu tick xanh cho đồng bộ */
+}
+/* Buttons in Modal */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-cancel {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-main);
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-highlight);
+}
+
+.btn-submit {
+  background-color: var(--accent-green);
+  border: none;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-submit:hover {
+  background-color: #43b548;
+}
+
+.btn-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
