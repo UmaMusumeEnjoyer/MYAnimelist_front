@@ -191,3 +191,157 @@
 .grid-item {
   height: 340px; /* Cần set chiều cao cố định hoặc min-height để card dãn đều */
 }
+
+/* src/pages/AnimeListPage.css */
+
+/* ... Các code cũ giữ nguyên ... */
+
+/* [MỚI] Style cho phần nhóm theo User */
+.user-group-section {
+  margin-bottom: 40px;
+  background-color: #1e293b50; /* Nền nhẹ để tách biệt các nhóm */
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.user-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-group-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #edf1f5;
+}
+
+.user-group-title h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.user-group-title .material-symbols-outlined {
+  color: #3db4f2;
+}
+
+.count-badge {
+  background-color: #334155;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* Nút See All */
+.see-all-btn {
+  background: transparent;
+  border: none;
+  color: #3db4f2;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: opacity 0.2s;
+}
+
+.see-all-btn:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.see-all-btn .material-symbols-outlined {
+  font-size: 1rem;
+}
+
+/* Grid hiển thị 5 item trên 1 hàng */
+.anime-grid-row {
+  display: grid;
+  /* Luôn chia thành 5 cột bằng nhau */
+  grid-template-columns: repeat(5, 1fr); 
+  gap: 16px;
+}
+
+/* Responsive cho Grid 5 cột */
+@media (max-width: 1200px) {
+  .anime-grid-row {
+    grid-template-columns: repeat(4, 1fr); /* Tablet ngang: 4 cột */
+  }
+}
+
+@media (max-width: 900px) {
+  .anime-grid-row {
+    grid-template-columns: repeat(3, 1fr); /* Tablet dọc: 3 cột */
+  }
+}
+
+@media (max-width: 600px) {
+  .anime-grid-row {
+    grid-template-columns: repeat(2, 1fr); /* Mobile: 2 cột */
+  }
+}
+
+.loading-state, .empty-state {
+  text-align: center;
+  color: #94a3b8;
+  padding: 40px;
+  font-size: 1.1rem;
+}
+
+/* src/pages/AnimeListPage.css */
+
+/* ... Code cũ giữ nguyên ... */
+
+/* src/pages/AnimeListPage.css */
+
+/* ... Code cũ giữ nguyên ... */
+
+/* [ĐÃ SỬA] Style nút Add tối giản: Chỉ có dấu + màu xanh */
+.btn-add-circle {
+  /* Xóa nền và viền */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  
+  /* Màu xanh lá (dùng mã màu #4cca51 hoặc var(--accent-green) nếu đã định nghĩa) */
+  color: #4cca51; 
+  
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 0;
+  
+  /* Căn chỉnh */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  transition: transform 0.2s, text-shadow 0.2s;
+}
+
+.btn-add-circle:hover {
+  /* Hiệu ứng phóng to nhẹ và phát sáng khi di chuột */
+  
+  text-shadow: 0 0 10px rgba(76, 202, 81, 0.6); 
+  background: transparent; /* Đảm bảo không hiện nền khi hover */
+}
+
+.btn-add-circle .material-symbols-outlined {
+  font-size: 26px; /* Kích thước icon lớn hơn một chút để dễ nhìn */
+  font-weight: 700; /* Làm đậm nét dấu cộng */
+}
+/* Tinh chỉnh lại title để căn giữa nút add */
+.user-group-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #edf1f5;
+}

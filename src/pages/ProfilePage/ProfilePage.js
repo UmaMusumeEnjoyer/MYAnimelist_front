@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ProfilePage.css';
+import { useNavigate } from 'react-router-dom'; // [1] Import useNavigate
 import ProfileBanner from './components/ProfileBanner';
 import ActivityHistory from './components/ActivityHistory';
 import ActivityFeed from './components/ActivityFeed';
@@ -9,7 +10,7 @@ import { getUserAnimeList, getUserCustomLists } from '../../services/api';
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState('Overview');
-  
+  const navigate = useNavigate(); // [2] Khởi tạo navigate
   // State cho Favorites
   const [favoriteList, setFavoriteList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -20,6 +21,10 @@ const ProfilePage = () => {
 
   const handleTabChange = (tabName) => {
     setActiveTab(tabName);
+  };
+  const handleListClick = (list) => {
+    // Điều hướng đến url /list/:id và truyền toàn bộ object list qua state
+    navigate(`/list/${list.list_id}`, { state: { listData: list } });
   };
 
   // Logic lấy Favorites (giữ nguyên)
@@ -113,6 +118,7 @@ const ProfilePage = () => {
                     className="custom-list-card"
                     // Sử dụng màu từ API làm màu nền hoặc màu viền
                     style={{ '--card-color': list.color || '#3db4f2' }}
+                    onClick={() => handleListClick(list)}
                   >
                     <div className="list-card-content">
                       <h3 className="list-name">{list.list_name}</h3>

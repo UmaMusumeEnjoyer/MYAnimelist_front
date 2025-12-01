@@ -70,7 +70,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/browse" element={<AnimeSearchPage />} />
 
-          <Route path="/list" element={<AnimeListPage />} />
+          <Route path="/list/:id" element={<AnimeListPage />} />
           {/* <Route path="/search/:type" element={<SearchPage />} /> */}
         </Routes>
       
