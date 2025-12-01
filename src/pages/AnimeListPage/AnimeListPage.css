@@ -535,3 +535,149 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* src/pages/AnimeList/AnimeListPage.css */
+
+/* ... Các CSS cũ giữ nguyên ... */
+
+/* ===================================================================
+   DELETE MODE STYLES (NEW)
+   =================================================================== */
+
+/* Nút icon đơn giản (thùng rác, đóng) */
+.btn-icon-only {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.btn-icon-only:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.text-danger { color: var(--red-500); }
+.text-danger:hover { color: var(--red-600); }
+.text-secondary { color: var(--text-secondary); }
+
+/* Nhóm nút trong header user */
+.user-actions-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.delete-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 4px 8px;
+  border-radius: 20px;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.selection-count {
+  font-size: 0.85rem;
+  color: var(--text-highlight);
+  margin-right: 4px;
+  font-weight: 600;
+}
+
+.btn-confirm-delete {
+  background-color: var(--red-600);
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.btn-confirm-delete:hover:not(:disabled) {
+  background-color: var(--red-700);
+  transform: scale(1.05);
+}
+
+.btn-confirm-delete:disabled {
+  background-color: var(--slate-700);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Wrapper cho Grid Item để xử lý Overlay */
+.grid-item-wrapper {
+  position: relative;
+  border-radius: 8px; /* Khớp với border-radius của card nếu có */
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+/* Khi ở chế độ delete, item có thể click */
+.delete-mode {
+  cursor: pointer;
+}
+
+/* Hiệu ứng khi được chọn */
+.grid-item-wrapper.selected {
+  outline: 3px solid var(--red-500);
+  transform: scale(0.96);
+}
+
+/* Lớp phủ mờ lên Anime Card */
+.delete-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3); /* Mờ nhẹ mặc định */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+  transition: background-color 0.2s;
+}
+
+.grid-item-wrapper:hover .delete-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.grid-item-wrapper.selected .delete-overlay {
+  background-color: rgba(220, 38, 38, 0.2); /* Đỏ nhạt khi chọn */
+}
+
+/* Icon Check/Uncheck */
+.check-icon {
+  font-size: 48px;
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  transition: all 0.2s;
+}
+
+.grid-item-wrapper.selected .check-icon {
+  color: var(--red-500);
+  transform: scale(1.2);
+  font-variation-settings: 'FILL' 1;
+}
+
+/* Animation xoay loading */
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
