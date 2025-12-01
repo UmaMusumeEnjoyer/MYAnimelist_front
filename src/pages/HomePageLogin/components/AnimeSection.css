@@ -1,16 +1,95 @@
 /* src/components/AnimeSection.css */
 .anime-section {
-  margin: 30px 0;
+margin-bottom: 20px; 
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.anime-section:last-child {
+  margin-bottom: 0;
+}
+
+/* Container cho tiêu đề và nút xem thêm */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #2d3748; /* Đường kẻ ngăn cách nhẹ */
+  padding-bottom: 10px;
+  
 }
 
 .section-title {
-  font-size: 1.4rem;
-  margin-bottom: 20px;
+  font-size: 1.8rem;
+  margin: 0;
   color: #fff;
+  font-weight: 1700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  border: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important; /* Đề phòng đường kẻ là bóng đổ */
+}
+
+/* Số lượng anime bên cạnh tiêu đề */
+.count-badge {
+  font-size: 1rem;
+  color: #a0aec0;
+  font-weight: 400;
 }
 
 .anime-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 20px;
+  /* Responsive grid: Tự động lấp đầy, tối thiểu 160px mỗi card */
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 24px;
+}
+
+/* --- Style cho nút View All --- */
+.view-all-btn {
+  background-color: transparent;
+  border: 1px solid #4a5568;
+  color: #cbd5e0;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.view-all-btn:hover {
+  background-color: #E84F63; /* Màu đỏ chủ đạo giống thanh progress */
+  border-color: #E84F63;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(232, 79, 99, 0.3);
+}
+
+.view-all-btn:active {
+  transform: translateY(0);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive cho mobile */
+@media (max-width: 600px) {
+  .section-header {
+    flex-direction: row; 
+    align-items: center;
+  }
+  
+  .section-title {
+    font-size: 1.2rem;
+  }
+
+  .anime-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+  }
 }
