@@ -180,6 +180,7 @@ const ProfilePage = () => {
                     className="custom-list-card"
                     style={{ '--card-color': list.color || '#3db4f2' }}
                     onClick={() => handleListClick(list)}
+                    
                   >
                     <div className="list-card-content">
                       <h3 className="list-name">{list.list_name}</h3>
