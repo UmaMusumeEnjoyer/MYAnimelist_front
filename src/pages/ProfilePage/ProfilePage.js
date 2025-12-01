@@ -4,18 +4,25 @@ import ProfileBanner from './components/ProfileBanner';
 import ActivityHistory from './components/ActivityHistory';
 import ActivityFeed from './components/ActivityFeed';
 import AnimeCard from '../../components/AnimeCard';
-import { getUserAnimeList } from '../../services/api'; //
+// Thêm getUserCustomLists vào import
+import { getUserAnimeList, getUserCustomLists } from '../../services/api'; 
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState('Overview');
+  
+  // State cho Favorites
   const [favoriteList, setFavoriteList] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // [MỚI] State cho Custom Anime Lists
+  const [customLists, setCustomLists] = useState([]);
+  const [listsLoading, setListsLoading] = useState(false);
 
   const handleTabChange = (tabName) => {
     setActiveTab(tabName);
   };
 
-  // --- LOGIC MỚI: Xử lý dữ liệu từ API theo cấu trúc JSON mới ---
+  // Logic lấy Favorites (giữ nguyên)
   useEffect(() => {
     if (activeTab === 'Favorites') {
       const username = localStorage.getItem('username');
@@ -24,9 +31,6 @@ const ProfilePage = () => {
         getUserAnimeList(username)
           .then((res) => {
             const data = res.data;
-
-            // 1. Gộp tất cả các mảng trạng thái lại thành một mảng duy nhất
-            // Cần kiểm tra kỹ vì có thể mảng rỗng hoặc undefined
             const allAnime = [
               ...(data.watching || []),
               ...(data.completed || []),
@@ -34,10 +38,7 @@ const ProfilePage = () => {
               ...(data.dropped || []),
               ...(data.plan_to_watch || [])
             ];
-
-            // 2. Lọc lấy những anime có is_favorite === true
             const filteredFavorites = allAnime.filter(anime => anime.is_favorite === true);
-
             setFavoriteList(filteredFavorites);
           })
           .catch((err) => {
@@ -51,11 +52,37 @@ const ProfilePage = () => {
     }
   }, [activeTab]);
 
+  // [MỚI] Logic lấy Custom Lists khi click tab "Anime List"
+  useEffect(() => {
+    if (activeTab === 'Anime List') {
+      const username = localStorage.getItem('username');
+      setListsLoading(true);
+      
+      // Gọi API getUserCustomLists
+      getUserCustomLists(username)
+        .then((res) => {
+          // Cấu trúc response: { username: "...", lists: [...] }
+          if (res.data && res.data.lists) {
+            setCustomLists(res.data.lists);
+          } else {
+            setCustomLists([]);
+          }
+        })
+        .catch((err) => {
+          console.error("Failed to fetch custom lists:", err);
+          setCustomLists([]);
+        })
+        .finally(() => {
+          setListsLoading(false);
+        });
+    }
+  }, [activeTab]);
+
   return (
     <div className="profile-page">
       <ProfileBanner activeTab={activeTab} onTabChange={handleTabChange} />
 
-      {/* Tab Overview: Giữ nguyên giao diện cũ */}
+      {/* Tab Overview */}
       {activeTab === 'Overview' && (
         <div className="profile-content-container">
           <div className="left-column">
@@ -72,7 +99,43 @@ const ProfilePage = () => {
         </div>
       )}
 
-      {/* Tab Favorites: Hiển thị Grid 6 cột */}
+      {/* [MỚI] Tab Anime List - Hiển thị danh sách Custom Lists */}
+      {activeTab === 'Anime List' && (
+        <div className="custom-lists-container">
+          {listsLoading ? (
+            <div className="loading-text">Loading lists...</div>
+          ) : (
+            <div className="custom-list-grid">
+              {customLists.length > 0 ? (
+                customLists.map((list) => (
+                  <div 
+                    key={list.list_id} 
+                    className="custom-list-card"
+                    // Sử dụng màu từ API làm màu nền hoặc màu viền
+                    style={{ '--card-color': list.color || '#3db4f2' }}
+                  >
+                    <div className="list-card-content">
+                      <h3 className="list-name">{list.list_name}</h3>
+                      <p className="list-desc">{list.description || "No description provided."}</p>
+                      
+                      <div className="list-meta">
+                        {list.is_private && <span className="badge private">Private</span>}
+                        <span className="list-date">
+                          Created: {new Date(list.created_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="empty-text">No custom lists found.</div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Tab Favorites */}
       {activeTab === 'Favorites' && (
         <div className="favorites-container">
           {loading ? (

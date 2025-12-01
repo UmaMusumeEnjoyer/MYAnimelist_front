@@ -54,3 +54,82 @@ body {
   font-size: 14px;
   font-weight: bold;
 }
+
+
+/* --- [MỚI] Phần hiển thị Custom Lists (Tab Anime List) --- */
+.custom-lists-container {
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+.custom-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Tự động chia cột */
+  gap: 20px;
+}
+
+.custom-list-card {
+  /* Dùng màu từ API làm background nhưng có độ trong suốt để text dễ đọc */
+  background: linear-gradient(135deg, var(--bg-card) 30%, var(--card-color) 150%);
+  border-left: 5px solid var(--card-color); /* Viền trái đậm màu chủ đạo */
+  border-radius: 4px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.custom-list-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+}
+
+.list-card-content {
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.list-name {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-highlight);
+}
+
+.list-desc {
+  font-size: 14px;
+  color: var(--text-main);
+  margin: 0 0 20px 0;
+  line-height: 1.4;
+  flex-grow: 1; /* Đẩy phần meta xuống đáy */
+  
+  /* Giới hạn số dòng mô tả */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.list-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding-top: 10px;
+}
+
+.badge.private {
+  background-color: rgba(232, 93, 117, 0.2);
+  color: var(--accent-red);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 10px;
+}
