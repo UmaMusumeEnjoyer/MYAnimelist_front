@@ -1,0 +1,212 @@
+/* src/components/AddAnimeModal.css */
+
+/* Nền tối mờ che phủ toàn màn hình */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Hộp nội dung chính */
+.modal-content {
+  background-color: #1a202c; /* Màu nền tối khớp theme */
+  width: 90%;
+  max-width: 1000px; /* Rộng vừa phải */
+  height: 85vh; /* Chiều cao cố định tương đối */
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* Header: Chứa Search và nút Close */
+.modal-header {
+  padding: 16px 24px;
+  background-color: #1e293b;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.modal-search-wrapper {
+  position: relative; /* Quan trọng để neo nút search */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-grow: 1; /* Để nó giãn hết khoảng trống còn lại trong header */
+}
+
+.modal-search-input {
+  width: 100%;
+  height: 40px;
+  /* Padding trái 40px để chừa chỗ cho icon search */
+  padding-left: 40px; 
+  padding-right: 15px;
+  
+  /* Màu sắc và style từ FilterBar */
+  background-color: #151f2e;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.modal-search-input:focus {
+  background-color: #1b2636;
+  box-shadow: 0 0 0 2px rgba(100, 37, 208, 0.5); /* Hiệu ứng focus tím */
+}
+
+/* Container chứa icon search */
+.modal-search-btn {
+  position: absolute;
+  left: 5px;            /* Cách lề trái 5px */
+  top: 50%;
+  transform: translateY(-50%); /* Căn giữa theo chiều dọc */
+  
+  width: 30px;
+  height: 30px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  color: #8BA0B2;
+  cursor: pointer; /* Cho phép click nếu muốn gắn sự kiện vào icon */
+  z-index: 10;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.modal-search-btn:hover {
+  color: #fff;
+}
+
+/* Chỉnh size icon Material Symbols bên trong */
+.modal-search-btn .material-symbols-outlined {
+  font-size: 1.1rem; 
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: white;
+}
+
+/* Phần body cuộn được */
+.modal-body {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+/* Scrollbar tùy chỉnh */
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-body::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+.modal-body::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+/* Section Status */
+.section-title {
+  color: #e2e8f0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding-bottom: 8px;
+}
+
+.modal-section {
+  margin-bottom: 32px;
+}
+
+/* Grid Layout: 5 cột giống yêu cầu */
+.modal-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+/* Responsive Grid modal */
+@media (max-width: 900px) {
+  .modal-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 600px) {
+  .modal-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* WRAPPER CARD ĐỂ THÊM NÚT ADD */
+.modal-card-wrapper {
+  position: relative;
+  /* Đặt chiều cao để khớp với layout grid */
+  height: 320px; 
+}
+
+/* Nút Add Overlay */
+.btn-card-add {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #4cca51; /* Màu xanh lá */
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  z-index: 10; /* Nằm trên ảnh và link */
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-card-add:hover {
+  background-color: #43b348;
+  transform: scale(1.1);
+}
+
+.btn-card-add .material-symbols-outlined {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
