@@ -9,7 +9,7 @@ const HomePage = () => {
   const [completedList, setCompletedList] = useState([]);       // Completed
   const [pausedList, setPausedList] = useState([]);             // On Hold
   const [droppedList, setDroppedList] = useState([]);           // Dropped
-  const [planningList, setPlanningList] = useState([]);         // Plan to Watch
+  const [planningList, setPlanningList] = useState([]);        
   
   const [loading, setLoading] = useState(true);
 
@@ -34,6 +34,7 @@ const HomePage = () => {
             setPausedList(response.data.on_hold || response.data.paused || []);
             setDroppedList(response.data.dropped || []);
             setPlanningList(response.data.plan_to_watch || response.data.planning || []);
+            
           }
         } else {
             console.warn("Không tìm thấy username trong localStorage");

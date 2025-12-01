@@ -1,20 +1,20 @@
 /* src/components/EditorModal.css */
-.modal-overlay {
+.editor-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6); /* Nền overlay tối nhẹ để làm nổi modal */
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  backdrop-filter: blur(2px); /* Làm mờ nhẹ background chính của trang web */
+  backdrop-filter: blur(2px);
 }
 
-.modal-content {
-  background-color: transparent; /* QUAN TRỌNG: Để trong suốt để thấy header xuyên thấu */
+.editor-modal-content {
+  background-color: transparent;
   width: 1200px;
   border-radius: 8px;
   color: #edf1f5;
@@ -23,26 +23,22 @@
   flex-direction: column;
 }
 
-/* --- Header Styles (Glassmorphism) --- */
-.modal-header {
+/* --- Header Styles --- */
+.editor-modal-header {
   position: relative;
   height: 180px;
   padding: 20px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-
-  /* Hiệu ứng kính mờ */
-  background-color: rgba(21, 31, 46, 0.5); /* Màu nền bán trong suốt */
-  backdrop-filter: blur(4px); /* Làm mờ nội dung phía sau header */
+  background-color: rgba(21, 31, 46, 0.5);
+  backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  
-  /* Bo góc trên cho header */
   border-radius: 8px 8px 0 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Đường viền mờ ngăn cách */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.btn-close {
+.editor-modal-btn-close {
   position: absolute;
   top: 15px;
   right: 20px;
@@ -54,27 +50,22 @@
   z-index: 10;
 }
 
-.form-group.full-width {
-  grid-column: 1 / -1; /* Bắt đầu từ cột 1 đến cột cuối cùng */
-  margin-top: 10px;    /* Tạo khoảng cách với hàng input bên trên */
-}
-
-.header-info {
+.editor-modal-header-info {
   display: flex;
   align-items: flex-end;
   gap: 20px;
   position: relative;
-  top: 40px; /* Đẩy thumbnail xuống đè lên phần body */
-  z-index: 2; /* Đảm bảo nổi lên trên */
+  top: 40px;
+  z-index: 2;
 }
 
-.modal-thumb {
+.editor-modal-thumb {
   width: 100px;
   border-radius: 4px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.4);
 }
 
-.modal-anime-title {
+.editor-modal-anime-title {
   font-size: 1.3rem;
   font-weight: 600;
   margin-bottom: 10px;
@@ -82,22 +73,34 @@
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
-.header-actions {
+.editor-modal-header-actions {
   display: flex;
   align-items: center;
   gap: 15px;
   margin-bottom: 10px;
 }
 
-.btn-icon {
+.editor-modal-btn-icon {
   background: none;
   border: none;
-  color: #ef5d5d;
   font-size: 1.6rem;
   cursor: pointer;
+  transition: all 0.2s ease;
+  color: transparent; 
+  -webkit-text-stroke: 2px #ef5d5d;
 }
 
-.btn-save {
+.editor-modal-btn-icon.active {
+  color: #ef5d5d;
+  -webkit-text-stroke: 0;
+  transform: scale(1.1);
+}
+
+.editor-modal-btn-icon:hover {
+  transform: scale(1.1);
+}
+
+.editor-modal-btn-save {
   background-color: #3db4f2;
   color: white;
   border: none;
@@ -109,31 +112,31 @@
   transition: background-color 0.2s;
 }
 
-.btn-save:hover {
+.editor-modal-btn-save:hover {
   background-color: #6bccf7;
 }
 
 /* --- Body & Layout Styles --- */
-.modal-body {
-  background-color: #151f2e; /* Màu nền đặc cho phần thân */
-  padding: 50px 25px 25px; /* Padding top lớn để chứa thumbnail */
-  border-radius: 0 0 8px 8px; /* Bo góc dưới */
+.editor-modal-body {
+  background-color: #151f2e;
+  padding: 50px 25px 25px;
+  border-radius: 0 0 8px 8px;
 }
 
-.form-split-layout {
+.editor-modal-form-split-layout {
   display: flex;
   gap: 30px;
   margin-bottom: 20px;
 }
 
-.form-left-col {
+.editor-modal-form-left-col {
   flex: 3;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
-.form-right-col {
+.editor-modal-form-right-col {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -141,22 +144,27 @@
 }
 
 /* --- Form Element Styles --- */
-.form-group {
+.editor-modal-form-group {
   display: flex;
   flex-direction: column;
 }
 
-.form-group label {
+.editor-modal-form-group.full-width {
+  grid-column: 1 / -1;
+  margin-top: 10px;
+}
+
+.editor-modal-form-group label {
   font-size: 0.85rem;
   color: #9fadbd;
   margin-bottom: 8px;
   font-weight: 600;
 }
 
-.form-group input:not([type="checkbox"]),
-.form-group select,
-.form-group textarea,
-.custom-list-placeholder {
+.editor-modal-form-group input:not([type="checkbox"]),
+.editor-modal-form-group select,
+.editor-modal-form-group textarea,
+.editor-modal-list-placeholder {
   background-color: #0b1622;
   border: 1px solid #151f2e;
   padding: 12px;
@@ -168,26 +176,26 @@
   transition: border-color 0.2s;
 }
 
-/* Fix icon lịch trên nền tối */
-input[type="date"]::-webkit-calendar-picker-indicator {
+/* Fix icon lịch */
+.editor-modal-form-group input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(1);
     opacity: 0.6;
     cursor: pointer;
 }
 
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
+.editor-modal-form-group input:focus,
+.editor-modal-form-group select:focus,
+.editor-modal-form-group textarea:focus {
   border-color: #3db4f2;
 }
 
-.custom-list-placeholder {
+.editor-modal-list-placeholder {
     color: #9fadbd;
     font-style: italic;
     background-color: #0b1622;
 }
 
-.checkbox-group label {
+.editor-modal-checkbox-group label {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -196,7 +204,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-weight: normal;
 }
 
-input[type="checkbox"] {
+.editor-modal-checkbox-group input[type="checkbox"] {
     width: 16px;
     height: 16px;
     accent-color: #3db4f2;
@@ -204,13 +212,13 @@ input[type="checkbox"] {
 }
 
 /* --- Footer --- */
-.modal-footer {
+.editor-modal-footer {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
 }
 
-.btn-delete {
+.editor-modal-btn-delete {
   background-color: transparent;
   color: #ef5d5d;
   border: 2px solid #ef5d5d;
@@ -222,37 +230,11 @@ input[type="checkbox"] {
   transition: all 0.2s;
 }
 
-.btn-delete:hover {
+.editor-modal-btn-delete:hover {
   background-color: rgba(239, 93, 93, 0.1);
 }
 
-/* ... giữ các style khác ... */
-
-.btn-icon {
-  background: none;
-  border: none;
-  font-size: 1.8rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  /* Mặc định: Trái tim rỗng (Chỉ có viền đỏ, bên trong trong suốt) */
-  color: transparent; 
-  -webkit-text-stroke: 2px #ef5d5d; /* Tạo viền cho ký tự text */
-}
-
-/* Khi active (isFavorite = true): Trái tim đỏ đặc */
-.btn-icon.active {
-  color: #ef5d5d;
-  -webkit-text-stroke: 0; /* Bỏ viền đi */
-  transform: scale(1.1); /* Hiệu ứng nảy nhẹ khi like */
-}
-
-.btn-icon:hover {
-  transform: scale(1.1);
-}
-
-/* Thêm vào EditorModal.css */
-.input-disabled {
+.editor-modal-input-disabled {
   background-color: #0f1a26 !important;
   color: #5c6877 !important;
   cursor: not-allowed;

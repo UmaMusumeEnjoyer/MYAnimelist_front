@@ -3,9 +3,9 @@ import React from 'react';
 
 const EditorModalForm = ({ formData, handleChange, isEditMode }) => {
   return (
-    <div className="form-split-layout">
-      <div className="form-left-col">
-        <div className="form-group">
+    <div className="editor-modal-form-split-layout">
+      <div className="editor-modal-form-left-col">
+        <div className="editor-modal-form-group">
           <label>Status</label>
           <select name="status" value={formData.status} onChange={handleChange}>
             <option value="plan_to_watch">Plan to watch</option>
@@ -16,7 +16,7 @@ const EditorModalForm = ({ formData, handleChange, isEditMode }) => {
           </select>
         </div>
 
-        <div className="form-group">
+        <div className="editor-modal-form-group">
           <label>Score</label>
           <input 
             type="number" 
@@ -25,11 +25,11 @@ const EditorModalForm = ({ formData, handleChange, isEditMode }) => {
             onChange={handleChange} 
             min="0" max="10" 
             disabled={isEditMode} 
-            className={isEditMode ? 'input-disabled' : ''}
+            className={isEditMode ? 'editor-modal-input-disabled' : ''}
           />
         </div>
 
-        <div className="form-group">
+        <div className="editor-modal-form-group">
           <label>Episode Progress</label>
           <input 
             type="number" 
@@ -39,7 +39,7 @@ const EditorModalForm = ({ formData, handleChange, isEditMode }) => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="editor-modal-form-group">
           <label>Start Date</label>
           <input 
             type="date" 
@@ -47,11 +47,11 @@ const EditorModalForm = ({ formData, handleChange, isEditMode }) => {
             value={formData.startDate} 
             onChange={handleChange}
             disabled={isEditMode}
-            className={isEditMode ? 'input-disabled' : ''}
+            className={isEditMode ? 'editor-modal-input-disabled' : ''}
           />
         </div>
 
-        <div className="form-group">
+        <div className="editor-modal-form-group">
           <label>Finish Date</label>
           <input 
             type="date" 
@@ -59,11 +59,11 @@ const EditorModalForm = ({ formData, handleChange, isEditMode }) => {
             value={formData.finishDate} 
             onChange={handleChange}
             disabled={isEditMode}
-            className={isEditMode ? 'input-disabled' : ''}
+            className={isEditMode ? 'editor-modal-input-disabled' : ''}
           />
         </div>
 
-        <div className="form-group">
+        <div className="editor-modal-form-group">
           <label>Total Rewatches</label>
           <input 
             type="number" 
@@ -71,11 +71,11 @@ const EditorModalForm = ({ formData, handleChange, isEditMode }) => {
             value={formData.rewatches} 
             onChange={handleChange}
             disabled={isEditMode}
-            className={isEditMode ? 'input-disabled' : ''}
+            className={isEditMode ? 'editor-modal-input-disabled' : ''}
           />
         </div>
 
-        <div className="form-group full-width">
+        <div className="editor-modal-form-group full-width">
           <label>Notes</label>
           <textarea 
             name="notes" 
@@ -86,12 +86,12 @@ const EditorModalForm = ({ formData, handleChange, isEditMode }) => {
         </div>
       </div>
 
-      <div className="form-right-col">
-        <div className="form-group">
+      <div className="editor-modal-form-right-col">
+        <div className="editor-modal-form-group">
           <label>Custom Lists</label>
-          <div className="custom-list-placeholder">No custom anime lists</div>
+          <div className="editor-modal-list-placeholder">No custom anime lists</div>
         </div>
-        <div className="form-group checkbox-group">
+        <div className="editor-modal-form-group editor-modal-checkbox-group">
           <label style={{ opacity: isEditMode ? 0.5 : 1 }}>
             <input 
               type="checkbox" 

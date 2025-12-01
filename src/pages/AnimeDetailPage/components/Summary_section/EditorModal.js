@@ -9,9 +9,6 @@ import EditorModalFooter from './EditorModalFooter';
 
 const EditorModal = ({ anime, isOpen, onClose, onSave, onDelete, initialData }) => {
   
-  // --- LOGIC MỚI: Xác định chế độ Edit ---
-  // Chỉ coi là Edit Mode nếu có data VÀ người dùng đang follow (is_following = true)
-  // Nếu API trả về data nhưng is_following = false => Coi như Create Mode
   const isEditMode = !!initialData && initialData.is_following;
 
   const getTodayDate = () => {
@@ -34,7 +31,6 @@ const EditorModal = ({ anime, isOpen, onClose, onSave, onDelete, initialData }) 
      isFavorite: false
   });
 
-  // useEffect load data: Vẫn load data từ API vào form kể cả khi chưa follow (để lấy default values từ server nếu có)
   useEffect(() => {
     if (initialData) {
       setFormData({
@@ -45,7 +41,7 @@ const EditorModal = ({ anime, isOpen, onClose, onSave, onDelete, initialData }) 
         finishDate: initialData.finish_date || '',
         rewatches: initialData.total_rewatch || 0,
         notes: initialData.user_note || '',
-        private: initialData.private || false, // Giả sử API có field này, nếu không thì false
+        private: initialData.private || false,
         isFavorite: initialData.isFavorite || false
       });
     }
@@ -63,9 +59,7 @@ const EditorModal = ({ anime, isOpen, onClose, onSave, onDelete, initialData }) 
   };
 
   const handleSaveClick = async () => {
-      // Logic Save phụ thuộc vào biến isEditMode đã sửa ở trên
       if (isEditMode) {
-      // --- LOGIC UPDATE (Chỉ chạy khi is_following = true) ---
       const updatePayload = {
         episode_progress: parseInt(formData.progress) || 0,
         watch_status: formData.status,
@@ -82,7 +76,6 @@ const EditorModal = ({ anime, isOpen, onClose, onSave, onDelete, initialData }) 
       }
 
     } else {
-      // --- LOGIC CREATE (Chạy khi chưa có data HOẶC is_following = false) ---
       const apiPayload = {
         notify_email: true,
         episode_progress: parseInt(formData.progress) || 0,
@@ -116,8 +109,8 @@ const EditorModal = ({ anime, isOpen, onClose, onSave, onDelete, initialData }) 
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
+    <div className="editor-modal-overlay" onClick={onClose}>
+      <div className="editor-modal-content" onClick={e => e.stopPropagation()}>
         
         <EditorModalHeader 
           anime={anime}
@@ -127,17 +120,13 @@ const EditorModal = ({ anime, isOpen, onClose, onSave, onDelete, initialData }) 
           toggleFavorite={toggleFavorite}
         />
 
-        <div className="modal-body">
+        <div className="editor-modal-body">
           <EditorModalForm 
             formData={formData}
             handleChange={handleChange}
-            // Truyền isEditMode mới vào Form
-            // Form sẽ disable input nếu isEditMode = true (logic cũ của bạn)
-            // Vì vậy với trường hợp is_following = false -> isEditMode = false -> Form Enable (cho phép sửa start date, rewatches...)
             isEditMode={isEditMode}
           />
           
-          {/* Chỉ hiển thị nút Delete nếu đang ở chế độ Edit (đã follow) */}
           {isEditMode && <EditorModalFooter onDelete={handleDeleteClick} />}
         </div>
       
