@@ -7,15 +7,16 @@ import AddAnimeModal from './components/AddAnimeModal';
 import ListHeader from './components/ListHeader';
 import UserAnimeGroup from './components/UserAnimeGroup';
 import EditListModal from './components/EditListModal';
+import UserSearchModal from './components/UserSearchModal'; // [NEW] Component tìm user
 
-import { collaborators } from '../../data/mockDataSearchPage';
 import { 
   getCustomListItems, 
   getAnimeById, 
   addAnimeToCustomList, 
   deleteCustomList,
   getListMembers,   
-  removeAnimeFromCustomList 
+  removeAnimeFromCustomList,
+  removeMemberFromList 
 } from '../../services/api'; 
 import './AnimeListPage.css';
 
@@ -25,7 +26,7 @@ const AnimeListPage = () => {
   const navigate = useNavigate(); 
   const currentUsername = localStorage.getItem("username");
   
-  // --- STATE ---
+  // --- LIST INFO STATE ---
   const [listInfo, setListInfo] = useState(location.state?.listData || {
     list_name: "Loading...",
     description: "",
@@ -34,33 +35,51 @@ const AnimeListPage = () => {
     is_owner: false
   });
 
+  // --- CONTENT STATE ---
   const [groupedAnime, setGroupedAnime] = useState({});
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   
-  // Modal States
+  // --- MEMBER & PERMISSION STATE ---
+  const [members, setMembers] = useState([]); // [NEW] Lưu danh sách member thô từ API
+
+  // --- MODAL STATES ---
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  
+  // [NEW] Modal User Search States
+  const [showUserModal, setShowUserModal] = useState(false);
+  const [modalRoleType, setModalRoleType] = useState('viewer'); // 'editor' | 'viewer'
 
-  // Delete Logic States
+  // --- DELETE LOGIC STATES ---
   const [deleteMode, setDeleteMode] = useState(false);
   const [selectedAnimeIds, setSelectedAnimeIds] = useState([]);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // --- 1. PERMISSIONS & DATA FETCHING ---
-  const fetchUserPermissions = useCallback(async () => {
-    if (!id || !currentUsername) return;
+  // =================================================================
+  // 1. DATA FETCHING
+  // =================================================================
+
+  // [UPDATED] Hàm vừa lấy member cho Sidebar, vừa check quyền Owner cho trang
+  const fetchMembersData = useCallback(async () => {
+    if (!id) return;
     try {
       const res = await getListMembers(id);
-      const { members } = res.data; 
-      const currentUserData = members.find(m => m.username === currentUsername);
+      const memberList = res.data.members || [];
+      
+      // Update State cho Sidebar render
+      setMembers(memberList);
 
-      if (currentUserData) {
-        localStorage.setItem("permission_level", currentUserData.permission_level);
-        setListInfo(prev => ({ ...prev, is_owner: currentUserData.is_owner }));
-      } else {
-        localStorage.removeItem("permission_level");
-        setListInfo(prev => ({ ...prev, is_owner: false }));
+      // Check quyền user hiện tại
+      if (currentUsername) {
+        const currentUserData = memberList.find(m => m.username === currentUsername);
+        if (currentUserData) {
+          localStorage.setItem("permission_level", currentUserData.permission_level);
+          setListInfo(prev => ({ ...prev, is_owner: currentUserData.is_owner }));
+        } else {
+          localStorage.removeItem("permission_level");
+          setListInfo(prev => ({ ...prev, is_owner: false }));
+        }
       }
     } catch (error) {
       console.error("Failed to fetch list members:", error);
@@ -97,6 +116,8 @@ const AnimeListPage = () => {
         );
 
         const detailedAnimeList = await Promise.all(detailedPromises);
+        
+        // Group anime by User
         const groups = {};
         detailedAnimeList.forEach((anime) => {
           if (anime) {
@@ -114,10 +135,14 @@ const AnimeListPage = () => {
   useEffect(() => {
     setLoading(true);
     fetchListDetails();     
-    fetchUserPermissions(); 
-  }, [fetchListDetails, fetchUserPermissions]);
+    fetchMembersData(); 
+  }, [fetchListDetails, fetchMembersData]);
 
-  // --- 2. HANDLERS ---
+  // =================================================================
+  // 2. HANDLERS
+  // =================================================================
+
+  // --- List Management ---
   const handleEditListClick = () => {
     if (localStorage.getItem("permission_level") !== "owner") {
       alert("You do not have permission to edit this list.");
@@ -141,6 +166,7 @@ const AnimeListPage = () => {
     }
   };
 
+  // --- Anime Management ---
   const handleAddAnime = async (anime) => {
     try {
       const payload = {
@@ -155,7 +181,6 @@ const AnimeListPage = () => {
     }
   };
 
-  // Delete Item Handlers
   const toggleDeleteMode = () => {
     if (deleteMode) setSelectedAnimeIds([]);
     setDeleteMode(!deleteMode);
@@ -191,7 +216,42 @@ const AnimeListPage = () => {
     });
   };
 
-  // --- RENDER ---
+  // --- [NEW] User Modal Handlers ---
+  const handleOpenAddEditor = () => {
+    // Tùy chọn: check quyền Owner trước khi mở
+    // if (!listInfo.is_owner) return alert("Only Owner can add Editors");
+    setModalRoleType('editor');
+    setShowUserModal(true);
+  };
+
+  const handleOpenAddViewer = () => {
+    setModalRoleType('viewer');
+    setShowUserModal(true);
+  };
+
+  const handleUserAdded = () => {
+    // Refresh danh sách member sau khi add thành công
+    fetchMembersData();
+  };
+  
+  const handleRemoveMember = async (username) => {
+    // Xác nhận trước khi xóa
+    const confirmDelete = window.confirm(`Are you sure you want to remove @${username} from this list?`);
+    if (!confirmDelete) return;
+
+    try {
+      await removeMemberFromList(id, username);
+      // Refresh danh sách sau khi xóa thành công
+      fetchMembersData();
+    } catch (error) {
+      console.error("Failed to remove member:", error);
+      alert("Failed to remove member. Please try again.");
+    }
+  };
+
+  // =================================================================
+  // 3. RENDER
+  // =================================================================
   return (
     <div className="page-container">
       <div className="main-layout">
@@ -252,6 +312,7 @@ const AnimeListPage = () => {
           </div>
         </main>
 
+        {/* SIDEBAR AREA */}
         <div className="sidebar-area">
           <div className="action-buttons sidebar-actions">
               {listInfo.is_owner ? (
@@ -270,22 +331,40 @@ const AnimeListPage = () => {
                 </button>
               )}
           </div>
-          <Sidebar data={collaborators} />
+          
+          {/* Sidebar nhận members và handlers mở modal */}
+          <Sidebar 
+            members={members} 
+            onAddEditor={handleOpenAddEditor}
+            onAddViewer={handleOpenAddViewer}
+          />
         </div>
       </div>
       
+      {/* ADD ANIME MODAL */}
       <AddAnimeModal 
         isOpen={showAddModal} 
         onClose={() => setShowAddModal(false)}
         onAddAnime={handleAddAnime} 
       />
 
+      {/* EDIT LIST INFO MODAL */}
       <EditListModal 
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}
         listId={id}
         initialData={listInfo}
         onUpdateSuccess={handleUpdateSuccess}
+      />
+
+      {/* [NEW] USER SEARCH MODAL */}
+      <UserSearchModal 
+        isOpen={showUserModal}
+        onClose={() => setShowUserModal(false)}
+        listId={id}
+        roleType={modalRoleType}
+        currentMembers={members}
+        onUserAdded={handleUserAdded}
       />
     </div>
   );

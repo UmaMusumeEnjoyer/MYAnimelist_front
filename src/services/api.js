@@ -235,6 +235,11 @@ export const getUserActivity = (username) => {
   });
 };
 
+export const searchUsers = (keyword) => {
+  // Giả định backend có endpoint search user
+  // Nếu chưa có, bạn cần implement endpoint này ở backend
+  return API.get(`/user/search/`, { params: { q: keyword } });
+};
 
 // =================================================================
 // CUSTOM LIST MANAGEMENT (CRUD - Không Cache)

@@ -83,3 +83,40 @@
   from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* src/pages/AnimeList/components/EditListModal.css */
+
+/* ... (các style cũ giữ nguyên) ... */
+
+/* --- Form Action Buttons --- */
+.btn-cancel {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-main);
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-highlight);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.btn-submit {
+  background-color: var(--accent-blue);
+  border: none;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.btn-submit:hover {
+  background-color: #3299d1; /* Màu tối hơn chút khi hover */
+}
