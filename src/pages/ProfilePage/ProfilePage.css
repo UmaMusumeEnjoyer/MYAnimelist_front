@@ -45,8 +45,8 @@ body {
 }
 
 .profile-avatar {
-  width: 296px;
-  height: 296px;
+  width: 250px;
+  height: 250px;
   border-radius: 50%;
   border: 1px solid var(--border-color);
   object-fit: cover;

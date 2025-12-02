@@ -67,7 +67,7 @@ const ProfilePage = () => {
               ...(data.watching || []), ...(data.completed || []),
               ...(data.on_hold || []), ...(data.dropped || []), ...(data.plan_to_watch || [])
             ];
-            const filteredFavorites = allAnime.filter(anime => anime.is_favorite === true);
+            const filteredFavorites = allAnime.filter(anime => anime.isFavorite === true);
             setFavoriteList(filteredFavorites); 
         } catch (err) {
             console.error("Failed to fetch favorites:", err);
@@ -163,7 +163,7 @@ const ProfilePage = () => {
               <div className="activity-section-wrapper" style={{marginTop: 0}}>
                  <div className="section-header">
                     <div className="section-title">{totalContributions} contributions in the last year</div>
-                    <div style={{fontSize: '12px', color: 'var(--text-secondary)'}}>Contribution settings</div>
+                
                  </div>
                  
                  {/* [MỚI] Truyền selectedDate và onDateSelect */}
