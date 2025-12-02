@@ -339,3 +339,57 @@ export const requestEditList = (listId) => {
 export const respondToEditRequest = (listId, requestId, responseData) => {
   return API.post(`/list/${listId}/edit-requests/${requestId}/respond/`, responseData);
 };
+
+// =================================================================
+// CUSTOM LIST LIKES & TRENDING (Dựa trên hình ảnh cung cấp)
+// =================================================================
+
+/**
+ * Toggle like cho một Custom List
+ * Endpoint: POST /api/list/{list_id}/like/
+ */
+export const toggleLikeList = (listId) => {
+  return API.post(`/list/${listId}/like/`);
+};
+
+/**
+ * Kiểm tra xem User hiện tại đã like list này chưa
+ * Endpoint: GET /api/list/{list_id}/like/status/
+ */
+export const getListLikeStatus = (listId) => {
+  return API.get(`/list/${listId}/like/status/`);
+};
+
+/**
+ * Lấy danh sách những người đã like List này
+ * Endpoint: POST /api/list/{list_id}/likers/
+ * (Dùng POST có thể do backend cần nhận body phân trang hoặc filter)
+ */
+export const getListLikers = (listId, data = {}) => {
+  return API.post(`/list/${listId}/likers/`, data);
+};
+
+/**
+ * Lấy danh sách các List mà một User cụ thể đã like
+ * Endpoint: POST /api/list/likes/user/
+ */
+export const getListsLikedByUser = (data = {}) => {
+  // data có thể chứa { username: "abc", page: 1, ... }
+  return API.post('/list/likes/user/', data);
+};
+
+/**
+ * Lấy danh sách các List đang thịnh hành (Trending)
+ * Endpoint: POST /api/list/likes/trending/
+ */
+export const getTrendingLists = (data = {}) => {
+  return API.post('/list/likes/trending/', data);
+};
+
+/**
+ * Lấy danh sách các List được like nhiều nhất (Most Liked)
+ * Endpoint: POST /api/list/likes/most-liked/
+ */
+export const getMostLikedLists = (data = {}) => {
+  return API.post('/list/likes/most-liked/', data);
+};
