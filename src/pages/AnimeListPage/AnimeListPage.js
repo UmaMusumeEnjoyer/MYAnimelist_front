@@ -7,7 +7,7 @@ import AddAnimeModal from './components/AddAnimeModal';
 import ListHeader from './components/ListHeader';
 import UserAnimeGroup from './components/UserAnimeGroup';
 import EditListModal from './components/EditListModal';
-import UserSearchModal from './components/UserSearchModal'; // [NEW] Component tìm user
+import UserSearchModal from './components/UserSearchModal';
 
 import { 
   getCustomListItems, 
@@ -26,6 +26,10 @@ const AnimeListPage = () => {
   const navigate = useNavigate(); 
   const currentUsername = localStorage.getItem("username");
   
+  // Lấy permission level để check quyền
+  const permissionLevel = localStorage.getItem("permission_level");
+  const canEdit = permissionLevel === "owner" || permissionLevel === "edit";
+
   // --- LIST INFO STATE ---
   const [listInfo, setListInfo] = useState(location.state?.listData || {
     list_name: "Loading...",
@@ -41,15 +45,14 @@ const AnimeListPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   
   // --- MEMBER & PERMISSION STATE ---
-  const [members, setMembers] = useState([]); // [NEW] Lưu danh sách member thô từ API
+  const [members, setMembers] = useState([]); 
 
   // --- MODAL STATES ---
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   
-  // [NEW] Modal User Search States
   const [showUserModal, setShowUserModal] = useState(false);
-  const [modalRoleType, setModalRoleType] = useState('viewer'); // 'editor' | 'viewer'
+  const [modalRoleType, setModalRoleType] = useState('viewer'); 
 
   // --- DELETE LOGIC STATES ---
   const [deleteMode, setDeleteMode] = useState(false);
@@ -60,17 +63,13 @@ const AnimeListPage = () => {
   // 1. DATA FETCHING
   // =================================================================
 
-  // [UPDATED] Hàm vừa lấy member cho Sidebar, vừa check quyền Owner cho trang
   const fetchMembersData = useCallback(async () => {
     if (!id) return;
     try {
       const res = await getListMembers(id);
       const memberList = res.data.members || [];
-      
-      // Update State cho Sidebar render
       setMembers(memberList);
 
-      // Check quyền user hiện tại
       if (currentUsername) {
         const currentUserData = memberList.find(m => m.username === currentUsername);
         if (currentUserData) {
@@ -117,7 +116,6 @@ const AnimeListPage = () => {
 
         const detailedAnimeList = await Promise.all(detailedPromises);
         
-        // Group anime by User
         const groups = {};
         detailedAnimeList.forEach((anime) => {
           if (anime) {
@@ -142,7 +140,6 @@ const AnimeListPage = () => {
   // 2. HANDLERS
   // =================================================================
 
-  // --- List Management ---
   const handleEditListClick = () => {
     if (localStorage.getItem("permission_level") !== "owner") {
       alert("You do not have permission to edit this list.");
@@ -166,7 +163,6 @@ const AnimeListPage = () => {
     }
   };
 
-  // --- Anime Management ---
   const handleAddAnime = async (anime) => {
     try {
       const payload = {
@@ -216,10 +212,7 @@ const AnimeListPage = () => {
     });
   };
 
-  // --- [NEW] User Modal Handlers ---
   const handleOpenAddEditor = () => {
-    // Tùy chọn: check quyền Owner trước khi mở
-    // if (!listInfo.is_owner) return alert("Only Owner can add Editors");
     setModalRoleType('editor');
     setShowUserModal(true);
   };
@@ -230,24 +223,24 @@ const AnimeListPage = () => {
   };
 
   const handleUserAdded = () => {
-    // Refresh danh sách member sau khi add thành công
     fetchMembersData();
   };
   
   const handleRemoveMember = async (username) => {
-    // Xác nhận trước khi xóa
     const confirmDelete = window.confirm(`Are you sure you want to remove @${username} from this list?`);
     if (!confirmDelete) return;
 
     try {
       await removeMemberFromList(id, username);
-      // Refresh danh sách sau khi xóa thành công
       fetchMembersData();
     } catch (error) {
       console.error("Failed to remove member:", error);
       alert("Failed to remove member. Please try again.");
     }
   };
+
+  // Check xem user hiện tại đã có item nào trong group chưa
+  const currentUserHasItems = groupedAnime[currentUsername] && groupedAnime[currentUsername].length > 0;
 
   // =================================================================
   // 3. RENDER
@@ -259,7 +252,6 @@ const AnimeListPage = () => {
           
           <ListHeader listInfo={listInfo} />
 
-          {/* Sticky Search Bar */}
           <div className="filter-bar-sticky">
              <div className="search-wrapper">
               <span className="material-symbols-outlined search-icon">search</span>
@@ -277,42 +269,88 @@ const AnimeListPage = () => {
             {loading ? (
               <div className="loading-state">Loading anime details...</div>
             ) : Object.keys(groupedAnime).length > 0 ? (
-              Object.keys(groupedAnime).map((user) => {
-                const userAnimeList = filterAnime(groupedAnime[user]);
-                if (userAnimeList.length === 0) return null;
+              <>
+                {/* Trường hợp 1: User hiện tại chưa có item nào -> Hiện ô Add thủ công */}
+                {canEdit && !currentUserHasItems && (
+                  <div className="user-group-section" style={{marginBottom: '30px'}}>
+                    <div className="user-group-header">
+                      <div className="user-group-title">
+                        <span className="material-symbols-outlined">person</span>
+                        <h3>Added by {currentUsername}</h3>
+                      </div>
+                    </div>
+                    {/* Placeholder Area */}
+                    <div style={{
+                        padding: '30px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                        borderRadius: '12px',
+                        border: '1px dashed rgba(255, 255, 255, 0.1)'
+                    }}>
+                        <p style={{ color: '#94a3b8', marginBottom: '16px', fontSize: '0.95rem' }}>
+                           You haven't added any anime to this list yet.
+                        </p>
+                        <button 
+                          className="btn btn-primary" 
+                          onClick={() => setShowAddModal(true)}
+                        >
+                          <span className="material-symbols-outlined" style={{marginRight:'5px'}}>add</span>
+                          Add Anime Now
+                        </button>
+                    </div>
+                  </div>
+                )}
 
-                return (
-                  <UserAnimeGroup 
-                    key={user}
-                    user={user}
-                    animeList={userAnimeList}
-                    isCurrentUser={user === currentUsername}
-                    deleteMode={deleteMode}
-                    selectedAnimeIds={selectedAnimeIds}
-                    isDeleting={isDeleting}
-                    onOpenAddModal={() => setShowAddModal(true)}
-                    onToggleDeleteMode={toggleDeleteMode}
-                    onConfirmDelete={handleConfirmDelete}
-                    onSelectAnime={handleSelectAnime}
-                  />
-                );
-              })
+                {/* Trường hợp 2: Render các User Group, SẮP XẾP user hiện tại lên đầu */}
+                {Object.keys(groupedAnime)
+                  .sort((a, b) => {
+                      // [LOGIC MỚI] Sắp xếp: Nếu là user hiện tại thì return -1 (đẩy lên trước)
+                      if (a === currentUsername) return -1;
+                      if (b === currentUsername) return 1;
+                      return 0; // Giữ nguyên thứ tự các user khác
+                  })
+                  .map((user) => {
+                    const userAnimeList = filterAnime(groupedAnime[user]);
+                    if (userAnimeList.length === 0) return null;
+
+                    return (
+                      <UserAnimeGroup 
+                        key={user}
+                        user={user}
+                        animeList={userAnimeList}
+                        isCurrentUser={user === currentUsername}
+                        deleteMode={deleteMode}
+                        selectedAnimeIds={selectedAnimeIds}
+                        isDeleting={isDeleting}
+                        onOpenAddModal={() => setShowAddModal(true)}
+                        onToggleDeleteMode={toggleDeleteMode}
+                        onConfirmDelete={handleConfirmDelete}
+                        onSelectAnime={handleSelectAnime}
+                      />
+                    );
+                })}
+              </>
             ) : (
+              // Empty State (Khi cả list chưa có ai add gì cả)
               <div className="empty-state">
                 <p>This list is empty.</p>
-                <button 
-                  className="btn btn-primary" 
-                  style={{marginTop: '16px'}}
-                  onClick={() => setShowAddModal(true)}
-                >
-                  Add Anime Now
-                </button>
+                {canEdit && (
+                  <button 
+                    className="btn btn-primary" 
+                    style={{marginTop: '16px'}}
+                    onClick={() => setShowAddModal(true)}
+                  >
+                    Add Anime Now
+                  </button>
+                )}
               </div>
             )}
           </div>
         </main>
 
-        {/* SIDEBAR AREA */}
         <div className="sidebar-area">
           <div className="action-buttons sidebar-actions">
               {listInfo.is_owner ? (
@@ -332,23 +370,21 @@ const AnimeListPage = () => {
               )}
           </div>
           
-          {/* Sidebar nhận members và handlers mở modal */}
           <Sidebar 
             members={members} 
             onAddEditor={handleOpenAddEditor}
             onAddViewer={handleOpenAddViewer}
+            onRemoveMember={handleRemoveMember}
           />
         </div>
       </div>
       
-      {/* ADD ANIME MODAL */}
       <AddAnimeModal 
         isOpen={showAddModal} 
         onClose={() => setShowAddModal(false)}
         onAddAnime={handleAddAnime} 
       />
 
-      {/* EDIT LIST INFO MODAL */}
       <EditListModal 
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}
@@ -357,7 +393,6 @@ const AnimeListPage = () => {
         onUpdateSuccess={handleUpdateSuccess}
       />
 
-      {/* [NEW] USER SEARCH MODAL */}
       <UserSearchModal 
         isOpen={showUserModal}
         onClose={() => setShowUserModal(false)}

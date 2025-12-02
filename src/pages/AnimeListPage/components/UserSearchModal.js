@@ -22,14 +22,30 @@ const UserSearchModal = ({ isOpen, onClose, listId, roleType, onUserAdded, curre
   const isEditorMode = roleType === 'editor'; // Xác định đang mở modal để add Editor hay Viewer
 
   // =================================================================
-  // 1. SEARCH LOGIC
+  // 1. SEARCH & FILTER LOGIC
   // =================================================================
   useEffect(() => {
+    // Nếu ô tìm kiếm trống: Hiển thị các thành viên có sẵn để promote/demote
     if (!debouncedSearchTerm.trim()) {
-      setResults([]);
+      
+      const suggestedUsers = currentMembers.filter(member => {
+        // Loại bỏ Owner khỏi danh sách gợi ý (vì không thể chỉnh sửa owner)
+        if (member.is_owner) return false;
+
+        if (isEditorMode) {
+          // Mode Add Editor: Hiện danh sách Viewer để Promote
+          return !member.can_edit;
+        } else {
+          // Mode Add Viewer: Hiện danh sách Editor để Demote
+          return member.can_edit;
+        }
+      });
+
+      setResults(suggestedUsers);
       return;
     }
 
+    // Nếu có từ khóa tìm kiếm: Gọi API Search
     const fetchData = async () => {
       setLoading(true);
       try {
@@ -49,7 +65,7 @@ const UserSearchModal = ({ isOpen, onClose, listId, roleType, onUserAdded, curre
     };
 
     fetchData();
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, currentMembers, isEditorMode]); // Thêm dependencies cần thiết
 
   // Reset khi đóng modal
   const handleClose = () => {
@@ -159,13 +175,15 @@ const UserSearchModal = ({ isOpen, onClose, listId, roleType, onUserAdded, curre
         <div className="user-modal-body">
           {loading && <div className="modal-loading">Searching users...</div>}
 
+          {/* Helper Text: Chỉ hiện khi không load, không có kết quả (cả search lẫn gợi ý) và chưa search gì */}
           {!loading && results.length === 0 && !searchTerm && (
             <div className="modal-helper-text">
               Type a username to invite them as a 
               <strong style={{color: isEditorMode ? '#e85d75' : '#3db4f2'}}> {roleType}</strong>.
             </div>
           )}
-
+          
+          {/* Helper Text: Khi search nhưng không ra kết quả */}
           {!loading && results.length === 0 && searchTerm && (
             <div className="modal-helper-text">No users found.</div>
           )}
@@ -173,9 +191,9 @@ const UserSearchModal = ({ isOpen, onClose, listId, roleType, onUserAdded, curre
           <div className="user-grid">
             {results.map((user) => {
               const isProcessing = processingIds.includes(user.username);
-              const avatarUrl = "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"; // Placeholder avatar
+              const avatarUrl = "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"; 
               
-              // Kiểm tra trạng thái hiện tại của user tìm được
+              // Kiểm tra trạng thái hiện tại của user tìm được (hoặc user từ list gợi ý)
               const existingMember = currentMembers.find(m => m.username === user.username);
               const isOwner = existingMember?.is_owner;
 
@@ -185,7 +203,7 @@ const UserSearchModal = ({ isOpen, onClose, listId, roleType, onUserAdded, curre
               let btnText = "Invite";
               let btnIcon = "person_add";
               let isDisabled = isProcessing || isOwner; 
-              let btnClass = isEditorMode ? 'editor' : 'viewer'; // Class màu cơ bản
+              let btnClass = isEditorMode ? 'editor' : 'viewer'; 
 
               if (existingMember) {
                 if (isEditorMode) {
@@ -216,7 +234,7 @@ const UserSearchModal = ({ isOpen, onClose, listId, roleType, onUserAdded, curre
               }
 
               return (
-                <div key={user.id} className="user-card-item">
+                <div key={user.id || user.username} className="user-card-item">
                   <div className="user-card-info">
                     <img src={avatarUrl} alt={user.username} className="user-card-avatar" />
                     <div>
