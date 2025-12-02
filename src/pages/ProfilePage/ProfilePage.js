@@ -1,295 +1,280 @@
 import React, { useState, useEffect } from 'react';
 import './ProfilePage.css';
 import { useNavigate } from 'react-router-dom';
-import ProfileBanner from './components/ProfileBanner';
+import ProfileBanner from './components/ProfileBanner'; 
 import ActivityHistory from './components/ActivityHistory';
 import ActivityFeed from './components/ActivityFeed';
 import AnimeCard from '../../components/AnimeCard';
-
-// [1] Thêm createCustomList vào import
-import { getUserAnimeList, getUserCustomLists, createCustomList } from '../../services/api'; 
+import { getUserCustomLists, createCustomList, getUserAnimeList } from '../../services/api'; 
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState('Overview');
   const navigate = useNavigate();
   
-  // State cho Favorites
-  const [favoriteList, setFavoriteList] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  // State cho Custom Anime Lists
+  // Fake User Info
+  const username = localStorage.getItem('username') || "dungbaoviec123";
+  const userDisplayName = "Trần Quang Dũng";
+  const userAvatar = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlZjpoc6BcEHSBXN83B8niRWSjcbNE-DArpg&s";
+  const userBio = "UmaMusumeEnjoyer · he/him";
+  
   const [customLists, setCustomLists] = useState([]);
   const [listsLoading, setListsLoading] = useState(false);
+  const [favoriteList, setFavoriteList] = useState([]);
+  const [favLoading, setFavLoading] = useState(false);
+  const [totalContributions, setTotalContributions] = useState(0);
 
-  // [MỚI] State cho Modal tạo List
+  // [MỚI] State lưu ngày đang được chọn từ Heatmap
+  const [selectedDate, setSelectedDate] = useState(null);
+
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newListData, setNewListData] = useState({
-    list_name: '',
-    description: '',
-    is_private: false,
-    color: '#3db4f2' // Màu mặc định
+    list_name: '', description: '', is_private: false, color: '#3db4f2'
   });
   const [creating, setCreating] = useState(false);
 
-  const handleTabChange = (tabName) => {
-    setActiveTab(tabName);
+  const handleTabChange = (tabName) => setActiveTab(tabName);
+
+  // [MỚI] Hàm xử lý khi click vào Heatmap
+  const handleDateSelect = (date) => {
+    // Nếu click lại vào ngày đang chọn thì bỏ chọn (toggle)
+    if (selectedDate === date) {
+      setSelectedDate(null);
+    } else {
+      setSelectedDate(date);
+    }
   };
 
-  const handleListClick = (list) => {
-    navigate(`/list/${list.list_id}`, { state: { listData: list } });
-  };
-
-  // Tách logic fetch list ra hàm riêng để tái sử dụng sau khi tạo mới
+  // Logic Fetch Custom List
   const fetchCustomLists = () => {
-    const username = localStorage.getItem('username');
     if (!username) return;
-
     setListsLoading(true);
     getUserCustomLists(username)
-      .then((res) => {
-        if (res.data && res.data.lists) {
-          setCustomLists(res.data.lists);
-        } else {
-          setCustomLists([]);
-        }
-      })
-      .catch((err) => {
-        console.error("Failed to fetch custom lists:", err);
-        setCustomLists([]);
-      })
-      .finally(() => {
-        setListsLoading(false);
-      });
+      .then((res) => setCustomLists(res.data && res.data.lists ? res.data.lists : []))
+      .catch((err) => console.error(err))
+      .finally(() => setListsLoading(false));
   };
 
-  // Logic lấy Favorites
+  // Logic Fetch Favorites
   useEffect(() => {
     if (activeTab === 'Favorites') {
-      const username = localStorage.getItem('username');
-      if (username) {
-        setLoading(true);
-        getUserAnimeList(username)
-          .then((res) => {
+      const fetchFavorites = async () => {
+        if (!username) return;
+        setFavLoading(true);
+        try {
+            const res = await getUserAnimeList(username);
             const data = res.data;
             const allAnime = [
-              ...(data.watching || []),
-              ...(data.completed || []),
-              ...(data.on_hold || []),
-              ...(data.dropped || []),
-              ...(data.plan_to_watch || [])
+              ...(data.watching || []), ...(data.completed || []),
+              ...(data.on_hold || []), ...(data.dropped || []), ...(data.plan_to_watch || [])
             ];
             const filteredFavorites = allAnime.filter(anime => anime.is_favorite === true);
-            setFavoriteList(filteredFavorites);
-          })
-          .catch((err) => {
-            console.error("Failed to fetch anime list:", err);
+            setFavoriteList(filteredFavorites); 
+        } catch (err) {
+            console.error("Failed to fetch favorites:", err);
             setFavoriteList([]);
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      }
+        } finally {
+            setFavLoading(false);
+        }
+      };
+      fetchFavorites();
     }
-  }, [activeTab]);
+  }, [activeTab, username]);
 
-  // Logic lấy Custom Lists
   useEffect(() => {
-    if (activeTab === 'Anime List') {
-      fetchCustomLists();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (activeTab === 'Anime List') fetchCustomLists();
   }, [activeTab]);
-
-  // [MỚI] Xử lý form tạo list
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setNewListData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
 
   const handleSubmitCreate = async (e) => {
     e.preventDefault();
     setCreating(true);
     try {
-      // Gọi API createCustomList
       await createCustomList(newListData);
-      
-      // Thành công: Đóng modal, reset form, load lại danh sách
       setShowCreateModal(false);
-      setNewListData({
-        list_name: '',
-        description: '',
-        is_private: false,
-        color: '#3db4f2'
-      });
-      fetchCustomLists(); // Load lại list để thấy list mới
+      setNewListData({ list_name: '', description: '', is_private: false, color: '#3db4f2' });
+      fetchCustomLists();
     } catch (error) {
-      console.error("Failed to create list:", error);
-      alert("Error creating list. Please try again.");
+      alert("Error creating list.");
     } finally {
       setCreating(false);
     }
   };
 
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setNewListData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+  };
+
   return (
     <div className="profile-page">
-      <ProfileBanner activeTab={activeTab} onTabChange={handleTabChange} />
-
-      {/* Overview Tab */}
-      {activeTab === 'Overview' && (
-        <div className="profile-content-container">
-          <div className="left-column">
-            <ActivityHistory />
+      <div className="profile-layout">
+        
+        {/* === LEFT COLUMN: SIDEBAR === */}
+        <div className="profile-sidebar">
+          <div className="profile-avatar-wrapper">
+            <img src={userAvatar} alt="Profile" className="profile-avatar" />
           </div>
-          <div className="right-column">
-            <div className="activity-section">
-              <div className="activity-filter">
-                <span>Activity</span>
-              </div>
-              <ActivityFeed />
-            </div>
+          <div className="profile-names">
+            <span className="profile-display-name">{userDisplayName}</span>
+            <span className="profile-username">{username}</span>
           </div>
-        </div>
-      )}
-
-      {/* Tab Anime List */}
-      {activeTab === 'Anime List' && (
-        <div className="custom-lists-container">
           
-          {/* [MỚI] Header chứa nút Create */}
-          <div className="list-section-header">
-            <h2 className="section-heading">My Custom Lists</h2>
-            <button 
-              className="btn-create-list" 
-              onClick={() => setShowCreateModal(true)}
-            >
-              + Create New List
-            </button>
+          <div className="profile-bio">{userBio}</div>
+          
+          <button className="btn-edit-profile">Edit profile</button>
+          
+          <div className="profile-stats">
+            <span><a href="#followers" className="stat-highlight">7</a> followers</span>
+            <span>·</span>
+            <span><a href="#following" className="stat-highlight">10</a> following</span>
           </div>
 
-          {listsLoading ? (
-            <div className="loading-text">Loading lists...</div>
-          ) : (
-            <div className="custom-list-grid">
-              {customLists.length > 0 ? (
-                customLists.map((list) => (
-                  <div 
-                    key={list.list_id} 
-                    className="custom-list-card"
-                    style={{ '--card-color': list.color || '#3db4f2' }}
-                    onClick={() => handleListClick(list)}
-                    
-                  >
-                    <div className="list-card-content">
-                      <h3 className="list-name">{list.list_name}</h3>
-                      <p className="list-desc">{list.description || "No description provided."}</p>
-                      
-                      <div className="list-meta">
-                        {list.is_private && <span className="badge private">Private</span>}
-                        <span className="list-date">
-                          Created: {new Date(list.created_at).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </div>
+          <div className="profile-meta">
+            <div className="meta-item">
+              <svg className="meta-icon" viewBox="0 0 16 16"><path fillRule="evenodd" d="M11.536 3.464a5 5 0 010 7.072L8 14.07l-3.536-3.535a5 5 0 010-7.072v.001zm-4.95 4.95a2.5 2.5 0 100-3.536 2.5 2.5 0 000 3.536z"></path></svg>
+              <span>Đà Nẵng, Việt Nam</span>
+            </div>
+            <div className="meta-item">
+               <svg className="meta-icon" viewBox="0 0 16 16"><path fillRule="evenodd" d="M1.75 2A1.75 1.75 0 000 3.75v.736a.75.75 0 000 .027v7.737C0 13.216.784 14 1.75 14h12.5A1.75 1.75 0 0016 12.25v-8.5A1.75 1.75 0 0014.25 2H1.75zM14.5 4.07v-.32a.25.25 0 00-.25-.25H1.75a.25.25 0 00-.25.25v.32L8 7.88l6.5-3.81zM1.5 5.51v6.74c0 .138.112.25.25.25h12.5a.25.25 0 00.25-.25V5.509L8 9.349 1.5 5.51z"></path></svg>
+               <a href={`mailto:contact@${username}.com`} style={{color: 'inherit', textDecoration: 'none'}}>contact@{username}.com</a>
+            </div>
+             <div className="meta-item">
+               <svg className="meta-icon" viewBox="0 0 16 16"><path fillRule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg>
+               <a href="#" style={{color: 'inherit', textDecoration: 'none'}}>anilist.co/user/{username}</a>
+            </div>
+          </div>
+          
+          <div className="separator"></div>
+          
+          <div className="section-title" style={{fontWeight: 600}}>Highlights</div>
+          <div style={{marginTop: '8px'}}>
+             <span style={{border: '1px solid var(--border-color)', borderRadius: '20px', padding: '2px 8px', fontSize: '12px', color: '#a371f7'}}>✦ PRO</span>
+          </div>
+
+        </div>
+
+        {/* === RIGHT COLUMN: MAIN CONTENT === */}
+        <div className="profile-content">
+          <ProfileBanner activeTab={activeTab} onTabChange={handleTabChange} />
+
+          {/* OVERVIEW TAB CONTENT */}
+          {activeTab === 'Overview' && (
+            <>
+              {/* Contribution Graph (Heatmap) */}
+              <div className="activity-section-wrapper" style={{marginTop: 0}}>
+                 <div className="section-header">
+                    <div className="section-title">{totalContributions} contributions in the last year</div>
+                    <div style={{fontSize: '12px', color: 'var(--text-secondary)'}}>Contribution settings</div>
+                 </div>
+                 
+                 {/* [MỚI] Truyền selectedDate và onDateSelect */}
+                 <ActivityHistory 
+                    onTotalCountChange={setTotalContributions}
+                    selectedDate={selectedDate}
+                    onDateSelect={handleDateSelect}
+                 />
+              </div>
+
+              {/* Activity Feed */}
+              <div className="activity-section-wrapper">
+                <div className="section-header">
+                  {/* [MỚI] Đổi tiêu đề dựa trên việc có lọc hay không */}
+                  <div className="section-title">
+                    {selectedDate ? `Activity on ${selectedDate}` : "Contribution activity"}
                   </div>
-                ))
-              ) : (
-                <div className="empty-text">No custom lists found. Create one to get started!</div>
-              )}
+                  {/* [MỚI] Nút Clear Filter */}
+                  {selectedDate && (
+                    <span 
+                      className="link-view-all" 
+                      style={{cursor: 'pointer'}} 
+                      onClick={() => setSelectedDate(null)}
+                    >
+                      Show all activity
+                    </span>
+                  )}
+                </div>
+                 
+                 {/* [MỚI] Truyền selectedDate để lọc */}
+                 <ActivityFeed filterDate={selectedDate} />
+              </div>
+            </>
+          )}
+
+          {/* ANIME LIST TAB */}
+          {activeTab === 'Anime List' && (
+             <div className="custom-lists-container">
+               <div className="section-header">
+                 <h2 className="section-title" style={{fontSize: '20px', fontWeight: 600}}>My Custom Lists</h2>
+                 <button className="btn-edit-profile" style={{width: 'auto'}} onClick={() => setShowCreateModal(true)}>
+                   New List
+                 </button>
+               </div>
+               
+               {listsLoading ? <div>Loading...</div> : (
+                 <div className="custom-list-grid">
+                    {customLists.map(list => (
+                       <div key={list.list_id} className="custom-list-card" onClick={() => navigate(`/list/${list.list_id}`, { state: { listData: list } })}>
+                          <h3 className="list-name">{list.list_name}</h3>
+                          <p className="list-desc">{list.description}</p>
+                       </div>
+                    ))}
+                 </div>
+               )}
+             </div>
+          )}
+
+          {/* FAVORITES TAB */}
+          {activeTab === 'Favorites' && (
+            <div className="favorites-container">
+               <div className="section-header">
+                 <h2 className="section-title" style={{fontSize: '20px', fontWeight: 600}}>Favorites</h2>
+               </div>
+
+               {favLoading ? <div>Loading favorites...</div> : (
+                 <div className="anime-grid-6">
+                    {favoriteList.length > 0 ? (
+                      favoriteList.map((anime) => (
+                        <div key={anime.id || anime.anilist_id} className="grid-item">
+                           <AnimeCard anime={anime} />
+                        </div>
+                      ))
+                    ) : (
+                      <div className="empty-text">No favorites found.</div>
+                    )}
+                 </div>
+               )}
             </div>
           )}
-        </div>
-      )}
 
-      {/* Tab Favorites */}
-      {activeTab === 'Favorites' && (
-        <div className="favorites-container">
-          {loading ? (
-            <div className="loading-text">Loading favorites...</div>
-          ) : (
-            <div className="anime-grid-6">
-              {favoriteList.length > 0 ? (
-                favoriteList.map((anime) => (
-                  <div key={anime.id || anime.anilist_id} className="grid-item">
-                    <AnimeCard anime={anime} />
-                  </div>
-                ))
-              ) : (
-                <div className="empty-text">No favorites found.</div>
-              )}
-            </div>
-          )}
         </div>
-      )}
+      </div>
 
-      {/* [MỚI] Modal Create List */}
+      {/* Modal logic */}
       {showCreateModal && (
         <div className="modal-overlay" onClick={() => setShowCreateModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            
-            <form onSubmit={handleSubmitCreate} className="create-list-form">
-              <div className="form-group">
-                <label>List Name</label>
-                <input 
-                  type="text" 
-                  name="list_name"
-                  value={newListData.list_name}
-                  onChange={handleInputChange}
-                  placeholder="e.g., Gai ban nhac"
-                  required 
-                  autoFocus
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Description</label>
-                <textarea 
-                  name="description"
-                  value={newListData.description}
-                  onChange={handleInputChange}
-                  placeholder="e.g., Tại sao gái ban nhạc?"
-                  rows="3"
-                />
-              </div>
-
-              <div className="form-row">
-                <div className="form-group color-picker-group">
-                  <label>Color Theme</label>
-                  <div className="color-input-wrapper">
-                    <input 
-                      type="color" 
-                      name="color"
-                      value={newListData.color}
-                      onChange={handleInputChange}
-                    />
-                    <span className="color-value">{newListData.color}</span>
-                  </div>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+             <h3 style={{marginTop: 0, color: 'var(--text-main)'}}>Create New List</h3>
+             <form onSubmit={handleSubmitCreate}>
+                <div className="form-group">
+                   <label style={{display: 'block', marginBottom: '5px', color: 'var(--text-main)'}}>List Name</label>
+                   <input 
+                      type="text" name="list_name" required
+                      value={newListData.list_name} onChange={handleInputChange}
+                      style={{width: '100%', padding: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-color)', color: 'white', borderRadius: '4px'}}
+                   />
                 </div>
-
-                <div className="form-group checkbox-group">
-                  <label className="checkbox-label">
-                    <input 
-                      type="checkbox" 
-                      name="is_private"
-                      checked={newListData.is_private}
-                      onChange={handleInputChange}
-                    />
-                    Private List
-                  </label>
+                <div className="form-group" style={{marginTop: '10px'}}>
+                   <label style={{display: 'block', marginBottom: '5px', color: 'var(--text-main)'}}>Description</label>
+                   <textarea 
+                      name="description" 
+                      value={newListData.description} onChange={handleInputChange}
+                      style={{width: '100%', padding: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-color)', color: 'white', borderRadius: '4px'}}
+                   />
                 </div>
-              </div>
-
-              <div className="modal-actions">
-                <button type="button" className="btn-cancel" onClick={() => setShowCreateModal(false)}>
-                  Cancel
-                </button>
-                <button type="submit" className="btn-submit" disabled={creating}>
-                  {creating ? 'Creating...' : 'Create List'}
-                </button>
-              </div>
-            </form>
+                <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px'}}>
+                   <button type="button" onClick={() => setShowCreateModal(false)} style={{padding: '6px 12px', background: 'transparent', border: 'none', color: 'var(--text-main)', cursor: 'pointer'}}>Cancel</button>
+                   <button type="submit" style={{padding: '6px 12px', background: 'var(--accent-green)', border: 'none', color: 'white', borderRadius: '4px', cursor: 'pointer'}} disabled={creating}>Create</button>
+                </div>
+             </form>
           </div>
         </div>
       )}

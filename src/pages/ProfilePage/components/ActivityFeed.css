@@ -1,97 +1,99 @@
+/* src/components/ActivityFeed.css */
 .feed-container {
   width: 100%;
+  padding-left: 10px; /* Thụt vào 1 chút để thẳng hàng với header */
 }
 
-.feed-item {
+.feed-row {
   display: flex;
-  gap: 12px; /* Khoảng cách giữa ảnh và nội dung text */
-  background: var(--bg-card, #151f2e); /* Fallback màu nền */
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  align-items: center; /* Căn giữa theo chiều dọc */
-  transition: background-color 0.2s ease;
+  gap: 16px;
+  position: relative;
+  padding-bottom: 24px; /* Khoảng cách giữa các row */
 }
 
-.feed-item.clickable {
-  cursor: pointer;
-}
-
-.feed-item.clickable:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-/* --- Style cho Thumbnail --- */
-.feed-image-wrapper {
-  flex-shrink: 0; /* Không cho ảnh bị co lại */
-}
-
-.feed-thumbnail {
-  width: 48px;  /* Kích thước ảnh nhỏ gọn */
-  height: 64px; /* Tỉ lệ poster dọc */
-  object-fit: cover;
-  border-radius: 3px;
-  display: block;
-}
-
-/* --- Phần chứa Text và Time --- */
-.feed-content {
-  flex: 1;
+/* Timeline vertical line logic */
+.feed-timeline {
   display: flex;
-  flex-direction: column; /* Xếp text và time theo chiều dọc hoặc ngang tùy ý */
+  flex-direction: column;
+  align-items: center;
+  width: 16px; /* Width cố định để căn thẳng hàng */
+}
+
+.feed-icon-circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 4px;
-  overflow: hidden; /* Tránh text tràn */
+  font-size: 10px;
+  font-weight: bold;
+  color: var(--bg-dark);
+  z-index: 2;
+  margin-top: 4px; /* Căn chỉnh icon ngang hàng với dòng text đầu tiên */
 }
 
-.feed-main-info {
+.feed-icon-add { background-color: var(--accent-green); }
+.feed-icon-update { background-color: var(--accent-blue); }
+.feed-icon-default { background-color: var(--text-secondary); }
+
+.feed-line {
+  flex-grow: 1;
+  width: 2px;
+  background-color: var(--border-color);
+  margin-top: 4px;
+}
+
+/* Content */
+.feed-content-wrapper {
+  flex: 1;
+  padding-top: 2px; /* Căn chỉnh text ngang với icon */
+}
+
+.feed-header {
   font-size: 14px;
-  color: var(--text-main, #9fadbd);
-  line-height: 1.4;
+  line-height: 1.5;
+  color: var(--text-main);
 }
 
-/* Các class màu sắc hành động (Giữ nguyên) */
-.highlight {
+.feed-user {
   font-weight: 600;
-  margin: 0 4px;
-}
-.highlight.type-add { color: #4ade80; }
-.highlight.type-update { color: #60a5fa; }
-.highlight.type-default { color: #a78bfa; }
-
-/* --- [MỚI] Style cho tên Anime --- */
-.feed-anime-name {
-  font-weight: 700; /* Tô đậm */
-  color: var(--text-highlight, #edf1f5); /* Màu sáng hơn text thường */
-  margin-left: 4px;
+  margin-right: 4px;
 }
 
-.feed-meta {
+.feed-action {
+  color: var(--text-secondary);
+  margin-right: 4px;
+}
+
+.feed-target {
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.feed-target:hover {
+  color: var(--text-highlight);
+  text-decoration: underline;
+}
+
+.feed-time {
   font-size: 12px;
-  color: var(--text-dim, #8ba0b2); /* Màu nhạt hơn */
+  color: var(--text-secondary);
 }
 
-.feed-loading, .feed-empty {
-    padding: 20px;
-    text-align: center;
-    color: var(--text-main);
-    font-size: 14px;
-}
-
-/* Style cho nút Load More (Giữ nguyên) */
-.load-more-btn {
-    text-align: center;
-    padding: 10px 15px;
-    margin-top: 10px;
-    cursor: pointer;
-    color: var(--text-highlight, #edf1f5);
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 4px;
-    font-size: 13px;
+.btn-load-more {
+    width: 100%;
+    padding: 8px;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-highlight);
     font-weight: 600;
-    transition: all 0.2s ease;
+    cursor: pointer;
+    margin-top: 10px;
 }
-.load-more-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--accent-blue, #3db4f2);
+.btn-load-more:hover {
+    background: rgba(255,255,255,0.03);
 }

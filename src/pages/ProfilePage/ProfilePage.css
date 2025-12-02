@@ -1,337 +1,312 @@
 /* src/pages/ProfilePage.css */
 :root {
-  --bg-dark: #0b1622;
-  --bg-card: #151f2e;
-  --text-main: #9fadbd;
-  --text-highlight: #edf1f5;
-  --accent-blue: #3db4f2;
-  --accent-green: #4cca51;
-  --accent-red: #e85d75;
+  --bg-dark: #0d1117; /* GitHub Dark Dimmed background base */
+  --bg-card: #161b22; /* GitHub card bg */
+  --border-color: #30363d;
+  --text-main: #c9d1d9;
+  --text-secondary: #8b949e;
+  --text-highlight: #58a6ff; /* GitHub Blue */
+  --btn-bg: #21262d;
+  --btn-border: #30363d;
+  --btn-hover: #30363d;
+  --accent-green: #3fb950;
+  --accent-blue: #388bfd;
 }
 
 body {
   background-color: var(--bg-dark);
-  font-family: 'Overpass', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   color: var(--text-main);
   margin: 0;
 }
 
 /* Layout Page */
 .profile-page {
-  max-width: 1100px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding-bottom: 50px;
+  padding: 24px;
 }
 
-.profile-content-container {
+.profile-layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 40px;
-  padding: 0 20px;
-  margin-top: 20px;
+  grid-template-columns: 296px 1fr; /* Cột trái cố định 296px giống GitHub, phải fill */
+  gap: 24px;
 }
 
-/* Style dùng chung cho các box ở cột trái */
-.sidebar-section {
-  margin-bottom: 25px;
-  background: var(--bg-card);
-  padding: 15px;
-  border-radius: 4px;
+/* --- LEFT SIDEBAR --- */
+.profile-sidebar {
+  position: relative;
+}
+
+.profile-avatar-wrapper {
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.profile-avatar {
+  width: 296px;
+  height: 296px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  object-fit: cover;
+  background-color: var(--bg-card);
+}
+
+.profile-names {
+  margin-bottom: 16px;
+}
+
+.profile-display-name {
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 600;
+  color: var(--text-main);
+  display: block;
+}
+
+.profile-username {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 24px;
+  color: var(--text-secondary);
+  display: block;
+}
+
+.profile-bio {
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: var(--text-main);
+}
+
+.btn-edit-profile {
+  width: 100%;
+  background-color: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  color: var(--text-main);
+  padding: 5px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-edit-profile:hover {
+  background-color: var(--btn-hover);
+  border-color: #8b949e;
+}
+
+.profile-meta {
+  margin-bottom: 16px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  color: var(--text-main);
+  font-size: 14px;
+}
+
+.meta-icon {
+  fill: var(--text-secondary);
+  width: 16px;
+  height: 16px;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.stat-highlight {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.profile-stats a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.profile-stats a:hover {
+  color: var(--text-highlight);
+}
+
+.separator {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 16px 0;
+}
+
+/* --- RIGHT CONTENT --- */
+.profile-content {
+  min-width: 0; /* Prevent overflow */
+}
+
+/* Pinned Items Section */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 .section-title {
+  font-size: 16px;
+  font-weight: 400;
   color: var(--text-main);
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 15px;
 }
 
-/* Activity Filter Text (dùng ở cột phải) */
-.activity-filter {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
-  font-size: 14px;
-  font-weight: bold;
+.link-view-all {
+  font-size: 12px;
+  color: var(--text-highlight);
+  text-decoration: none;
 }
 
-
-/* --- [MỚI] Phần hiển thị Custom Lists (Tab Anime List) --- */
-.custom-lists-container {
-  max-width: 1100px;
-  margin: 20px auto;
-  padding: 0 20px;
+.link-view-all:hover {
+  text-decoration: underline;
 }
 
-.custom-list-grid {
+.pinned-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Tự động chia cột */
-  gap: 20px;
+  grid-template-columns: repeat(2, 1fr); /* 2 cột giống GitHub */
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
-.custom-list-card {
-  /* Dùng màu từ API làm background nhưng có độ trong suốt để text dễ đọc */
-  background: linear-gradient(135deg, var(--bg-card) 30%, var(--card-color) 150%);
-  border-left: 5px solid var(--card-color); /* Viền trái đậm màu chủ đạo */
-  border-radius: 4px;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
-  position: relative;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
-
-.custom-list-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 15px rgba(0,0,0,0.3);
-}
-
-.list-card-content {
-  padding: 20px;
-  height: 100%;
+.pinned-card {
+  background-color: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-}
-
-.list-name {
-  margin: 0 0 10px 0;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-highlight);
-}
-
-.list-desc {
-  font-size: 14px;
-  color: var(--text-main);
-  margin: 0 0 20px 0;
-  line-height: 1.4;
-  flex-grow: 1; /* Đẩy phần meta xuống đáy */
-  
-  /* Giới hạn số dòng mô tả */
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.list-meta {
-  display: flex;
   justify-content: space-between;
+}
+
+.pinned-card-header {
+  display: flex;
   align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-highlight); /* Blue text */
+}
+
+.repo-icon {
+  fill: var(--text-secondary);
+}
+
+.pinned-card-desc {
   font-size: 12px;
-  color: rgba(255,255,255,0.5);
-  border-top: 1px solid rgba(255,255,255,0.05);
-  padding-top: 10px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  flex-grow: 1;
 }
 
-.badge.private {
-  background-color: rgba(232, 93, 117, 0.2);
-  color: var(--accent-red);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 10px;
-}
-
-/* --- [MỚI] Create List Button & Header --- */
-.list-section-header {
+.pinned-card-meta {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
 }
 
-.section-heading {
-  font-size: 18px;
-  color: var(--text-main);
-  margin: 0;
+.language-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
 }
 
-.btn-create-list {
-  background-color: var(--accent-blue);
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
+/* Activity Section Layout */
+.activity-section-wrapper {
+  margin-top: 24px;
 }
 
-.btn-create-list:hover {
-  background-color: #3299d1;
-  transform: translateY(-1px);
-}
-
-.btn-create-list:active {
-  transform: translateY(0);
-}
-
-/* --- [MỚI] Modal Dialog Styling --- */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.7); /* Background tối */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(2px);
-}
-
-.modal-content {
-  background-color: var(--bg-card); /* Màu nền giống Card */
-  width: 100%;
-  max-width: 500px;
-  border-radius: 6px;
-  padding: 25px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  animation: modalFadeIn 0.2s ease-out;
-}
-
-@keyframes modalFadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-
-
-.close-btn {
-  background: none;
-  border: none;
-  color: var(--text-main);
-  font-size: 24px;
-  cursor: pointer;
-  line-height: 1;
-}
-
-.close-btn:hover {
-  color: var(--text-highlight);
-}
-
-/* Form Styling */
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  color: var(--text-highlight);
+.activity-header {
+  margin-bottom: 8px;
   font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 10px;
-  text-transform: uppercase;    /* In hoa chữ cái đầu tiêu đề */
-  letter-spacing: 1px;          /* Khoảng cách chữ thoáng hơn */
-}
-
-.form-group input[type="text"],
-.form-group textarea {
-  width: 100%;
-  background-color: var(--bg-dark); /* Màu nền input đậm hơn modal */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-highlight);
-  padding: 10px;
-  border-radius: 4px;
-  font-family: inherit;
-  box-sizing: border-box;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: var(--accent-blue);
-}
-
-.form-row {
-  display: flex;
-  gap: 30px;
-  align-items: flex-end;
-}
-
-.color-input-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.color-input-wrapper input[type="color"] {
-  border: none;
-  width: 60px;
-  height: 60px;
-  cursor: pointer;
-  background: none;
-}
-
-.color-value {
   color: var(--text-main);
-  font-family: monospace;
 }
 
-.checkbox-group {
-  display: flex;
-  align-items: center;
-  margin-top: 0;
-  padding-bottom: 18px;
+/* Responsive */
+@media (max-width: 768px) {
+  .profile-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .pinned-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-.checkbox-label {
-display: flex;
-  align-items: center;
-  gap: 10px;
+/* --- Custom List Styles --- */
+.custom-lists-container {
+  margin-top: 20px;
+}
+.custom-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+.custom-list-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 16px;
   cursor: pointer;
-  color: var(--text-highlight);
-  font-size: 15px; /* Tăng kích thước chữ cho cân xứng */
-  font-weight: 600;
+  transition: border-color 0.2s;
 }
-.checkbox-label input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: var(--accent-blue); /* Đổi màu tick xanh cho đồng bộ */
+.custom-list-card:hover {
+  border-color: var(--text-secondary);
 }
-/* Buttons in Modal */
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 15px;
-  margin-top: 25px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+.list-name { color: var(--text-highlight); font-size: 16px; font-weight: 600; }
+.list-desc { font-size: 12px; color: var(--text-secondary); }
+
+/* Create List Modal */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000;
+}
+.modal-content {
+  background: var(--bg-card); border: 1px solid var(--border-color); padding: 20px; border-radius: 6px; width: 400px;
 }
 
-.btn-cancel {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: var(--text-main);
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
+/* --- [MỚI] Phần hiển thị Favorites Grid (Thêm lại CSS cũ) --- */
+.favorites-container {
+  margin-top: 20px;
 }
 
-.btn-cancel:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-highlight);
+.anime-grid-6 {
+  display: grid;
+  /* Tạo đúng 6 cột bằng nhau */
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+  /* Khoảng cách giữa các card */
+  gap: 20px 15px; 
 }
 
-.btn-submit {
-  background-color: var(--accent-green);
-  border: none;
-  color: white;
-  padding: 8px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
+.grid-item {
+  height: 100%;
 }
 
-.btn-submit:hover {
-  background-color: #43b548;
-}
-
-.btn-submit:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
+.empty-text {
+  color: var(--text-secondary);
+  font-style: italic;
+  padding: 20px 0;
 }

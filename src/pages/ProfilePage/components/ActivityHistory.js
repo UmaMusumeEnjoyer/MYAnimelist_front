@@ -1,51 +1,70 @@
 import React, { useEffect, useState } from 'react';
-import { getUserHeatmap } from '../../../services/api'; // Đảm bảo import đúng đường dẫn file api.js
+import { getUserHeatmap } from '../../../services/api';
 import './ActivityHistory.css';
 
-const ActivityHistory = () => {
+// [MỚI] Nhận props selectedDate và onDateSelect
+const ActivityHistory = ({ onTotalCountChange, selectedDate, onDateSelect }) => {
   const [heatmapCounts, setHeatmapCounts] = useState({});
   const [loading, setLoading] = useState(true);
 
-  // 1. Hàm tạo danh sách 45 ngày gần nhất (tính từ hôm nay lùi về)
-  // Kết quả trả về mảng các chuỗi "YYYY-MM-DD"
-  const getLast45Days = () => {
-    const dates = [];
-    for (let i = 44; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      
-      // Format thủ công để tránh lỗi lệch múi giờ so với toISOString()
-      const year = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      
-      const dateStr = `${year}-${month}-${day}`;
-      dates.push(dateStr);
+  const generateYearData = () => {
+    const today = new Date();
+    const endDate = new Date(today);
+    const startDate = new Date(today);
+    startDate.setDate(endDate.getDate() - 364); 
+
+    const dayOfWeek = startDate.getDay(); 
+    startDate.setDate(startDate.getDate() - dayOfWeek);
+
+    let currentDate = new Date(startDate);
+    
+    const weeks = [];
+    for (let w = 0; w < 53; w++) {
+        const week = [];
+        for (let d = 0; d < 7; d++) {
+            const dateStr = currentDate.toISOString().split('T')[0];
+            const displayDate = new Date(currentDate);
+            const isFuture = displayDate > today;
+
+            week.push({
+                date: dateStr,
+                month: displayDate.toLocaleString('default', { month: 'short' }),
+                day: displayDate.getDate(),
+                isFuture: isFuture
+            });
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+        weeks.push(week);
     }
-    return dates;
+    return weeks;
   };
 
-  const last45Days = getLast45Days();
+  const yearWeeks = generateYearData();
 
   useEffect(() => {
     const fetchData = async () => {
-      // 2. Lấy username từ localStorage
-      // Giả sử bạn lưu username là một string với key 'username'
-      // Nếu lưu trong object 'user', dùng: JSON.parse(localStorage.getItem('user'))?.username
-      const username = localStorage.getItem('username'); 
-
-      if (!username) {
-        setLoading(false);
-        return;
-      }
+      const username = localStorage.getItem('username');
+      if (!username) { setLoading(false); return; }
 
       try {
         const res = await getUserHeatmap(username);
-        
-        // 3. Xử lý dữ liệu dựa trên cấu trúc JSON mới
-        // API trả về: { year: 2025, counts: { "2025-01-01": 0, ... } }
         if (res.data && res.data.counts) {
-          setHeatmapCounts(res.data.counts);
+          const counts = res.data.counts;
+          setHeatmapCounts(counts);
+
+          let total = 0;
+          const today = new Date();
+          const pastYear = new Date();
+          pastYear.setDate(today.getDate() - 365);
+
+          Object.keys(counts).forEach(dateStr => {
+             const d = new Date(dateStr);
+             if (d >= pastYear && d <= today) {
+                total += counts[dateStr];
+             }
+          });
+          
+          if (onTotalCountChange) onTotalCountChange(total);
         }
       } catch (error) {
         console.error("Error fetching heatmap:", error);
@@ -53,38 +72,56 @@ const ActivityHistory = () => {
         setLoading(false);
       }
     };
-
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 4. Hàm xác định class màu sắc dựa trên số lượng
   const getLevelClass = (count) => {
-    if (!count || count === 0) return ''; // Mặc định là màu xám (#2b384a)
-    if (count <= 2) return 'act-lvl-1';
-    if (count <= 5) return 'act-lvl-2';
-    if (count <= 9) return 'act-lvl-3';
-    return 'act-lvl-4';
+    if (!count || count === 0) return 'level-0';
+    if (count <= 2) return 'level-1';
+    if (count <= 5) return 'level-2';
+    if (count <= 9) return 'level-3';
+    return 'level-4';
   };
 
-  if (loading) return <div className="sidebar-section"><div className="section-title">Loading...</div></div>;
+  if (loading) return <div className="heatmap-container">Loading contribution graph...</div>;
 
   return (
-    <div className="sidebar-section">
-      <div className="section-title">Activity History (Last 45 Days)</div>
-      <div className="activity-grid">
-        {last45Days.map((dateStr) => {
-          // Tra cứu số lượng từ object counts gọi về
-          const count = heatmapCounts[dateStr] || 0; 
-          
-          return (
-            <div 
-              key={dateStr} 
-              className={`act-dot ${getLevelClass(count)}`} 
-              title={`${dateStr}: ${count} activities`} // Hover để xem ngày và số lượng
-            />
-          );
-        })}
+    <div className="heatmap-wrapper">
+      <div className="heatmap-container">
+        <div className="heatmap-grid">
+            {yearWeeks.map((week, wIndex) => (
+                <div key={wIndex} className="heatmap-col">
+                    {week.map((day) => {
+                        if (day.isFuture) return null;
+                        const count = heatmapCounts[day.date] || 0;
+                        
+                        // [MỚI] Kiểm tra xem ngày này có đang được chọn không
+                        const isSelected = selectedDate === day.date;
+
+                        return (
+                            <div 
+                                key={day.date}
+                                className={`heatmap-cell ${getLevelClass(count)} ${isSelected ? 'selected-day' : ''}`}
+                                title={`${day.date}: ${count} activities`}
+                                // [MỚI] Xử lý click
+                                onClick={() => onDateSelect && onDateSelect(day.date)}
+                            />
+                        );
+                    })}
+                </div>
+            ))}
+        </div>
       </div>
+       <div className="heatmap-legend">
+           <span>Less</span>
+           <div className="heatmap-cell level-0"></div>
+           <div className="heatmap-cell level-1"></div>
+           <div className="heatmap-cell level-2"></div>
+           <div className="heatmap-cell level-3"></div>
+           <div className="heatmap-cell level-4"></div>
+           <span>More</span>
+       </div>
     </div>
   );
 };
