@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react'; // [UPDATE] Thêm useMemo
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 
 // Import Child Components
@@ -44,6 +44,8 @@ const AnimeListPage = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   
+  // [UPDATE] Xóa state myAnimeList thừa vì ta sẽ tính toán trực tiếp từ groupedAnime
+  
   // --- MEMBER & PERMISSION STATE ---
   const [members, setMembers] = useState([]); 
 
@@ -58,6 +60,14 @@ const AnimeListPage = () => {
   const [deleteMode, setDeleteMode] = useState(false);
   const [selectedAnimeIds, setSelectedAnimeIds] = useState([]);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // =================================================================
+  // [MỚI] TÍNH TOÁN DANH SÁCH PHIM ĐỂ TRUYỀN VÀO MODAL
+  // =================================================================
+  // Chuyển object groupedAnime {'user1': [animeA], 'user2': [animeB]} thành mảng [animeA, animeB]
+  const allAnimeInList = useMemo(() => {
+    return Object.values(groupedAnime).flat();
+  }, [groupedAnime]);
 
   // =================================================================
   // 1. DATA FETCHING
@@ -307,10 +317,9 @@ const AnimeListPage = () => {
                 {/* Trường hợp 2: Render các User Group, SẮP XẾP user hiện tại lên đầu */}
                 {Object.keys(groupedAnime)
                   .sort((a, b) => {
-                      // [LOGIC MỚI] Sắp xếp: Nếu là user hiện tại thì return -1 (đẩy lên trước)
                       if (a === currentUsername) return -1;
                       if (b === currentUsername) return 1;
-                      return 0; // Giữ nguyên thứ tự các user khác
+                      return 0; 
                   })
                   .map((user) => {
                     const userAnimeList = filterAnime(groupedAnime[user]);
@@ -379,10 +388,12 @@ const AnimeListPage = () => {
         </div>
       </div>
       
+      {/* [UPDATE] Truyền danh sách phim đầy đủ vào Modal để check Added */}
       <AddAnimeModal 
         isOpen={showAddModal} 
         onClose={() => setShowAddModal(false)}
         onAddAnime={handleAddAnime} 
+        currentList={allAnimeInList} 
       />
 
       <EditListModal 
