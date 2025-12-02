@@ -7,24 +7,24 @@
   padding: 10px 50px;
   background-color: #152232;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  position: relative; /* Thêm để dropdown có thể căn chỉnh nếu cần */
+  z-index: 100;
 }
 
-/* --- Phần Trái (Đã cập nhật cho ảnh) --- */
+/* --- Phần Trái --- */
 .header-left .logo a {
-  display: flex; /* Căn giữa ảnh trong thẻ a */
+  display: flex; 
   align-items: center;
 }
 
 .header-left .logo-img {
-  height: 50px; /* Chiều cao cố định phù hợp với header */
-  width: auto;  /* Chiều rộng tự động theo tỷ lệ */
-  object-fit: contain; /* Đảm bảo ảnh không bị méo */
-  transition: transform 0.2s; /* Hiệu ứng nhỏ khi hover nếu muốn */
+  height: 50px; 
+  width: auto;  
+  object-fit: contain; 
+  transition: transform 0.2s; 
 }
 
-
-
-/* --- Phần Giữa (Không đổi) --- */
+/* --- Phần Giữa --- */
 .header-center a {
   color: #c2c2c2;
   text-decoration: none;
@@ -38,19 +38,14 @@
   color: #3DB4F2;
 }
 
-/* src/components/Header.css */
-
-/* ... (Giữ nguyên phần Header Left và Header Center cũ của bạn) ... */
-
-
-/* --- Phần Phải (Đã cập nhật Avatar và Logout) --- */
+/* --- Phần Phải (Đã cập nhật Search, Avatar Dropdown) --- */
 .header-right {
   display: flex;
   align-items: center;
   gap: 15px; 
 }
 
-/* Định dạng chung cho thẻ a và button trong header-right để đồng bộ size chữ */
+/* Định dạng chung */
 .header-right a,
 .header-right button {
     text-decoration: none;
@@ -59,12 +54,12 @@
     padding: 8px 18px;
     border-radius: 8px; 
     transition: all 0.2s ease-in-out;
-    border: none; /* Xóa viền mặc định của button */
-    cursor: pointer; /* Thêm con trỏ tay cho button */
-    font-family: inherit; /* Kế thừa font chữ của web */
+    border: none; 
+    cursor: pointer; 
+    font-family: inherit; 
 }
 
-/* --- Style cho nút Login (Giữ nguyên) --- */
+/* --- Login & Signup --- */
 .header-right .btn-login {
     color: #c2c2c2;
     background-color: transparent;
@@ -73,7 +68,6 @@
     color: #fff;
 }
 
-/* --- Style cho nút Sign Up (Giữ nguyên) --- */
 .header-right .btn-signup {
     background-color: #3578E5; 
     color: white;
@@ -82,34 +76,88 @@
     background-color: #2a62bc; 
 }
 
-/* --- Style MỚI cho nút Logout --- */
-.header-right .btn-logout {
-    background-color: transparent; /* Nền trong suốt giống Login */
+/* --- Style MỚI cho nút Search --- */
+.header-right .btn-search {
+    background-color: transparent;
     color: #c2c2c2;
+    padding: 8px; /* Padding nhỏ hơn vì là icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.header-right .btn-logout:hover {
-    background-color: #1a2b3c; /* Nền tối nhẹ khi hover */
-    color: #EF5D5D; /* Màu đỏ nhạt để báo hiệu hành động "Thoát" */
-    /* Nếu bạn muốn màu trắng giống nút Login thì đổi #EF5D5D thành #fff */
+.header-right .btn-search:hover {
+    color: #3DB4F2; /* Đổi màu xanh khi hover */
 }
 
-/* --- Style MỚI cho Avatar --- */
-.header-right .user-avatar-link {
-    padding: 0; /* Xóa padding mặc định của thẻ a trong header-right */
-    display: flex; /* Để ảnh căn giữa */
-    border-radius: 50%; /* Bo tròn thẻ a */
+/* --- Style MỚI cho Container chứa Avatar (Dropdown cha) --- */
+.user-menu-container {
+    position: relative; /* Quan trọng để dropdown con định vị theo cái này */
+    display: flex;
+    align-items: center;
+}
+
+/* Trigger click vào Avatar */
+.header-right .user-avatar-trigger {
+    padding: 0;
+    display: flex;
+    cursor: pointer;
+    border-radius: 50%;
 }
 
 .header-right .user-avatar-img {
-    width: 40px;  /* Kích thước avatar */
+    width: 40px; 
     height: 40px;
-    border-radius: 5px; /* Bo góc vuông nhẹ giống phong cách AniList (hoặc 50% nếu muốn tròn vo) */
-    object-fit: cover; /* Cắt ảnh đẹp nếu ảnh gốc không vuông */
-    border: 2px solid transparent; /* Tạo viền trong suốt để tránh nhảy layout khi hover */
+    border-radius: 5px; 
+    object-fit: cover; 
+    border: 2px solid transparent; 
     transition: border-color 0.2s;
 }
 
-.header-right .user-avatar-link:hover .user-avatar-img {
-    border-color: #3578E5; /* Viền xanh khi di chuột vào avatar */
+.header-right .user-avatar-trigger:hover .user-avatar-img {
+    border-color: #3578E5;
+}
+
+/* --- Menu Dropdown --- */
+.dropdown-menu {
+    position: absolute;
+    top: 130%; /* Đẩy xuống dưới avatar một chút */
+    right: 0; /* Căn phải thẳng hàng với avatar */
+    background-color: #1a2b3c; /* Màu nền hơi sáng hơn header chút để nổi bật */
+    min-width: 150px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    padding: 8px 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Style cho các item trong dropdown */
+.dropdown-menu .dropdown-item {
+    text-align: left;
+    color: #c2c2c2;
+    padding: 10px 20px;
+    border-radius: 0; /* Ghi đè border-radius chung */
+    background-color: transparent;
+    font-size: 0.95rem;
+    width: 100%; /* Full width */
+    box-sizing: border-box;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #152232; /* Màu nền khi hover item */
+    color: #3DB4F2;
+}
+
+/* Style riêng cho nút Logout trong dropdown */
+.dropdown-menu .btn-dropdown-logout:hover {
+    color: #EF5D5D; /* Màu đỏ khi hover logout */
+}
+
+/* Hiệu ứng xuất hiện nhẹ nhàng */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }

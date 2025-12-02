@@ -1,0 +1,145 @@
+/* src/components/GlobalSearchModal.css */
+
+/* Overlay */
+.gs-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Để modal nằm cao hơn chút cho giống thanh search */
+  padding-top: 80px;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+  animation: gsFadeIn 0.2s ease-out;
+}
+
+/* Modal Content */
+.gs-content {
+  background-color: #1a202c;
+  width: 90%;
+  max-width: 600px;
+  max-height: 70vh; /* Không quá dài */
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+/* Header (Chứa input) */
+.gs-header {
+  padding: 16px 24px;
+  background-color: #1e293b;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.gs-search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.gs-input {
+  width: 100%;
+  height: 48px;
+  padding-left: 48px;
+  padding-right: 15px;
+  background-color: #0f172a;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1.1rem;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box; /* Quan trọng để không vỡ layout */
+}
+
+.gs-input:focus {
+  border-color: #3db4f2;
+  box-shadow: 0 0 0 3px rgba(61, 180, 242, 0.2);
+}
+
+.gs-close-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+.gs-close-btn:hover { color: #fff; }
+
+/* Body (Chứa kết quả) */
+.gs-body {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 10px;
+  background-color: #101622;
+}
+
+.gs-body::-webkit-scrollbar { width: 6px; }
+.gs-body::-webkit-scrollbar-track { background: #0f172a; }
+.gs-body::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+
+/* Grid & Items */
+.gs-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gs-result-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 16px;
+  background-color: #1e293b;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+  text-decoration: none; /* Vì có thể dùng Link */
+}
+
+.gs-result-item:hover {
+  background-color: #263345;
+  border-color: #3db4f2;
+  transform: translateX(5px);
+}
+
+.gs-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.gs-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.gs-username {
+  color: #f1f5f9;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.gs-empty, .gs-loading {
+  text-align: center;
+  color: #64748b;
+  padding: 30px;
+  font-style: italic;
+}
+
+@keyframes gsFadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

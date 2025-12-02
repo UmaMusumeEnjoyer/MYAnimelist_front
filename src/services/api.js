@@ -2,7 +2,8 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://localhost:8000/api' // Đảm bảo URL này đúng với backend của bạn
+  //baseURL: 'http://localhost:8000/api' // Đảm bảo URL này đúng với backend của bạn
+  baseURL: 'https://doannguyen.pythonanywhere.com/api'
 });
 
 // =================================================================
@@ -46,6 +47,10 @@ API.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
+export const verifyEmail = (token) => {
+    // Gọi trực tiếp đến URL backend bạn yêu cầu với token
+    return axios.get(`https://doannguyen.pythonanywhere.com/api/auth/verify-email/?token=${token}`);
+};
 
 // =================================================================
 // ANIME, CHARACTER & STAFF API (Core Info - Có Cache)

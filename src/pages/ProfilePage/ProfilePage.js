@@ -1,6 +1,7 @@
+// src/pages/ProfilePage.js
 import React, { useState, useEffect } from 'react';
 import './ProfilePage.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom'; // Thêm useParams
 import ProfileBanner from './components/ProfileBanner'; 
 import ActivityHistory from './components/ActivityHistory';
 import ActivityFeed from './components/ActivityFeed';
@@ -11,9 +12,19 @@ const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState('Overview');
   const navigate = useNavigate();
   
-  // Fake User Info
-  const username = localStorage.getItem('username') || "dungbaoviec123";
-  const userDisplayName = "Trần Quang Dũng";
+  // --- LOGIC XÁC ĐỊNH USER ---
+  const { username: routeUsername } = useParams(); // Lấy param từ URL nếu có
+  const loggedInUsername = localStorage.getItem('username'); // User đang đăng nhập
+
+  // Username mục tiêu để fetch data
+  // Nếu có routeUsername (vd: /user/abc) thì dùng abc, nếu không thì dùng user đăng nhập
+  const targetUsername = routeUsername || loggedInUsername || "guest";
+  
+  // Kiểm tra xem có phải "Chính chủ" không để hiện nút Edit
+  const isOwnProfile = !routeUsername || (routeUsername === loggedInUsername);
+
+  // Fake User Info (Nếu bạn có API getProfileInfo, hãy gọi ở đây bằng targetUsername)
+  const userDisplayName = targetUsername; // Tạm dùng username làm tên hiển thị
   const userAvatar = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlZjpoc6BcEHSBXN83B8niRWSjcbNE-DArpg&s";
   const userBio = "UmaMusumeEnjoyer · he/him";
   
@@ -23,7 +34,6 @@ const ProfilePage = () => {
   const [favLoading, setFavLoading] = useState(false);
   const [totalContributions, setTotalContributions] = useState(0);
 
-  // [MỚI] State lưu ngày đang được chọn từ Heatmap
   const [selectedDate, setSelectedDate] = useState(null);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -34,9 +44,7 @@ const ProfilePage = () => {
 
   const handleTabChange = (tabName) => setActiveTab(tabName);
 
-  // [MỚI] Hàm xử lý khi click vào Heatmap
   const handleDateSelect = (date) => {
-    // Nếu click lại vào ngày đang chọn thì bỏ chọn (toggle)
     if (selectedDate === date) {
       setSelectedDate(null);
     } else {
@@ -44,24 +52,24 @@ const ProfilePage = () => {
     }
   };
 
-  // Logic Fetch Custom List
+  // Logic Fetch Custom List - Dùng targetUsername
   const fetchCustomLists = () => {
-    if (!username) return;
+    if (!targetUsername) return;
     setListsLoading(true);
-    getUserCustomLists(username)
+    getUserCustomLists(targetUsername)
       .then((res) => setCustomLists(res.data && res.data.lists ? res.data.lists : []))
       .catch((err) => console.error(err))
       .finally(() => setListsLoading(false));
   };
 
-  // Logic Fetch Favorites
+  // Logic Fetch Favorites - Dùng targetUsername
   useEffect(() => {
     if (activeTab === 'Favorites') {
       const fetchFavorites = async () => {
-        if (!username) return;
+        if (!targetUsername) return;
         setFavLoading(true);
         try {
-            const res = await getUserAnimeList(username);
+            const res = await getUserAnimeList(targetUsername);
             const data = res.data;
             const allAnime = [
               ...(data.watching || []), ...(data.completed || []),
@@ -78,11 +86,14 @@ const ProfilePage = () => {
       };
       fetchFavorites();
     }
-  }, [activeTab, username]);
+  }, [activeTab, targetUsername]);
 
+  // Reset data khi chuyển qua user khác
   useEffect(() => {
     if (activeTab === 'Anime List') fetchCustomLists();
-  }, [activeTab]);
+    // Reset các state khác nếu cần thiết khi đổi user
+    setSelectedDate(null);
+  }, [activeTab, targetUsername]); // Thêm targetUsername vào dependency
 
   const handleSubmitCreate = async (e) => {
     e.preventDefault();
@@ -115,12 +126,15 @@ const ProfilePage = () => {
           </div>
           <div className="profile-names">
             <span className="profile-display-name">{userDisplayName}</span>
-            <span className="profile-username">{username}</span>
+            <span className="profile-username">{targetUsername}</span>
           </div>
           
           <div className="profile-bio">{userBio}</div>
           
-          <button className="btn-edit-profile">Edit profile</button>
+          {/* CHỈ HIỆN NÚT EDIT NẾU LÀ PROFILE CỦA CHÍNH MÌNH */}
+          {isOwnProfile && (
+            <button className="btn-edit-profile">Edit profile</button>
+          )}
           
           <div className="profile-stats">
             <span><a href="#followers" className="stat-highlight">7</a> followers</span>
@@ -135,11 +149,11 @@ const ProfilePage = () => {
             </div>
             <div className="meta-item">
                <svg className="meta-icon" viewBox="0 0 16 16"><path fillRule="evenodd" d="M1.75 2A1.75 1.75 0 000 3.75v.736a.75.75 0 000 .027v7.737C0 13.216.784 14 1.75 14h12.5A1.75 1.75 0 0016 12.25v-8.5A1.75 1.75 0 0014.25 2H1.75zM14.5 4.07v-.32a.25.25 0 00-.25-.25H1.75a.25.25 0 00-.25.25v.32L8 7.88l6.5-3.81zM1.5 5.51v6.74c0 .138.112.25.25.25h12.5a.25.25 0 00.25-.25V5.509L8 9.349 1.5 5.51z"></path></svg>
-               <a href={`mailto:contact@${username}.com`} style={{color: 'inherit', textDecoration: 'none'}}>contact@{username}.com</a>
+               <a href={`mailto:contact@${targetUsername}.com`} style={{color: 'inherit', textDecoration: 'none'}}>contact@{targetUsername}.com</a>
             </div>
              <div className="meta-item">
                <svg className="meta-icon" viewBox="0 0 16 16"><path fillRule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg>
-               <a href="#" style={{color: 'inherit', textDecoration: 'none'}}>anilist.co/user/{username}</a>
+               <a href="#" style={{color: 'inherit', textDecoration: 'none'}}>anilist.co/user/{targetUsername}</a>
             </div>
           </div>
           
@@ -156,32 +170,27 @@ const ProfilePage = () => {
         <div className="profile-content">
           <ProfileBanner activeTab={activeTab} onTabChange={handleTabChange} />
 
-          {/* OVERVIEW TAB CONTENT */}
           {activeTab === 'Overview' && (
             <>
-              {/* Contribution Graph (Heatmap) */}
               <div className="activity-section-wrapper" style={{marginTop: 0}}>
                  <div className="section-header">
                     <div className="section-title">{totalContributions} contributions in the last year</div>
-                
                  </div>
                  
-                 {/* [MỚI] Truyền selectedDate và onDateSelect */}
+                 {/* Cần đảm bảo ActivityHistory hỗ trợ prop user/username nếu API cần */}
                  <ActivityHistory 
+                    username={targetUsername} 
                     onTotalCountChange={setTotalContributions}
                     selectedDate={selectedDate}
                     onDateSelect={handleDateSelect}
                  />
               </div>
 
-              {/* Activity Feed */}
               <div className="activity-section-wrapper">
                 <div className="section-header">
-                  {/* [MỚI] Đổi tiêu đề dựa trên việc có lọc hay không */}
                   <div className="section-title">
                     {selectedDate ? `Activity on ${selectedDate}` : "Contribution activity"}
                   </div>
-                  {/* [MỚI] Nút Clear Filter */}
                   {selectedDate && (
                     <span 
                       className="link-view-all" 
@@ -193,20 +202,24 @@ const ProfilePage = () => {
                   )}
                 </div>
                  
-                 {/* [MỚI] Truyền selectedDate để lọc */}
-                 <ActivityFeed filterDate={selectedDate} />
+                 {/* Cần đảm bảo ActivityFeed hỗ trợ prop username nếu API cần */}
+                 <ActivityFeed username={targetUsername} filterDate={selectedDate} />
               </div>
             </>
           )}
 
-          {/* ANIME LIST TAB */}
           {activeTab === 'Anime List' && (
              <div className="custom-lists-container">
                <div className="section-header">
-                 <h2 className="section-title" style={{fontSize: '20px', fontWeight: 600}}>My Custom Lists</h2>
-                 <button className="btn-edit-profile" style={{width: 'auto'}} onClick={() => setShowCreateModal(true)}>
-                   New List
-                 </button>
+                 <h2 className="section-title" style={{fontSize: '20px', fontWeight: 600}}>
+                   {isOwnProfile ? "My Custom Lists" : `${targetUsername}'s Lists`}
+                 </h2>
+                 {/* Ẩn nút New List nếu không phải chính chủ */}
+                 {isOwnProfile && (
+                   <button className="btn-edit-profile" style={{width: 'auto'}} onClick={() => setShowCreateModal(true)}>
+                     New List
+                   </button>
+                 )}
                </div>
                
                {listsLoading ? <div>Loading...</div> : (
@@ -222,7 +235,6 @@ const ProfilePage = () => {
              </div>
           )}
 
-          {/* FAVORITES TAB */}
           {activeTab === 'Favorites' && (
             <div className="favorites-container">
                <div className="section-header">
@@ -248,10 +260,11 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      {/* Modal logic */}
-      {showCreateModal && (
+      {/* Modal logic: Chỉ cho phép mở modal tạo list nếu là chính chủ */}
+      {showCreateModal && isOwnProfile && (
         <div className="modal-overlay" onClick={() => setShowCreateModal(false)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
+           {/* ... Giữ nguyên phần nội dung modal ... */}
+           <div className="modal-content" onClick={e => e.stopPropagation()}>
              <h3 style={{marginTop: 0, color: 'var(--text-main)'}}>Create New List</h3>
              <form onSubmit={handleSubmitCreate}>
                 <div className="form-group">

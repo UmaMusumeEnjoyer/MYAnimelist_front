@@ -17,6 +17,7 @@ import NewsDetailPage from './pages/NewsDetailPage/NewsDetailPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import AnimeSearchPage from './pages/AnimeSearch/AnimeSearchPage';
 import AnimeListPage from './pages/AnimeListPage/AnimeListPage';
+import VerifyEmail from './components/VerifyEmail';
 
 function App() {
   
@@ -69,8 +70,9 @@ function App() {
           <Route path="/about" element={<NewsDetailPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/browse" element={<AnimeSearchPage />} />
-
+          <Route path="/user/:username" element={<ProfilePage />} />
           <Route path="/list/:id" element={<AnimeListPage />} />
+          <Route path="/verify-email" element={<AuthPage />} />
           {/* <Route path="/search/:type" element={<SearchPage />} /> */}
         </Routes>
       
