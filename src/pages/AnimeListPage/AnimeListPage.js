@@ -250,7 +250,7 @@ const AnimeListPage = () => {
       <div className="main-layout">
         <main className="content-area">
           
-          <ListHeader listInfo={listInfo} />
+          <ListHeader listInfo={listInfo}  listId={id}/>
 
           <div className="filter-bar-sticky">
              <div className="search-wrapper">
