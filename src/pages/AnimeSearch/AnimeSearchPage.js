@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { FaArrowLeft } from 'react-icons/fa'; // [MỚI] Import Icon Back
+import React, { useState, useEffect } from 'react';
+import { FaArrowLeft } from 'react-icons/fa';
 import './AnimeSearchPage.css';
 
 // Import Components
@@ -23,17 +23,60 @@ import {
   allTimePopular
 } from '../../data/animeSearchData';
 
+const SESSION_KEY = 'ANIME_SEARCH_STATE'; // [MỚI] Key để lưu session
+
 const AnimeSearchPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [loading, setLoading] = useState(false);
   
-  // State hiển thị tiêu đề động (Ví dụ: Trending Now, Search Results...)
   const [viewTitle, setViewTitle] = useState('Search Results');
-
   const [page, setPage] = useState(1);
   const [canLoadMore, setCanLoadMore] = useState(false);
   const [currentFilters, setCurrentFilters] = useState(null); 
+
+  // --- [MỚI] 1. RESTORE STATE KHI COMPONENT MOUNT ---
+  useEffect(() => {
+    const savedState = sessionStorage.getItem(SESSION_KEY);
+    if (savedState) {
+      try {
+        const parsed = JSON.parse(savedState);
+        // Khôi phục lại toàn bộ trạng thái cũ
+        setSearchResults(parsed.searchResults);
+        setIsSearching(parsed.isSearching);
+        setViewTitle(parsed.viewTitle);
+        setPage(parsed.page);
+        setCanLoadMore(parsed.canLoadMore);
+        setCurrentFilters(parsed.currentFilters);
+        
+        // Scroll nhẹ xuống phần kết quả để user biết đang ở đâu (tuỳ chọn)
+        if (parsed.isSearching) {
+            setTimeout(() => {
+                window.scrollTo({ top: 400, behavior: 'smooth' });
+            }, 100);
+        }
+      } catch (error) {
+        console.error("Failed to restore search state", error);
+        sessionStorage.removeItem(SESSION_KEY);
+      }
+    }
+  }, []);
+
+  // --- [MỚI] 2. AUTO SAVE STATE KHI DATA THAY ĐỔI ---
+  useEffect(() => {
+    // Chỉ lưu khi đang ở chế độ search và có kết quả (hoặc filters)
+    if (isSearching) {
+      const stateToSave = {
+        searchResults,
+        isSearching,
+        viewTitle,
+        page,
+        canLoadMore,
+        currentFilters
+      };
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify(stateToSave));
+    }
+  }, [searchResults, isSearching, viewTitle, page, canLoadMore, currentFilters]);
 
   // --- MAP DATA HELPER ---
   const mapAnimeData = (rawItem) => ({
@@ -62,13 +105,13 @@ const AnimeSearchPage = () => {
 
     // Nếu không có gì để search -> Về trang chủ
     if ((!keyword || keyword.trim() === "") && !hasFilter) {
-      handleBackToHome(); // [MỚI] Dùng chung logic back
+      handleBackToHome(); 
       return;
     }
 
     setLoading(true);
     setIsSearching(true);
-    setViewTitle('Search Results'); // Mặc định là Search Results
+    setViewTitle('Search Results');
     setSearchResults([]); 
     setPage(1);
     
@@ -82,6 +125,8 @@ const AnimeSearchPage = () => {
         if (year && year !== 'Any') criteriaBody.year = parseInt(year);
         if (season && season !== 'Any') criteriaBody.season = season;
         if (format && format !== 'Any') criteriaBody.format = format;
+        
+        // [ĐÃ SỬA] Đổi key thành 'genres' số nhiều
         if (genre && genre !== 'Any') criteriaBody.genres = genre;
         
         const response = await searchAnimeByCriteria(criteriaBody);
@@ -109,11 +154,13 @@ const AnimeSearchPage = () => {
 
   // --- VIEW ALL HANDLER ---
   const handleViewAllClick = async (type) => {
-    // 1. Trending Now
+    // Reset để tránh conflict state cũ
+    sessionStorage.removeItem(SESSION_KEY);
+
     if (type === 'TRENDING_NOW') {
         setLoading(true);
         setIsSearching(true);
-        setViewTitle('Trending Now'); // [MỚI] Cập nhật tiêu đề
+        setViewTitle('Trending Now');
         setSearchResults([]);
         setPage(1);
         setCurrentFilters(null); 
@@ -132,14 +179,11 @@ const AnimeSearchPage = () => {
         return; 
     }
 
-    // 2. Filter-based Views
     let targetFilters = { genre: 'Any', year: 'Any', season: 'Any', format: 'Any' };
 
     if (type === 'POPULAR_THIS_SEASON') {
       const { year, season } = getCurrentSeasonInfo();
       targetFilters = { ...targetFilters, year, season };
-      // Gọi search nhưng ta sẽ override title sau một chút (hoặc để handleSearch set mặc định)
-      // Để đơn giản, handleSearch sẽ set là "Search Results", ta chấp nhận hoặc sửa logic handleSearch.
     } 
     else if (type === 'UPCOMING_NEXT_SEASON') {
       const { year, season } = getNextSeasonInfo();
@@ -148,20 +192,21 @@ const AnimeSearchPage = () => {
 
     handleSearch('', targetFilters);
     
-    // Override tiêu đề cho đẹp
     if (type === 'POPULAR_THIS_SEASON') setViewTitle('Popular This Season');
     if (type === 'UPCOMING_NEXT_SEASON') setViewTitle('Upcoming Next Season');
 
     window.scrollTo({ top: 400, behavior: 'smooth' });
   };
 
-  // --- [MỚI] BACK BUTTON HANDLER ---
+  // --- BACK BUTTON HANDLER ---
   const handleBackToHome = () => {
+    // [MỚI] 3. Xóa Session khi người dùng chủ động Back
+    sessionStorage.removeItem(SESSION_KEY);
+
     setIsSearching(false);
     setSearchResults([]);
     setPage(1);
     
-    // Reset FilterBar về trạng thái "Any"
     setCurrentFilters({
       keyword: '',
       filters: { genre: 'Any', year: 'Any', season: 'Any', format: 'Any' }
@@ -181,6 +226,8 @@ const AnimeSearchPage = () => {
       if (year && year !== 'Any') criteriaBody.year = parseInt(year);
       if (season && season !== 'Any') criteriaBody.season = season;
       if (format && format !== 'Any') criteriaBody.format = format;
+      
+      // [ĐÃ SỬA] Đổi key thành 'genres' số nhiều
       if (genre && genre !== 'Any') criteriaBody.genres = genre;
 
       const response = await searchAnimeByCriteria(criteriaBody);
@@ -203,19 +250,18 @@ const AnimeSearchPage = () => {
     <div className="anime-search-page">
       <HeroSection slides={heroList} />
       
+      {/* Truyền activeFilters để FilterBar hiển thị đúng trạng thái khi Restore */}
       <FilterBar onSearch={handleSearch} activeFilters={currentFilters} />
 
       <div className="page-content">
         {isSearching ? (
           <div className="container anime-section">
             
-            {/* [MỚI] HEADER VỚI NÚT BACK */}
             <div className="search-results-header">
               <h2 className="section-title">{viewTitle}</h2>
               <button className="back-btn" onClick={handleBackToHome}>
                 <FaArrowLeft /> Back
               </button>
-              
             </div>
             
             <div className="anime-grid">
