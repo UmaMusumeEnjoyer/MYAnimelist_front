@@ -82,7 +82,7 @@ const AnimeSearchPage = () => {
         if (year && year !== 'Any') criteriaBody.year = parseInt(year);
         if (season && season !== 'Any') criteriaBody.season = season;
         if (format && format !== 'Any') criteriaBody.format = format;
-        if (genre && genre !== 'Any') criteriaBody.genre = genre;
+        if (genre && genre !== 'Any') criteriaBody.genres = genre;
         
         const response = await searchAnimeByCriteria(criteriaBody);
         const rawResults = response.data.results || [];
@@ -181,7 +181,7 @@ const AnimeSearchPage = () => {
       if (year && year !== 'Any') criteriaBody.year = parseInt(year);
       if (season && season !== 'Any') criteriaBody.season = season;
       if (format && format !== 'Any') criteriaBody.format = format;
-      if (genre && genre !== 'Any') criteriaBody.genre = genre;
+      if (genre && genre !== 'Any') criteriaBody.genres = genre;
 
       const response = await searchAnimeByCriteria(criteriaBody);
       const rawResults = response.data.results || [];
