@@ -18,6 +18,7 @@ import ProfilePage from './pages/ProfilePage/ProfilePage';
 import AnimeSearchPage from './pages/AnimeSearch/AnimeSearchPage';
 import AnimeListPage from './pages/AnimeListPage/AnimeListPage';
 import VerifyEmail from './components/VerifyEmail';
+import AnimeListSearchPage from './pages/AnimeListSearch/AnimeListSearchPage';
 
 function App() {
   
@@ -74,6 +75,7 @@ function App() {
           <Route path="/list/:id" element={<AnimeListPage />} />
           <Route path="/verify-email" element={<AuthPage />} />
           {/* <Route path="/search/:type" element={<SearchPage />} /> */}
+          <Route path="/animelist" element={<AnimeListSearchPage />} />
         </Routes>
       
       </main>

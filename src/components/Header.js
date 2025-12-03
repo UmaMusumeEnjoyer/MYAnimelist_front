@@ -58,7 +58,7 @@ const Header = () => {
           <Link to="/browse">Browse</Link>
           {isAuthenticated && (
             <>
-              <Link to="/calendar">Calendar</Link>
+              {/* <Link to="/calendar">Calendar</Link> */}
               <Link to="/animelist">Anime List</Link>
               <Link to="/profile">Profile</Link>
             </>

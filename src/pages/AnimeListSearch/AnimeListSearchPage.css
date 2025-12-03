@@ -1,0 +1,223 @@
+/* --- GLOBAL LAYOUT --- */
+.anime-list-search-page {
+  background-color: #0B1622;
+  color: #9FADBD;
+  font-family: 'Overpass', sans-serif; /* Đảm bảo bạn đã import font này ở index.html */
+  min-height: 100vh;
+  padding-bottom: 50px;
+}
+
+.container {
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header Text */
+.list-page-header {
+  padding-top: 40px;
+  margin-bottom: 20px;
+}
+.list-page-header h1 {
+  color: #fff;
+  font-size: 2rem;
+  margin-bottom: 5px;
+}
+.list-page-header p {
+  font-size: 1rem;
+  color: #8BA0B2;
+}
+
+/* --- LIST SEARCH BAR (Customized from FilterBar) --- */
+.list-search-bar {
+  display: grid;
+  grid-template-columns: 1fr max-content; /* Search dài, Sort ngắn */
+  gap: 20px;
+  align-items: end;
+  margin-bottom: 40px;
+}
+
+.ls-search-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ls-search-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #8BA0B2;
+  margin-left: 2px;
+}
+
+.ls-search-box {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.ls-search-box input {
+  width: 100%;
+  height: 44px; /* Cao hơn xíu cho nổi bật */
+  padding-left: 45px;
+  padding-right: 15px;
+  background-color: #151f2e;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.ls-search-box input:focus {
+  background-color: #1b2636;
+  box-shadow: 0 0 0 2px rgba(100, 37, 208, 0.5); /* Màu tím điểm nhấn */
+}
+
+.ls-search-btn {
+  position: absolute;
+  left: 12px;
+  color: #8BA0B2;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+
+
+/* --- SECTION & GRID --- */
+.section-title {
+  font-size: 1.2rem;
+  color: #fff;
+  margin-bottom: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.lists-grid {
+  display: grid;
+  /* Card list thường to ngang nên để minmax lớn hơn card anime thường (250px vs 180px) */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+  gap: 25px;
+}
+
+/* --- ANIME LIST CARD --- */
+.anime-list-card {
+  background-color: #151f2e;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.anime-list-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Phần hiển thị ảnh preview */
+.alc-preview {
+  height: 160px;
+  display: flex;
+  position: relative;
+  background-color: #0d131a;
+}
+
+.alc-cover {
+  flex: 1;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  border-right: 1px solid rgba(0,0,0,0.3);
+}
+.alc-cover:last-child { border-right: none; }
+
+.alc-overlay {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  padding: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.alc-count {
+  font-size: 0.8rem;
+  color: #fff;
+  background-color: rgba(0,0,0,0.6);
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Phần thông tin */
+.alc-info {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alc-title {
+  margin: 0;
+  font-size: 1rem;
+  color: #fff;
+  font-weight: 600;
+  line-height: 1.4;
+  /* Cắt chữ nếu quá dài */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.alc-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #8BA0B2;
+}
+
+.alc-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.alc-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.alc-likes {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.heart-icon {
+  color: #E84F63; /* Màu đỏ hồng giống icon Back hover */
+  font-size: 0.9rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .list-search-bar {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+}
