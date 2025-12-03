@@ -356,8 +356,11 @@ export const requestJoinList = (listId, message) => {
   });
 };
 
-export const respondToJoinRequest = (listId, requestId, responseData) => {
-  return API.post(`/list/${listId}/join-requests/${requestId}/respond/`, responseData);
+export const respondToJoinRequest = (listId, requestId, action) => {
+  return API.post(`/list/${listId}/join-requests/${requestId}/respond/`, {
+    action: action, 
+    can_edit: false // Fix cứng theo yêu cầu
+  });
 };
 
 export const requestEditList = (listId, message) => {
@@ -367,8 +370,11 @@ export const requestEditList = (listId, message) => {
   });
 };
 
-export const respondToEditRequest = (listId, requestId, responseData) => {
-  return API.post(`/list/${listId}/edit-requests/${requestId}/respond/`, responseData);
+export const respondToEditRequest = (listId, requestId, action) => {
+   return API.post(`/list/${listId}/edit-requests/${requestId}/respond/`, {
+    action: action, 
+    can_edit: true // Fix cứng theo yêu cầu
+  });
 };
 
 // =================================================================
