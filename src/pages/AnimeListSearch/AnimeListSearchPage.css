@@ -221,3 +221,32 @@
   }
 
 }
+
+/* --- APPEND TO: AnimeListSearchPage.css --- */
+
+/* Class dành riêng cho chế độ hiển thị màu (Search Result) */
+.alc-color-preview {
+  height: 160px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-color: #2b3544; /* Fallback color */
+  transition: opacity 0.2s;
+}
+
+.alc-color-preview:hover {
+  opacity: 0.9;
+}
+
+/* Icon đại diện ở giữa mảng màu cho đỡ trống (Optional) */
+.alc-color-icon {
+  font-size: 3rem;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* Ẩn phần avatar trong meta khi ở chế độ search card */
+.alc-meta.no-avatar {
+  justify-content: flex-end; /* Đẩy like sang phải */
+}

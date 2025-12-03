@@ -38,7 +38,7 @@ const Header = () => {
         {/* --- PHẦN BÊN TRÁI --- */}
         <div className="header-left">
           <div className="logo">
-              <Link to="/">
+              <Link to="/" tabIndex="-1">
                   <img 
                     src="/images/Gemini_Generated_Image_eg5d1qeg5d1qeg5d (1).png" 
                     alt="Logo" 

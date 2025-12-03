@@ -56,9 +56,14 @@ const AnimeListCard = ({ listData }) => {
   };
 
   // --- 3. XỬ LÝ ẢNH PREVIEW (Luôn đảm bảo hiển thị 3 ảnh) ---
-  const getCoverImages = () => {
-    // Lấy mảng ảnh từ API (giả sử API trả về mảng các string URL)
-    const apiImages = listData.preview_anime || [];
+const getCoverImages = () => {
+    const rawPreview = listData.preview_anime || [];
+
+    // [FIX]: Map qua mảng để lấy ra đường dẫn ảnh (cover_image)
+    // Kiểm tra nếu phần tử là object thì lấy .cover_image, nếu là string thì giữ nguyên (đề phòng API đổi format)
+    const apiImages = rawPreview.map(item => {
+        return typeof item === 'object' && item.cover_image ? item.cover_image : item;
+    });
     
     // Tạo mảng mới bắt đầu bằng ảnh từ API
     let displayImages = [...apiImages];

@@ -1,35 +1,72 @@
 import React, { useState, useEffect } from 'react';
 import ListSearchBar from './components/ListSearchBar'; 
 import TopListsSection from './components/TopListsSection';
-import { getMostLikedLists } from '../../services/api'; // Đảm bảo đường dẫn import đúng tới file api.js của bạn
+import SearchListCard from './components/SearchListCard'; // Import component mới
+import { getMostLikedLists, searchCustomLists } from '../../services/api'; 
 import './AnimeListSearchPage.css';
 
 const AnimeListSearchPage = () => {
+  // State cho Top Lists (Mặc định)
   const [topLists, setTopLists] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingTop, setLoadingTop] = useState(true);
 
-  // Gọi API khi component được mount
+  // State cho Search Results
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchMetadata, setSearchMetadata] = useState(null); // Lưu total, has_more...
+  const [isSearching, setIsSearching] = useState(false); // Cờ để biết đang ở chế độ search hay không
+  const [loadingSearch, setLoadingSearch] = useState(false);
+
+  // 1. Fetch Top Lists khi mount
   useEffect(() => {
     const fetchTopLists = async () => {
       try {
         const response = await getMostLikedLists();
-        // Cấu trúc response: { data: { total: 1, most_liked_lists: [...] } }
         if (response.data && response.data.most_liked_lists) {
           setTopLists(response.data.most_liked_lists);
         }
       } catch (error) {
         console.error("Error fetching most liked lists:", error);
       } finally {
-        setLoading(false);
+        setLoadingTop(false);
       }
     };
 
     fetchTopLists();
   }, []);
 
-  const handleSearch = (keyword) => {
+  // 2. Xử lý Search
+  const handleSearch = async (keyword) => {
+    // Nếu keyword rỗng, quay về chế độ hiển thị Top Lists
+    if (!keyword || keyword.trim() === '') {
+      setIsSearching(false);
+      setSearchResults([]);
+      return;
+    }
+
     console.log("Searching for lists:", keyword);
-    // Logic search có thể triển khai sau
+    setLoadingSearch(true);
+    setIsSearching(true); // Bật chế độ search
+
+    try {
+      const response = await searchCustomLists(keyword);
+      // Response structure: 
+      // { data: { query: "...", lists: [...], total: 1, ... } }
+      
+      if (response.data && response.data.lists) {
+        setSearchResults(response.data.lists);
+        setSearchMetadata({
+            total: response.data.total,
+            showing: response.data.showing
+        });
+      } else {
+        setSearchResults([]);
+      }
+    } catch (error) {
+      console.error("Error searching lists:", error);
+      setSearchResults([]);
+    } finally {
+      setLoadingSearch(false);
+    }
   };
 
   return (
@@ -41,11 +78,37 @@ const AnimeListSearchPage = () => {
 
       <ListSearchBar onSearch={handleSearch} />
 
-      <div className="page-content">
-        {loading ? (
-          <p className="container">Loading lists...</p>
+      <div className="page-content container">
+        {/* LOGIC HIỂN THỊ CÓ ĐIỀU KIỆN */}
+        
+        {isSearching ? (
+          // --- VIEW 1: SEARCH RESULTS ---
+          <section className="search-results-section">
+            <h2 className="section-title">
+              {loadingSearch ? 'Searching...' : `Search Results ${searchMetadata ? `(${searchMetadata.total})` : ''}`}
+            </h2>
+
+            {loadingSearch ? (
+               <p>Looking for lists...</p>
+            ) : searchResults.length > 0 ? (
+              <div className="lists-grid">
+                {searchResults.map((list) => (
+                  // Dùng Component SearchListCard mới cho kết quả tìm kiếm
+                  <SearchListCard key={list.list_id} listData={list} />
+                ))}
+              </div>
+            ) : (
+              <p style={{color: '#8BA0B2'}}>No lists found matching your query.</p>
+            )}
+          </section>
+
         ) : (
-          <TopListsSection title="Most Liked Lists" lists={topLists} />
+          // --- VIEW 2: TOP LISTS (DEFAULT) ---
+          loadingTop ? (
+            <p>Loading top lists...</p>
+          ) : (
+            <TopListsSection title="Most Liked Lists" lists={topLists} />
+          )
         )}
       </div>
     </div>
