@@ -314,7 +314,7 @@ const AnimeListPage = () => {
   const filterAnime = (list) => {
     if (!searchTerm) return list;
     return list.filter(anime => {
-      const title = anime.title_romaji || anime.title_english || "";
+      const title = anime.name_romaji || anime.title_english || "";
       return title.toLowerCase().includes(searchTerm.toLowerCase());
     });
   };
