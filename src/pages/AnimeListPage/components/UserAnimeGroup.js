@@ -1,3 +1,4 @@
+// src/pages/AnimeListPage/components/UserAnimeGroup.js
 import React from 'react';
 import AnimeCard from '../../../components/AnimeCard';
 import './UserAnimeGroup.css';
@@ -6,10 +7,10 @@ const UserAnimeGroup = ({
   user, 
   animeList, 
   isCurrentUser, 
+  canEdit, // [UPDATE] Nhận thêm prop canEdit
   deleteMode, 
   selectedAnimeIds, 
   isDeleting, 
-  // Callbacks
   onOpenAddModal, 
   onToggleDeleteMode, 
   onConfirmDelete, 
@@ -17,6 +18,10 @@ const UserAnimeGroup = ({
 }) => {
   
   if (animeList.length === 0) return null;
+
+  // [UPDATE] Logic quyền chỉnh sửa: Phải là chính chủ VÀ có quyền edit
+  // Nếu là viewer (canEdit = false) nhưng có items (isCurrentUser = true) -> hasEditPermission = false
+  const hasEditPermission = isCurrentUser && canEdit;
 
   return (
     <div className="user-group-section">
@@ -26,7 +31,8 @@ const UserAnimeGroup = ({
           <h3>Added by {user}</h3>
           <span className="count-badge">{animeList.length}</span>
           
-          {isCurrentUser && !deleteMode && (
+          {/* [UPDATE] Sử dụng hasEditPermission thay vì isCurrentUser */}
+          {hasEditPermission && !deleteMode && (
             <button 
               className="btn-add-circle" 
               title="Add Anime to this list"
@@ -37,7 +43,8 @@ const UserAnimeGroup = ({
           )}
         </div>
 
-        {isCurrentUser && (
+        {/* [UPDATE] Sử dụng hasEditPermission thay vì isCurrentUser */}
+        {hasEditPermission && (
           <div className="user-actions-controls">
             {!deleteMode ? (
               <button 
@@ -87,15 +94,18 @@ const UserAnimeGroup = ({
           
           return (
             <div 
-              className={`grid-item-wrapper ${deleteMode ? 'delete-mode' : ''} ${isSelected ? 'selected' : ''}`} 
+              // [UPDATE] Chỉ cho phép style xóa nếu có quyền
+              className={`grid-item-wrapper ${deleteMode && hasEditPermission ? 'delete-mode' : ''} ${isSelected ? 'selected' : ''}`} 
               key={anime.id}
-              onClick={() => deleteMode && onSelectAnime(anime._anilist_id || anime.id)}
+              // [UPDATE] Chỉ cho phép click chọn nếu có quyền
+              onClick={() => deleteMode && hasEditPermission && onSelectAnime(anime._anilist_id || anime.id)}
             >
               <div className="grid-item">
                 <AnimeCard anime={anime} />
               </div>
               
-              {deleteMode && (
+              {/* [UPDATE] Chỉ hiện overlay check nếu có quyền */}
+              {deleteMode && hasEditPermission && (
                 <div className="delete-overlay">
                   <span className="material-symbols-outlined check-icon">
                     {isSelected ? 'check_circle' : 'radio_button_unchecked'}

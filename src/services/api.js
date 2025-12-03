@@ -349,16 +349,22 @@ export const getListRequests = (listId) => {
   return API.get(`/list/${listId}/requests/`);
 };
 
-export const requestJoinList = (listId) => {
-  return API.post(`/list/${listId}/request-join/`);
+export const requestJoinList = (listId, message) => {
+  return API.post(`/list/${listId}/request-join/`, {
+    request_type: "join", // Fix cứng theo yêu cầu
+    message: message      // Nội dung message truyền từ giao diện
+  });
 };
 
 export const respondToJoinRequest = (listId, requestId, responseData) => {
   return API.post(`/list/${listId}/join-requests/${requestId}/respond/`, responseData);
 };
 
-export const requestEditList = (listId) => {
-  return API.post(`/list/${listId}/request-edit/`);
+export const requestEditList = (listId, message) => {
+    return API.post(`/list/${listId}/request-edit/`, {
+    request_type: "edit_permission", // Fix cứng theo yêu cầu
+    message: message      // Nội dung message truyền từ giao diện
+  });
 };
 
 export const respondToEditRequest = (listId, requestId, responseData) => {
@@ -415,6 +421,20 @@ export const getTrendingLists = (data = {}) => {
  * Lấy danh sách các List được like nhiều nhất (Most Liked)
  * Endpoint: POST /api/list/likes/most-liked/
  */
-export const getMostLikedLists = (data = {}) => {
-  return API.post('/list/likes/most-liked/', data);
+export const getMostLikedLists = () => {
+  return API.post('/list/likes/most-liked/', { 
+    limit: 20 
+  });
 };
+
+// =================================================================
+// CUSTOM LIST SEARCH
+// =================================================================
+
+export const searchCustomLists = (keyword) => {
+  return API.post('/list/search/', {
+    query: keyword,
+    limit: 20 // Limit được fix cứng là 20 theo yêu cầu
+  });
+};
+

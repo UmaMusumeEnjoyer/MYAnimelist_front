@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'; // [UPDATE] Thêm useMemo
+// src/pages/AnimeListPage/AnimeListPage.js
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 
 // Import Child Components
@@ -8,6 +9,9 @@ import ListHeader from './components/ListHeader';
 import UserAnimeGroup from './components/UserAnimeGroup';
 import EditListModal from './components/EditListModal';
 import UserSearchModal from './components/UserSearchModal';
+import RequestModal from './components/RequestModal';
+// [MỚI] Import RequestList Component
+import RequestList from './components/RequestList';
 
 import { 
   getCustomListItems, 
@@ -16,7 +20,11 @@ import {
   deleteCustomList,
   getListMembers,   
   removeAnimeFromCustomList,
-  removeMemberFromList 
+  removeMemberFromList,
+  requestJoinList,
+  requestEditList,
+  // [MỚI] Import API lấy danh sách request
+  getListRequests 
 } from '../../services/api'; 
 import './AnimeListPage.css';
 
@@ -26,9 +34,13 @@ const AnimeListPage = () => {
   const navigate = useNavigate(); 
   const currentUsername = localStorage.getItem("username");
   
-  // Lấy permission level để check quyền
-  const permissionLevel = localStorage.getItem("permission_level");
-  const canEdit = permissionLevel === "owner" || permissionLevel === "edit";
+  // [FIX] CHUYỂN PERMISSION VÀO STATE
+  // Khởi tạo state từ localStorage để tránh flicker ban đầu, nhưng sẽ được update chính xác bởi API
+  const [currentPermission, setCurrentPermission] = useState(localStorage.getItem("permission_level"));
+
+  // [LOGIC QUYỀN HẠN] Dựa trên State thay vì localStorage thuần
+  const canEdit = currentPermission === "owner" || currentPermission === "edit";
+  const isViewer = currentPermission === "view" || currentPermission === "viewer";
 
   // --- LIST INFO STATE ---
   const [listInfo, setListInfo] = useState(location.state?.listData || {
@@ -44,17 +56,19 @@ const AnimeListPage = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   
-  // [UPDATE] Xóa state myAnimeList thừa vì ta sẽ tính toán trực tiếp từ groupedAnime
-  
-  // --- MEMBER & PERMISSION STATE ---
+  // --- MEMBER & REQUEST STATE ---
   const [members, setMembers] = useState([]); 
+  // [MỚI] State lưu danh sách requests (chưa phân loại)
+  const [pendingRequests, setPendingRequests] = useState([]);
 
   // --- MODAL STATES ---
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  
   const [showUserModal, setShowUserModal] = useState(false);
   const [modalRoleType, setModalRoleType] = useState('viewer'); 
+  const [showRequestModal, setShowRequestModal] = useState(false);
+  const [requestType, setRequestType] = useState('join');
+  const [isSubmittingRequest, setIsSubmittingRequest] = useState(false);
 
   // --- DELETE LOGIC STATES ---
   const [deleteMode, setDeleteMode] = useState(false);
@@ -62,9 +76,8 @@ const AnimeListPage = () => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   // =================================================================
-  // [MỚI] TÍNH TOÁN DANH SÁCH PHIM ĐỂ TRUYỀN VÀO MODAL
+  // TÍNH TOÁN DANH SÁCH PHIM
   // =================================================================
-  // Chuyển object groupedAnime {'user1': [animeA], 'user2': [animeB]} thành mảng [animeA, animeB]
   const allAnimeInList = useMemo(() => {
     return Object.values(groupedAnime).flat();
   }, [groupedAnime]);
@@ -83,10 +96,16 @@ const AnimeListPage = () => {
       if (currentUsername) {
         const currentUserData = memberList.find(m => m.username === currentUsername);
         if (currentUserData) {
+          // Cập nhật cả localStorage và STATE để UI re-render ngay lập tức
           localStorage.setItem("permission_level", currentUserData.permission_level);
+          setCurrentPermission(currentUserData.permission_level); // [FIX QUAN TRỌNG]
+
+          // Cập nhật is_owner
           setListInfo(prev => ({ ...prev, is_owner: currentUserData.is_owner }));
         } else {
           localStorage.removeItem("permission_level");
+          setCurrentPermission(null); // [FIX QUAN TRỌNG]
+          
           setListInfo(prev => ({ ...prev, is_owner: false }));
         }
       }
@@ -94,6 +113,18 @@ const AnimeListPage = () => {
       console.error("Failed to fetch list members:", error);
     }
   }, [id, currentUsername]);
+
+  // [MỚI] Fetch Requests nếu là Owner
+  useEffect(() => {
+    if (listInfo.is_owner && id) {
+      getListRequests(id) //
+        .then(res => {
+          // API trả về { requests: [...] }
+          setPendingRequests(res.data.requests || []);
+        })
+        .catch(err => console.error("Failed to fetch requests", err));
+    }
+  }, [listInfo.is_owner, id]);
 
   const fetchListDetails = useCallback(() => {
     if (!id) return;
@@ -149,9 +180,23 @@ const AnimeListPage = () => {
   // =================================================================
   // 2. HANDLERS
   // =================================================================
+  
+  // [MỚI] Handlers cho Accept/Reject (Truyền xuống component con)
+  const handleAcceptRequest = async (request) => {
+    // TODO: Implement API logic later
+    console.log("Accepting request:", request);
+    alert(`Will accept ${request.request_type} request from ${request.username}`);
+  };
+
+  const handleRejectRequest = async (request) => {
+    // TODO: Implement API logic later
+    console.log("Rejecting request:", request);
+    alert(`Will reject ${request.request_type} request from ${request.username}`);
+  };
 
   const handleEditListClick = () => {
-    if (localStorage.getItem("permission_level") !== "owner") {
+    // Kiểm tra state thay vì localStorage
+    if (currentPermission !== "owner") {
       alert("You do not have permission to edit this list.");
       return;
     }
@@ -170,6 +215,36 @@ const AnimeListPage = () => {
       } catch (error) {
         alert("An error occurred while deleting the list.");
       }
+    }
+  };
+
+  const handleOpenJoinRequest = () => {
+    setRequestType('join');
+    setShowRequestModal(true);
+  };
+
+  const handleOpenEditRequest = () => {
+    setRequestType('edit');
+    setShowRequestModal(true);
+  };
+
+  const handleSubmitRequest = async (message) => {
+    setIsSubmittingRequest(true);
+    try {
+      if (requestType === 'join') {
+        await requestJoinList(id, message);
+        alert("Your join request has been sent successfully!");
+      } else if (requestType === 'edit') {
+        await requestEditList(id, message);
+        alert("Your edit access request has been sent successfully!");
+      }
+      setShowRequestModal(false);
+    } catch (error) {
+      console.error("Failed to send request:", error);
+      const errorMsg = error.response?.data?.message || "Failed to send request.";
+      alert(errorMsg);
+    } finally {
+      setIsSubmittingRequest(false);
     }
   };
 
@@ -249,7 +324,6 @@ const AnimeListPage = () => {
     }
   };
 
-  // Check xem user hiện tại đã có item nào trong group chưa
   const currentUserHasItems = groupedAnime[currentUsername] && groupedAnime[currentUsername].length > 0;
 
   // =================================================================
@@ -259,8 +333,7 @@ const AnimeListPage = () => {
     <div className="page-container">
       <div className="main-layout">
         <main className="content-area">
-          
-          <ListHeader listInfo={listInfo}  listId={id}/>
+          <ListHeader listInfo={listInfo} listId={id}/>
 
           <div className="filter-bar-sticky">
              <div className="search-wrapper">
@@ -280,8 +353,8 @@ const AnimeListPage = () => {
               <div className="loading-state">Loading anime details...</div>
             ) : Object.keys(groupedAnime).length > 0 ? (
               <>
-                {/* Trường hợp 1: User hiện tại chưa có item nào -> Hiện ô Add thủ công */}
-                {canEdit && !currentUserHasItems && (
+                {/* [UPDATE] Thêm logic hiển thị nút Add nếu Editor chưa có bài nào */}
+                 {canEdit && !currentUserHasItems && (
                   <div className="user-group-section" style={{marginBottom: '30px'}}>
                     <div className="user-group-header">
                       <div className="user-group-title">
@@ -289,7 +362,6 @@ const AnimeListPage = () => {
                         <h3>Added by {currentUsername}</h3>
                       </div>
                     </div>
-                    {/* Placeholder Area */}
                     <div style={{
                         padding: '30px',
                         display: 'flex',
@@ -313,8 +385,7 @@ const AnimeListPage = () => {
                     </div>
                   </div>
                 )}
-
-                {/* Trường hợp 2: Render các User Group, SẮP XẾP user hiện tại lên đầu */}
+                
                 {Object.keys(groupedAnime)
                   .sort((a, b) => {
                       if (a === currentUsername) return -1;
@@ -331,6 +402,8 @@ const AnimeListPage = () => {
                         user={user}
                         animeList={userAnimeList}
                         isCurrentUser={user === currentUsername}
+                        // [UPDATE QUAN TRỌNG] Truyền prop canEdit
+                        canEdit={canEdit} 
                         deleteMode={deleteMode}
                         selectedAnimeIds={selectedAnimeIds}
                         isDeleting={isDeleting}
@@ -343,7 +416,6 @@ const AnimeListPage = () => {
                 })}
               </>
             ) : (
-              // Empty State (Khi cả list chưa có ai add gì cả)
               <div className="empty-state">
                 <p>This list is empty.</p>
                 {canEdit && (
@@ -371,10 +443,22 @@ const AnimeListPage = () => {
                      Delete List
                   </button>
                 </>
-              ) : (
-                <button className="btn btn-primary btn-icon">
-                   <span className="material-symbols-outlined">share</span>
-                   Share List
+              ) : isViewer ? (
+                <button 
+                  className="btn btn-primary btn-icon" 
+                  onClick={handleOpenEditRequest}
+                >
+                   <span className="material-symbols-outlined">edit_note</span>
+                   Request Edit Access
+                </button>
+              ) : !currentPermission && ( // [FIX] Sử dụng currentPermission thay vì permissionLevel
+                <button 
+                  className="btn btn-primary btn-icon" 
+                  onClick={handleOpenJoinRequest}
+                  style={{ backgroundColor: 'var(--accent-green)' }}
+                >
+                   <span className="material-symbols-outlined">person_add</span>
+                   Join Request
                 </button>
               )}
           </div>
@@ -385,10 +469,22 @@ const AnimeListPage = () => {
             onAddViewer={handleOpenAddViewer}
             onRemoveMember={handleRemoveMember}
           />
+
+          {/* [MỚI] Hiển thị RequestList bên dưới Sidebar nếu là Owner */}
+          {listInfo.is_owner && (
+            <RequestList 
+              requests={pendingRequests} 
+              onAccept={handleAcceptRequest} 
+              onReject={handleRejectRequest} 
+              // [UPDATE QUAN TRỌNG] Truyền list thành viên hiện tại vào để check logic
+              currentMembers={members}
+            />
+          )}
+
         </div>
       </div>
       
-      {/* [UPDATE] Truyền danh sách phim đầy đủ vào Modal để check Added */}
+      {/* --- Modal Components --- */}
       <AddAnimeModal 
         isOpen={showAddModal} 
         onClose={() => setShowAddModal(false)}
@@ -411,6 +507,19 @@ const AnimeListPage = () => {
         roleType={modalRoleType}
         currentMembers={members}
         onUserAdded={handleUserAdded}
+      />
+
+      <RequestModal 
+        isOpen={showRequestModal}
+        onClose={() => setShowRequestModal(false)}
+        onSubmit={handleSubmitRequest}
+        title={requestType === 'join' ? "Join Request" : "Edit Access Request"}
+        placeholder={
+          requestType === 'join' 
+            ? "Hello, I would like to join this list as a contributor..." 
+            : "Please describe why you need edit permission..."
+        }
+        isLoading={isSubmittingRequest}
       />
     </div>
   );
