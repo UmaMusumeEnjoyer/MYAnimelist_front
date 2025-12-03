@@ -29,7 +29,7 @@ const HomePage = () => {
       {/* --- PHẦN MỚI 1: Hero Section (Giống như ảnh bạn cung cấp) --- */}
       <section className="heroSection">
         <div className="heroContent">
-          <h1>Manage <br /> Your Anime <br /> Journey</h1> {/* Tiêu đề bạn có thể thay đổi */}
+          <h1>Manage <br /> Your Anime <br /> Dream Journey</h1> {/* Tiêu đề bạn có thể thay đổi */}
           <p>From the latest series to the classics. Search, follow. Never lose your way in your watching list again.</p> {/* Mô tả bạn có thể thay đổi */}
 
         </div>
