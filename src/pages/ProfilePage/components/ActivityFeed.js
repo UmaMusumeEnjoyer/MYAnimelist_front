@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { getUserActivity } from '../../../services/api'; 
 import './ActivityFeed.css';
 
-// [MỚI] Nhận filterDate
 const ActivityFeed = ({ filterDate }) => {
   const [activities, setActivities] = useState([]);
   const [visibleCount, setVisibleCount] = useState(10);
@@ -16,6 +15,7 @@ const ActivityFeed = ({ filterDate }) => {
         const username = localStorage.getItem('username'); 
         if (username) {
           const res = await getUserActivity(username);
+          // Đảm bảo activities luôn là mảng
           setActivities(res.data.items || []);
         }
       } catch (error) {
@@ -28,19 +28,13 @@ const ActivityFeed = ({ filterDate }) => {
     fetchData();
   }, []);
 
-  // [MỚI] Logic lọc Activity
+  // Logic lọc Activity theo ngày
   const getFilteredActivities = () => {
     if (!filterDate) return activities;
 
     return activities.filter(item => {
-      // Tính toán ngày của activity từ ago_seconds
-      // ago_seconds là số giây trôi qua từ lúc activity đến hiện tại
-      // => Thời gian activity = Hiện tại - ago_seconds
       const actionDate = new Date(Date.now() - item.ago_seconds * 1000);
-      
-      // Chuyển về chuỗi YYYY-MM-DD để so sánh
       const actionDateStr = actionDate.toISOString().split('T')[0];
-      
       return actionDateStr === filterDate;
     });
   };
@@ -57,15 +51,66 @@ const ActivityFeed = ({ filterDate }) => {
       return `${Math.floor(s/86400)}d ago`;
   };
 
+  // --- [LOGIC MỚI] Xử lý hiển thị cho từng loại hành động ---
+
+  // 1. Lấy class màu sắc cho icon
   const getActionClass = (type) => {
-      if (type === 'followed_anime') return 'feed-icon-add';
-      if (type === 'updated_followed_anime') return 'feed-icon-update';
-      return 'feed-icon-default';
+      switch (type) {
+          case 'followed_anime': 
+          case 'create_list': // Tạo list cũng dùng màu xanh (add)
+              return 'feed-icon-add';
+          case 'updated_followed_anime': 
+              return 'feed-icon-update';
+          default: 
+              return 'feed-icon-default';
+      }
   };
+
+  // 2. Lấy ký tự icon (+, ✎, hoặc icon list)
+  const getActionIconChar = (type) => {
+      if (type === 'create_list') return '☰'; // Ký tự menu/list
+      if (type === 'followed_anime') return '+';
+      if (type.includes('update')) return '✎';
+      return '•';
+  };
+
+  // 3. Lấy nội dung mô tả hành động
+  const getActionDescription = (item) => {
+      switch (item.action_type) {
+          case 'followed_anime':
+              return 'added to list';
+          case 'create_list':
+              return 'created custom list';
+          case 'updated_followed_anime':
+              return 'updated progress';
+          default:
+              return 'performed action';
+      }
+  };
+
+  // 4. Lấy tên đối tượng (Anime Title hoặc List Name)
+  const getTargetName = (item) => {
+      if (item.action_type === 'create_list') {
+          return item.metadata?.list_name || "Unnamed List";
+      }
+      return item.metadata?.title || "Unknown Anime";
+  };
+
+  // 5. Xử lý click vào đối tượng (Điều hướng)
+  const handleTargetClick = (item) => {
+      if (item.action_type === 'create_list') {
+          // Điều hướng đến trang chi tiết list (bạn tự điều chỉnh route cho phù hợp)
+          navigate(`/collection/${item.target_id}`); 
+      } else {
+          // Điều hướng đến trang anime
+          navigate(`/anime/${item.target_id}`);
+      }
+  };
+
+  // ---------------------------------------------------------
 
   if (loading) return <div className="feed-loading">Loading activity...</div>;
   
-  // [MỚI] Hiển thị thông báo nếu không có activity nào trong ngày đã chọn
   if (filteredItems.length === 0) {
     return (
       <div className="feed-empty" style={{textAlign: 'left', paddingLeft: '10px', color: 'var(--text-secondary)'}}>
@@ -79,7 +124,6 @@ const ActivityFeed = ({ filterDate }) => {
   return (
     <div className="feed-container">
       {displayItems.map((item, index) => {
-        const animeTitle = item.metadata?.title || "Unknown Anime";
         const isLast = index === displayItems.length - 1;
 
         return (
@@ -87,7 +131,7 @@ const ActivityFeed = ({ filterDate }) => {
             {/* Timeline Column */}
             <div className="feed-timeline">
                <div className={`feed-icon-circle ${getActionClass(item.action_type)}`}>
-                   {item.action_type === 'followed_anime' ? '+' : '✎'}
+                   {getActionIconChar(item.action_type)}
                </div>
                {!isLast && <div className="feed-line"></div>}
             </div>
@@ -96,14 +140,19 @@ const ActivityFeed = ({ filterDate }) => {
             <div className="feed-content-wrapper">
                 <div className="feed-header">
                     <span className="feed-user">{username}</span>
+                    
                     <span className="feed-action">
-                        {item.action_type === 'followed_anime' ? 'added to list' : 'updated progress'}
+                        {getActionDescription(item)}
                     </span>
-                    <span className="feed-target clickable" onClick={() => navigate(`/anime/${item.target_id}`)}>
-                        {animeTitle}
+                    
+                    <span className="feed-target clickable" onClick={() => handleTargetClick(item)}>
+                        {getTargetName(item)}
                     </span>
+                    
                     <span className="feed-time">{formatTimeAgo(item.ago_seconds)}</span>
                 </div>
+                
+                {/* [Tuỳ chọn] Nếu muốn hiện thêm chi tiết (ví dụ ảnh cover cho anime) có thể thêm ở đây */}
             </div>
           </div>
         );
