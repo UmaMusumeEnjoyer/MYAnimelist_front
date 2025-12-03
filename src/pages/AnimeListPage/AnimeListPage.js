@@ -118,7 +118,7 @@ const AnimeListPage = () => {
     fetchRequestsData();
   }, [fetchRequestsData]);
 
-  const fetchListDetails = useCallback(() => {
+const fetchListDetails = useCallback(() => {
     if (!id) return;
     setDeleteMode(false);
     setSelectedAnimeIds([]);
@@ -159,9 +159,26 @@ const AnimeListPage = () => {
         });
         setGroupedAnime(groups);
       })
-      .catch((err) => console.error("Error fetching list data:", err))
+      // --- PHẦN CHỈNH SỬA BẮT ĐẦU TỪ ĐÂY ---
+      .catch((err) => {
+        console.error("Error fetching list data:", err);
+        
+        // Kiểm tra response từ server xem có đúng lỗi permission không
+        if (err.response && err.response.data) {
+          const errorMsg = err.response.data.error;
+          
+          // So sánh chuỗi lỗi chính xác như bạn yêu cầu
+          if (errorMsg === "['You do not have permission to view this private list']") {
+            // (Tuỳ chọn) Thông báo cho người dùng biết trước khi chuyển trang
+            // alert("Bạn không có quyền xem danh sách riêng tư này."); 
+            
+            navigate('/browse'); // Chuyển hướng về trang browse
+          }
+        }
+      })
+      // --- KẾT THÚC PHẦN CHỈNH SỬA ---
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, navigate]); // Đảm bảo thêm navigate vào dependency array nếu eslint yêu cầu
 
   useEffect(() => {
     setLoading(true);
