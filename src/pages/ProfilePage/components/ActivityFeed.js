@@ -15,7 +15,6 @@ const ActivityFeed = ({ filterDate }) => {
         const username = localStorage.getItem('username'); 
         if (username) {
           const res = await getUserActivity(username);
-          // Đảm bảo activities luôn là mảng
           setActivities(res.data.items || []);
         }
       } catch (error) {
@@ -28,7 +27,6 @@ const ActivityFeed = ({ filterDate }) => {
     fetchData();
   }, []);
 
-  // Logic lọc Activity theo ngày
   const getFilteredActivities = () => {
     if (!filterDate) return activities;
 
@@ -51,13 +49,12 @@ const ActivityFeed = ({ filterDate }) => {
       return `${Math.floor(s/86400)}d ago`;
   };
 
-  // --- [LOGIC MỚI] Xử lý hiển thị cho từng loại hành động ---
+  // --- LOGIC HIỂN THỊ ---
 
-  // 1. Lấy class màu sắc cho icon
   const getActionClass = (type) => {
       switch (type) {
           case 'followed_anime': 
-          case 'create_list': // Tạo list cũng dùng màu xanh (add)
+          case 'create_list': 
               return 'feed-icon-add';
           case 'updated_followed_anime': 
               return 'feed-icon-update';
@@ -66,19 +63,18 @@ const ActivityFeed = ({ filterDate }) => {
       }
   };
 
-  // 2. Lấy ký tự icon (+, ✎, hoặc icon list)
   const getActionIconChar = (type) => {
-      if (type === 'create_list') return '☰'; // Ký tự menu/list
+      if (type === 'create_list') return '☰'; 
       if (type === 'followed_anime') return '+';
       if (type.includes('update')) return '✎';
       return '•';
   };
 
-  // 3. Lấy nội dung mô tả hành động
+  // [ĐÃ SỬA] Cập nhật text hiển thị
   const getActionDescription = (item) => {
       switch (item.action_type) {
           case 'followed_anime':
-              return 'added to list';
+              return 'followed anime'; // Sửa thành "followed anime"
           case 'create_list':
               return 'created custom list';
           case 'updated_followed_anime':
@@ -88,7 +84,6 @@ const ActivityFeed = ({ filterDate }) => {
       }
   };
 
-  // 4. Lấy tên đối tượng (Anime Title hoặc List Name)
   const getTargetName = (item) => {
       if (item.action_type === 'create_list') {
           return item.metadata?.list_name || "Unnamed List";
@@ -96,18 +91,16 @@ const ActivityFeed = ({ filterDate }) => {
       return item.metadata?.title || "Unknown Anime";
   };
 
-  // 5. Xử lý click vào đối tượng (Điều hướng)
+  // [ĐÃ SỬA] Cập nhật đường dẫn điều hướng
   const handleTargetClick = (item) => {
       if (item.action_type === 'create_list') {
-          // Điều hướng đến trang chi tiết list (bạn tự điều chỉnh route cho phù hợp)
-          navigate(`/collection/${item.target_id}`); 
+          navigate(`/list/${item.target_id}`); // Sửa thành /list/{id}
       } else {
-          // Điều hướng đến trang anime
           navigate(`/anime/${item.target_id}`);
       }
   };
 
-  // ---------------------------------------------------------
+  // -----------------------
 
   if (loading) return <div className="feed-loading">Loading activity...</div>;
   
@@ -128,7 +121,6 @@ const ActivityFeed = ({ filterDate }) => {
 
         return (
           <div key={item.id} className="feed-row">
-            {/* Timeline Column */}
             <div className="feed-timeline">
                <div className={`feed-icon-circle ${getActionClass(item.action_type)}`}>
                    {getActionIconChar(item.action_type)}
@@ -136,7 +128,6 @@ const ActivityFeed = ({ filterDate }) => {
                {!isLast && <div className="feed-line"></div>}
             </div>
 
-            {/* Content Column */}
             <div className="feed-content-wrapper">
                 <div className="feed-header">
                     <span className="feed-user">{username}</span>
@@ -151,8 +142,6 @@ const ActivityFeed = ({ filterDate }) => {
                     
                     <span className="feed-time">{formatTimeAgo(item.ago_seconds)}</span>
                 </div>
-                
-                {/* [Tuỳ chọn] Nếu muốn hiện thêm chi tiết (ví dụ ảnh cover cho anime) có thể thêm ở đây */}
             </div>
           </div>
         );
