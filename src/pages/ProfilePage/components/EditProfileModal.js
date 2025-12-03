@@ -13,18 +13,21 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateSuccess }) => 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     
-    // Ref để kích hoạt input file ẩn
     const fileInputRef = useRef(null);
 
+    // [FIX] Sửa logic useEffect: Chỉ reset form khi Modal MỞ ra (isOpen = true)
+    // Bỏ currentUser ra khỏi dependency array để tránh việc upload avatar (làm currentUser thay đổi) 
+    // kích hoạt lại hàm này và reset các trường text đang nhập dở.
     useEffect(() => {
-        if (currentUser) {
+        if (isOpen && currentUser) {
             setFormData({
                 first_name: currentUser.first_name || '',
                 last_name: currentUser.last_name || '',
                 username: currentUser.username || ''
             });
         }
-    }, [currentUser]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpen]); 
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -51,13 +54,14 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateSuccess }) => 
         try {
             const res = await uploadUserAvatar(file);
             
-            // Cập nhật UI cha ngay lập tức
+            // Cập nhật UI cha (ProfilePage/Header) với avatar mới
+            // Lưu ý: Text fields (first_name...) ở UI cha vẫn là dữ liệu cũ cho đến khi bấm Save
+            // Nhưng formData cục bộ ở đây vẫn được giữ nguyên nhờ việc sửa useEffect ở trên
             onUpdateSuccess({ 
                 ...currentUser, 
                 avatar_url: res.data.avatar_url 
             });
             
-            // [REMOVED] Đã xóa alert thông báo thành công
         } catch (err) {
             console.error("Upload failed:", err);
             setError("Failed to upload avatar.");
@@ -69,15 +73,12 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateSuccess }) => 
 
     // --- LOGIC DELETE AVATAR ---
     const handleAvatarDelete = async () => {
-        // [REMOVED] Đã xóa dòng xác nhận window.confirm
-
         setLoading(true);
         setError(null);
 
         try {
             await deleteUserAvatar();
 
-            // Cập nhật UI cha: set avatar_url về null
             onUpdateSuccess({ 
                 ...currentUser, 
                 avatar_url: null 
@@ -189,6 +190,9 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateSuccess }) => 
                                 onChange={handleChange}
                                 required
                             />
+                            <div style={{fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px'}}>
+                                Changing username may affect your profile link.
+                            </div>
                         </div>
                     </div>
 

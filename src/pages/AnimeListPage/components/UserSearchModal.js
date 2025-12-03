@@ -1,8 +1,13 @@
+// src/pages/AnimeListPage/components/UserSearchModal.js
 import React, { useState, useEffect } from 'react';
-import { searchUsers, addMemberToList, updateMemberPermission } from '../../../services/api'; 
+// [UPDATE 1] Import getUserProfile
+import { searchUsers, addMemberToList, updateMemberPermission, getUserProfile } from '../../../services/api'; 
 import './UserSearchModal.css';
 
-// Hook để delay gọi API khi gõ phím (500ms)
+// Khai báo Domain Backend
+const BACKEND_DOMAIN = 'https://doannguyen.pythonanywhere.com';
+
+// Hook debounce
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
   useEffect(() => {
@@ -12,45 +17,152 @@ const useDebounce = (value, delay) => {
   return debouncedValue;
 };
 
+// [UPDATE 2] Component con để xử lý từng kết quả tìm kiếm & lấy Avatar
+const UserSearchResultItem = ({ user, currentMembers, isEditorMode, isProcessing, onAddUser }) => {
+  const DEFAULT_AVATAR = "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg";
+  const [displayAvatar, setDisplayAvatar] = useState(DEFAULT_AVATAR);
+
+  // Helper xử lý URL
+  const getAvatarUrl = (url) => {
+    if (!url) return DEFAULT_AVATAR;
+    if (url.startsWith('http')) return url;
+    return `${BACKEND_DOMAIN}${url}`;
+  };
+
+  // [LOGIC FETCH AVATAR]
+  useEffect(() => {
+    let isMounted = true;
+
+    // Ưu tiên avatar có sẵn từ kết quả search trước (tránh layout shift)
+    if (user.avatar || user.avatar_url) {
+      setDisplayAvatar(getAvatarUrl(user.avatar || user.avatar_url));
+    }
+
+    // Gọi API lấy thông tin profile chi tiết
+    if (user.username) {
+      getUserProfile(user.username)
+        .then((res) => {
+          if (isMounted && res.data && res.data.avatar_url) {
+            setDisplayAvatar(getAvatarUrl(res.data.avatar_url));
+          }
+        })
+        .catch((err) => console.error(err));
+    }
+    return () => { isMounted = false; };
+  }, [user.username, user.avatar, user.avatar_url]);
+
+  // [LOGIC TÍNH TOÁN NÚT BẤM]
+  const existingMember = currentMembers.find(m => m.username === user.username);
+  const isOwner = existingMember?.is_owner;
+
+  let btnText = "Invite";
+  let btnIcon = "person_add";
+  let isDisabled = isProcessing || isOwner; 
+  let btnClass = isEditorMode ? 'editor' : 'viewer'; 
+
+  if (existingMember) {
+    if (isEditorMode) {
+        // Mode Add Editor
+        if (existingMember.can_edit) {
+          btnText = "Joined";
+          btnIcon = "check";
+          isDisabled = true;
+        } else {
+          btnText = "Promote";
+          btnIcon = "arrow_upward";
+        }
+    } else {
+        // Mode Add Viewer
+        if (existingMember.can_edit) {
+          btnText = "Demote";
+          btnIcon = "arrow_downward";
+        } else {
+          btnText = "Joined";
+          btnIcon = "check";
+          isDisabled = true;
+        }
+    }
+  }
+
+  return (
+    <div className="user-card-item">
+      <div className="user-card-info">
+        {/* Hiển thị avatar đã fetch */}
+        <img src={displayAvatar} alt={user.username} className="user-card-avatar" />
+        <div>
+          <p className="user-card-name">
+            {user.username}
+            {user.email_verified && (
+              <span className="material-symbols-outlined" 
+                style={{fontSize: '14px', color: '#3db4f2', marginLeft: '4px', verticalAlign: 'middle'}}
+                title="Verified Email">
+                verified
+              </span>
+            )}
+          </p>
+          
+          <p className="user-card-handle">
+            {existingMember ? (
+                <span style={{color: '#94a3b8', fontStyle: 'italic'}}>
+                  Currently: {isOwner ? 'Owner' : (existingMember.can_edit ? 'Editor' : 'Viewer')}
+                </span>
+            ) : (
+                <>Assign: <span style={{color: isEditorMode ? '#e85d75' : '#3db4f2', fontWeight: 'bold'}}>
+                  {isEditorMode ? 'Editor' : 'Viewer'}
+                </span></>
+            )}
+          </p>
+        </div>
+      </div>
+
+      <button 
+        className={`btn-invite ${btnClass}`} 
+        onClick={() => onAddUser(user)}
+        disabled={isDisabled}
+        title={isOwner ? "Cannot modify Owner" : ""}
+      >
+        {isProcessing ? (
+          <span className="material-symbols-outlined spin-icon" style={{fontSize: '18px'}}>sync</span>
+        ) : (
+          <>
+            <span className="material-symbols-outlined" style={{fontSize: '18px'}}>{btnIcon}</span>
+            {btnText}
+          </>
+        )}
+      </button>
+    </div>
+  );
+};
+
+// [MAIN COMPONENT]
 const UserSearchModal = ({ isOpen, onClose, listId, roleType, onUserAdded, currentMembers = [] }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]); 
   const [loading, setLoading] = useState(false);
-  const [processingIds, setProcessingIds] = useState([]); // Track user đang được xử lý (xoay vòng)
+  const [processingIds, setProcessingIds] = useState([]); 
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  const isEditorMode = roleType === 'editor'; // Xác định đang mở modal để add Editor hay Viewer
+  const isEditorMode = roleType === 'editor'; 
 
-  // =================================================================
   // 1. SEARCH & FILTER LOGIC
-  // =================================================================
   useEffect(() => {
-    // Nếu ô tìm kiếm trống: Hiển thị các thành viên có sẵn để promote/demote
     if (!debouncedSearchTerm.trim()) {
-      
       const suggestedUsers = currentMembers.filter(member => {
-        // Loại bỏ Owner khỏi danh sách gợi ý (vì không thể chỉnh sửa owner)
         if (member.is_owner) return false;
-
         if (isEditorMode) {
-          // Mode Add Editor: Hiện danh sách Viewer để Promote
           return !member.can_edit;
         } else {
-          // Mode Add Viewer: Hiện danh sách Editor để Demote
           return member.can_edit;
         }
       });
-
       setResults(suggestedUsers);
       return;
     }
 
-    // Nếu có từ khóa tìm kiếm: Gọi API Search
     const fetchData = async () => {
       setLoading(true);
       try {
         const res = await searchUsers(debouncedSearchTerm);
-        // API trả về: { query: "...", count: X, results: [...] }
         if (res.data && Array.isArray(res.data.results)) {
           setResults(res.data.results);
         } else {
@@ -65,25 +177,20 @@ const UserSearchModal = ({ isOpen, onClose, listId, roleType, onUserAdded, curre
     };
 
     fetchData();
-  }, [debouncedSearchTerm, currentMembers, isEditorMode]); // Thêm dependencies cần thiết
+  }, [debouncedSearchTerm, currentMembers, isEditorMode]);
 
-  // Reset khi đóng modal
   const handleClose = () => {
     setSearchTerm('');
     setResults([]);
     onClose();
   };
 
-  // =================================================================
-  // 2. ACTION HANDLER (ADD / UPDATE PERMISSION)
-  // =================================================================
+  // 2. ACTION HANDLER
   const handleAddUser = async (user) => {
     setProcessingIds(prev => [...prev, user.username]);
     
-    // Kiểm tra xem user này đã có trong list chưa
     const existingMember = currentMembers.find(m => m.username === user.username);
     
-    // Bảo vệ: Không bao giờ được tác động đến Owner
     if (existingMember && existingMember.is_owner) {
       alert("Cannot change permissions of the List Owner.");
       setProcessingIds(prev => prev.filter(id => id !== user.username));
@@ -92,41 +199,30 @@ const UserSearchModal = ({ isOpen, onClose, listId, roleType, onUserAdded, curre
 
     try {
       if (isEditorMode) {
-        // ---------------------------------------------
-        // CASE A: MODE ADD EDITOR
-        // ---------------------------------------------
         if (existingMember) {
-          // TH1: Đã là thành viên (Viewer) -> Thăng cấp (Promote)
           await updateMemberPermission(listId, {
             username: user.username,
             can_edit: true
           });
         } else {
-          // TH2: Chưa là thành viên -> Thêm mới làm Editor
           await addMemberToList(listId, {
             username: user.username,
             can_edit: true
           });
         }
       } else {
-        // ---------------------------------------------
-        // CASE B: MODE ADD VIEWER
-        // ---------------------------------------------
         if (existingMember) {
           if (existingMember.can_edit) {
-            // TH3: Đang là Editor -> Truất quyền (Demote) xuống Viewer
             await updateMemberPermission(listId, {
               username: user.username,
               can_edit: false
             });
           } else {
-            // TH4: Đã là Viewer -> Không làm gì cả
             alert(`${user.username} is already a viewer.`);
             setProcessingIds(prev => prev.filter(id => id !== user.username));
             return; 
           }
         } else {
-          // TH5: Chưa là thành viên -> Thêm mới làm Viewer
           await addMemberToList(listId, {
             username: user.username,
             permission_level: 'view'
@@ -134,7 +230,6 @@ const UserSearchModal = ({ isOpen, onClose, listId, roleType, onUserAdded, curre
         }
       }
 
-      // Refresh list ở component cha
       if (onUserAdded) onUserAdded(); 
       
     } catch (error) {
@@ -175,7 +270,6 @@ const UserSearchModal = ({ isOpen, onClose, listId, roleType, onUserAdded, curre
         <div className="user-modal-body">
           {loading && <div className="modal-loading">Searching users...</div>}
 
-          {/* Helper Text: Chỉ hiện khi không load, không có kết quả (cả search lẫn gợi ý) và chưa search gì */}
           {!loading && results.length === 0 && !searchTerm && (
             <div className="modal-helper-text">
               Type a username to invite them as a 
@@ -183,104 +277,22 @@ const UserSearchModal = ({ isOpen, onClose, listId, roleType, onUserAdded, curre
             </div>
           )}
           
-          {/* Helper Text: Khi search nhưng không ra kết quả */}
           {!loading && results.length === 0 && searchTerm && (
             <div className="modal-helper-text">No users found.</div>
           )}
 
           <div className="user-grid">
-            {results.map((user) => {
-              const isProcessing = processingIds.includes(user.username);
-              const avatarUrl = "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"; 
-              
-              // Kiểm tra trạng thái hiện tại của user tìm được (hoặc user từ list gợi ý)
-              const existingMember = currentMembers.find(m => m.username === user.username);
-              const isOwner = existingMember?.is_owner;
-
-              // =============================================
-              // LOGIC HIỂN THỊ NÚT (Dynamic Button)
-              // =============================================
-              let btnText = "Invite";
-              let btnIcon = "person_add";
-              let isDisabled = isProcessing || isOwner; 
-              let btnClass = isEditorMode ? 'editor' : 'viewer'; 
-
-              if (existingMember) {
-                if (isEditorMode) {
-                   // --- Mode: Add Editor ---
-                   if (existingMember.can_edit) {
-                     // Đã là Editor/Owner -> Disabled
-                     btnText = "Joined";
-                     btnIcon = "check";
-                     isDisabled = true;
-                   } else {
-                     // Đang là Viewer -> Cho phép Promote
-                     btnText = "Promote";
-                     btnIcon = "arrow_upward";
-                   }
-                } else {
-                   // --- Mode: Add Viewer ---
-                   if (existingMember.can_edit) {
-                     // Đang là Editor -> Cho phép Demote
-                     btnText = "Demote";
-                     btnIcon = "arrow_downward";
-                   } else {
-                     // Đã là Viewer -> Disabled
-                     btnText = "Joined";
-                     btnIcon = "check";
-                     isDisabled = true;
-                   }
-                }
-              }
-
-              return (
-                <div key={user.id || user.username} className="user-card-item">
-                  <div className="user-card-info">
-                    <img src={avatarUrl} alt={user.username} className="user-card-avatar" />
-                    <div>
-                      <p className="user-card-name">
-                        {user.username}
-                        {user.email_verified && (
-                          <span className="material-symbols-outlined" 
-                            style={{fontSize: '14px', color: '#3db4f2', marginLeft: '4px', verticalAlign: 'middle'}}
-                            title="Verified Email">
-                            verified
-                          </span>
-                        )}
-                      </p>
-                      
-                      <p className="user-card-handle">
-                        {existingMember ? (
-                           <span style={{color: '#94a3b8', fontStyle: 'italic'}}>
-                             Currently: {isOwner ? 'Owner' : (existingMember.can_edit ? 'Editor' : 'Viewer')}
-                           </span>
-                        ) : (
-                           <>Assign: <span style={{color: isEditorMode ? '#e85d75' : '#3db4f2', fontWeight: 'bold'}}>
-                             {isEditorMode ? 'Editor' : 'Viewer'}
-                           </span></>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-
-                  <button 
-                    className={`btn-invite ${btnClass}`} 
-                    onClick={() => handleAddUser(user)}
-                    disabled={isDisabled}
-                    title={isOwner ? "Cannot modify Owner" : ""}
-                  >
-                    {isProcessing ? (
-                      <span className="material-symbols-outlined spin-icon" style={{fontSize: '18px'}}>sync</span>
-                    ) : (
-                      <>
-                        <span className="material-symbols-outlined" style={{fontSize: '18px'}}>{btnIcon}</span>
-                        {btnText}
-                      </>
-                    )}
-                  </button>
-                </div>
-              );
-            })}
+            {results.map((user) => (
+              // [UPDATE 3] Sử dụng component con thay vì render trực tiếp
+              <UserSearchResultItem 
+                key={user.id || user.username}
+                user={user}
+                currentMembers={currentMembers}
+                isEditorMode={isEditorMode}
+                isProcessing={processingIds.includes(user.username)}
+                onAddUser={handleAddUser}
+              />
+            ))}
           </div>
         </div>
       </div>

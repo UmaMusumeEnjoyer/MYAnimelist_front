@@ -1,20 +1,60 @@
-import React, { useMemo } from 'react';
+// src/pages/AnimeListPage/components/Sidebar.js
+import React, { useMemo, useState, useEffect } from 'react';
 import './Sidebar.css';
+// [UPDATE 1] Import API getUserProfile
+import { getUserProfile } from '../../../services/api'; 
 
-// [UPDATE] Thêm prop isCurrentUser vào UserItem
+// Khai báo Domain Backend để xử lý ảnh
+const BACKEND_DOMAIN = 'https://doannguyen.pythonanywhere.com';
+
 const UserItem = ({ user, roleIcon, iconTitle, onRemove, canRemove, isCurrentUser }) => {
-  // Fallback avatar
-  const avatarUrl = user.avatar || "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg";
+  // Avatar mặc định
+  const DEFAULT_AVATAR = "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg";
+
+  // [UPDATE 2] State để lưu avatar hiển thị
+  const [displayAvatar, setDisplayAvatar] = useState(DEFAULT_AVATAR);
+
+  // Hàm xử lý URL ảnh
+  const getAvatarUrl = (url) => {
+    if (!url) return DEFAULT_AVATAR;
+    if (url.startsWith('http')) return url;
+    return `${BACKEND_DOMAIN}${url}`;
+  };
+
+  // [UPDATE 3] useEffect để gọi API lấy thông tin profile mới nhất (bao gồm Avatar)
+  useEffect(() => {
+    let isMounted = true;
+
+    // Ưu tiên hiển thị avatar có sẵn trong props trước (nếu có) để tránh layout shift
+    if (user.avatar || user.avatar_url) {
+      setDisplayAvatar(getAvatarUrl(user.avatar || user.avatar_url));
+    }
+
+    // Gọi API lấy thông tin chi tiết
+    if (user.username) {
+      getUserProfile(user.username)
+        .then((res) => {
+          if (isMounted && res.data && res.data.avatar_url) {
+            // Cập nhật lại avatar từ API getUserProfile
+            setDisplayAvatar(getAvatarUrl(res.data.avatar_url));
+          }
+        })
+        .catch((err) => {
+          console.error(`Failed to fetch profile for ${user.username}`, err);
+        });
+    }
+
+    return () => { isMounted = false; };
+  }, [user.username, user.avatar, user.avatar_url]);
 
   return (
-    // [UPDATE] Thêm class 'current-user' nếu là user hiện tại
     <div className={`sidebar-user-item ${isCurrentUser ? 'current-user' : ''}`}>
       <div className="user-info">
-        <img src={avatarUrl} alt={user.username} className="user-avatar" />
+        {/* [UPDATE 4] Sử dụng state displayAvatar */}
+        <img src={displayAvatar} alt={user.username} className="user-avatar" />
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <p className="user-name">{user.username}</p>
-            {/* [UPDATE] Thêm badge (You) */}
             {isCurrentUser && <span className="you-badge">You</span>}
           </div>
           <p className="user-handle">@{user.username}</p> 
@@ -44,7 +84,6 @@ const UserItem = ({ user, roleIcon, iconTitle, onRemove, canRemove, isCurrentUse
 
 const Sidebar = ({ members = [], onAddEditor, onAddViewer, onRemoveMember }) => {
   const permissionLevel = localStorage.getItem("permission_level");
-  // [UPDATE] Lấy username hiện tại
   const currentUsername = localStorage.getItem("username");
   
   const isCurrentUserOwner = permissionLevel === "owner";
@@ -91,7 +130,6 @@ const Sidebar = ({ members = [], onAddEditor, onAddViewer, onRemoveMember }) => 
             roleIcon="verified_user" 
             iconTitle="List Owner" 
             canRemove={false}
-            // [UPDATE] Truyền prop isCurrentUser
             isCurrentUser={owner.username === currentUsername}
           />
         </div>
@@ -117,7 +155,6 @@ const Sidebar = ({ members = [], onAddEditor, onAddViewer, onRemoveMember }) => 
                 iconTitle="Can edit content"
                 canRemove={isCurrentUserOwner} 
                 onRemove={onRemoveMember}
-                // [UPDATE] Truyền prop isCurrentUser
                 isCurrentUser={editor.username === currentUsername}
               />
             ))
@@ -147,7 +184,6 @@ const Sidebar = ({ members = [], onAddEditor, onAddViewer, onRemoveMember }) => 
                 iconTitle="Can view only"
                 canRemove={isCurrentUserOwner}
                 onRemove={onRemoveMember}
-                // [UPDATE] Truyền prop isCurrentUser
                 isCurrentUser={viewer.username === currentUsername}
               />
             ))

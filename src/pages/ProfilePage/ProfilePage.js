@@ -9,6 +9,7 @@ import ActivityHistory from './components/ActivityHistory';
 import ActivityFeed from './components/ActivityFeed';
 import AnimeCard from '../../components/AnimeCard';
 import EditProfileModal from './components/EditProfileModal'; // [NEW] Import Modal
+import { useAuth } from '../../context/AuthContext'; // Import hook
 
 // API Services
 import { 
@@ -25,7 +26,7 @@ const BACKEND_DOMAIN = 'https://doannguyen.pythonanywhere.com';
 const ProfilePage = () => {
   const navigate = useNavigate();
   const { username: routeUsername } = useParams(); 
-  
+  const { updateUserContext } = useAuth();
   // Lấy username hiện tại từ localStorage (được cập nhật khi login hoặc edit profile)
   const loggedInUsername = localStorage.getItem('username'); 
 
@@ -196,6 +197,7 @@ const ProfilePage = () => {
             ...updatedUser
         }));
     }
+    updateUserContext(updatedUser);
   };
 
 

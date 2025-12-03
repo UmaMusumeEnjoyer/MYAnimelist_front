@@ -3,20 +3,34 @@ import React, { useState } from 'react';
 import './Header.css';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-// Import Modal mới
+// Import Modal Search
 import GlobalSearchModal from './GlobalSearchModal'; 
 
+// Khai báo Domain Backend để xử lý ảnh
+const BACKEND_DOMAIN = 'https://doannguyen.pythonanywhere.com';
+
 const Header = () => {
-  const { isAuthenticated, logout } = useAuth();
+  // [IMPORTANT] Lấy 'user' trực tiếp từ AuthContext thay vì tự quản lý state
+  const { isAuthenticated, logout, user } = useAuth();
+  
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  // State điều khiển Search Modal
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
+  // Avatar mặc định
+  const DEFAULT_AVATAR = "https://media.gametora.com/umamusume/characters/profile/1114.png";
+
+  // Hàm helper xử lý URL ảnh
+  const getAvatarUrl = (url) => {
+    if (!url) return DEFAULT_AVATAR;
+    // Nếu URL bắt đầu bằng http hoặc https (ảnh online), giữ nguyên
+    if (url.startsWith('http')) return url;
+    // Nếu URL là đường dẫn tương đối từ backend, ghép thêm domain
+    return `${BACKEND_DOMAIN}${url}`;
+  };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-
-  const defaultAvatar = "https://media.gametora.com/umamusume/characters/profile/1114.png";
 
   return (
     <>
@@ -55,7 +69,7 @@ const Header = () => {
         <div className="header-right">
           {isAuthenticated ? (
             <>
-              {/* Nút Search - Sửa sự kiện onClick để mở Modal */}
+              {/* Nút Search - Mở Modal */}
               <button 
                 className="btn-search" 
                 aria-label="Search"
@@ -79,7 +93,15 @@ const Header = () => {
               {/* Avatar & Dropdown */}
               <div className="user-menu-container">
                 <div className="user-avatar-trigger" onClick={toggleDropdown}>
-                   <img src={defaultAvatar} alt="User Avatar" className="user-avatar-img" />
+                   {/* [CORE LOGIC] 
+                      Sử dụng user?.avatar_url lấy từ AuthContext.
+                      Khi ProfilePage gọi updateUserContext, biến 'user' ở đây thay đổi -> ảnh tự đổi.
+                   */}
+                   <img 
+                      src={getAvatarUrl(user?.avatar_url)} 
+                      alt="User Avatar" 
+                      className="user-avatar-img" 
+                   />
                 </div>
                 
                 {isDropdownOpen && (
@@ -113,7 +135,7 @@ const Header = () => {
         </div>
       </header>
 
-      {/* Render Modal ở đây */}
+      {/* Global Search Modal */}
       <GlobalSearchModal 
         isOpen={isSearchModalOpen} 
         onClose={() => setIsSearchModalOpen(false)} 
