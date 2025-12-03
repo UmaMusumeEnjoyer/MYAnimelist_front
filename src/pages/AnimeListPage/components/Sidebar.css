@@ -116,3 +116,34 @@
 .remove-member-btn .material-symbols-outlined {
   font-size: 18px; /* Icon nhỏ gọn */
 }
+
+/* ... Các code cũ giữ nguyên ... */
+
+/* [UPDATE] Style cho User Item của chính người dùng đang đăng nhập */
+.sidebar-user-item.current-user {
+  background: rgba(61, 180, 242, 0.1); /* Màu xanh nhạt */
+  border: 1px solid rgba(61, 180, 242, 0.3);
+  border-radius: 8px;
+  padding: 8px 12px; /* Thêm padding vì có border */
+  margin-left: -12px; /* Căn chỉnh lại để không bị thụt vào so với các item khác */
+  margin-right: -12px;
+  width: calc(100% + 24px);
+}
+
+.you-badge {
+  font-size: 0.7rem;
+  background-color: #3db4f2; /* Màu xanh nổi bật */
+  color: #0b1622;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Điều chỉnh lại nút remove khi nằm trong item current-user */
+.sidebar-user-item.current-user .remove-member-btn {
+  margin-right: -4px;
+}
+
+/* ... Các code cũ phần empty-text, remove-member-btn giữ nguyên ... */

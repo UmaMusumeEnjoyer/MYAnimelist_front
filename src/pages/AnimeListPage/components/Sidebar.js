@@ -1,17 +1,22 @@
 import React, { useMemo } from 'react';
 import './Sidebar.css';
 
-// Component con UserItem giữ nguyên, chỉ nhận props hiển thị
-const UserItem = ({ user, roleIcon, iconTitle, onRemove, canRemove }) => {
+// [UPDATE] Thêm prop isCurrentUser vào UserItem
+const UserItem = ({ user, roleIcon, iconTitle, onRemove, canRemove, isCurrentUser }) => {
   // Fallback avatar
   const avatarUrl = user.avatar || "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg";
 
   return (
-    <div className="sidebar-user-item">
+    // [UPDATE] Thêm class 'current-user' nếu là user hiện tại
+    <div className={`sidebar-user-item ${isCurrentUser ? 'current-user' : ''}`}>
       <div className="user-info">
         <img src={avatarUrl} alt={user.username} className="user-avatar" />
         <div>
-          <p className="user-name">{user.username}</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <p className="user-name">{user.username}</p>
+            {/* [UPDATE] Thêm badge (You) */}
+            {isCurrentUser && <span className="you-badge">You</span>}
+          </div>
           <p className="user-handle">@{user.username}</p> 
         </div>
       </div>
@@ -23,7 +28,6 @@ const UserItem = ({ user, roleIcon, iconTitle, onRemove, canRemove }) => {
           </span>
         )}
         
-        {/* Chỉ hiện nút xóa nếu canRemove = true */}
         {canRemove && (
           <button 
             className="remove-member-btn"
@@ -39,10 +43,10 @@ const UserItem = ({ user, roleIcon, iconTitle, onRemove, canRemove }) => {
 };
 
 const Sidebar = ({ members = [], onAddEditor, onAddViewer, onRemoveMember }) => {
-  // [UPDATE] Lấy quyền trực tiếp từ LocalStorage
   const permissionLevel = localStorage.getItem("permission_level");
+  // [UPDATE] Lấy username hiện tại
+  const currentUsername = localStorage.getItem("username");
   
-  // Xác định xem user hiện tại có phải là Owner không dựa vào localStorage
   const isCurrentUserOwner = permissionLevel === "owner";
 
   const { owner, editors, viewers } = useMemo(() => {
@@ -86,7 +90,9 @@ const Sidebar = ({ members = [], onAddEditor, onAddViewer, onRemoveMember }) => 
             user={owner} 
             roleIcon="verified_user" 
             iconTitle="List Owner" 
-            canRemove={false} // Không bao giờ được xóa Owner
+            canRemove={false}
+            // [UPDATE] Truyền prop isCurrentUser
+            isCurrentUser={owner.username === currentUsername}
           />
         </div>
       )}
@@ -95,7 +101,6 @@ const Sidebar = ({ members = [], onAddEditor, onAddViewer, onRemoveMember }) => 
       <div className="sidebar-section">
         <div className="sidebar-header">
           <h3 className="sidebar-title">Editors ({editors.length})</h3>
-          {/* Chỉ Owner mới thấy nút Add Editor */}
           {isCurrentUserOwner && (
             <button className="add-btn" onClick={onAddEditor} title="Invite new Editor">
               <span className="material-symbols-outlined">add</span>
@@ -110,9 +115,10 @@ const Sidebar = ({ members = [], onAddEditor, onAddViewer, onRemoveMember }) => 
                 user={editor} 
                 roleIcon="edit" 
                 iconTitle="Can edit content"
-                // [LOGIC] canRemove dựa trên biến isCurrentUserOwner lấy từ localStorage
                 canRemove={isCurrentUserOwner} 
                 onRemove={onRemoveMember}
+                // [UPDATE] Truyền prop isCurrentUser
+                isCurrentUser={editor.username === currentUsername}
               />
             ))
           ) : (
@@ -125,7 +131,6 @@ const Sidebar = ({ members = [], onAddEditor, onAddViewer, onRemoveMember }) => 
       <div className="sidebar-section">
         <div className="sidebar-header">
           <h3 className="sidebar-title">Viewers ({viewers.length})</h3>
-          {/* Chỉ Owner mới thấy nút Add Viewer */}
           {isCurrentUserOwner && (
             <button className="add-btn" onClick={onAddViewer} title="Invite new Viewer">
               <span className="material-symbols-outlined">add</span>
@@ -140,9 +145,10 @@ const Sidebar = ({ members = [], onAddEditor, onAddViewer, onRemoveMember }) => 
                 user={viewer} 
                 roleIcon="visibility" 
                 iconTitle="Can view only"
-                // [LOGIC] canRemove dựa trên biến isCurrentUserOwner lấy từ localStorage
                 canRemove={isCurrentUserOwner}
                 onRemove={onRemoveMember}
+                // [UPDATE] Truyền prop isCurrentUser
+                isCurrentUser={viewer.username === currentUsername}
               />
             ))
           ) : (

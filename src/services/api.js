@@ -213,9 +213,34 @@ export const getUserAnimeStatus = (animeId) => {
 // (Đã thêm Cache ngắn hạn cho Heatmap & Activity)
 // =================================================================
 
+export const getUserProfile = (username) => {
+  return API.get(`/user/${username}/profile/`);
+};
+
+export const updateUserProfile = (userData) => {
+  // userData là object chứa các field cần sửa, ví dụ:
+  // { first_name: "John", last_name: "Doe", username: "xuctu" }
+  return API.put('/user/profile/update/', userData);
+};
+
 export const getUserAnimeList = (username) => {
   // KHÔNG CACHE: List thay đổi thường xuyên khi user update
   return API.get(`/user/${username}/animelist`);
+};
+
+export const deleteUserAvatar = () => {
+  return API.delete('/user/avatar/delete/');
+};
+
+export const uploadUserAvatar = (file) => {
+  const formData = new FormData();
+  formData.append('avatar', file); // Key 'avatar' phải khớp với yêu cầu Backend
+
+  return API.post('/user/avatar/upload/', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data', // Bắt buộc khi gửi file
+    },
+  });
 };
 
 export const getUserHeatmap = (username) => {
