@@ -1,5 +1,8 @@
 /* src/components/Header.css */
 
+/* =========================================
+   1. LAYOUT CHÍNH (HEADER CONTAINER)
+   ========================================= */
 .app-header {
   display: flex;
   justify-content: space-between;
@@ -7,11 +10,13 @@
   padding: 10px 50px;
   background-color: #152232;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  position: relative; /* Thêm để dropdown có thể căn chỉnh nếu cần */
+  position: relative;
   z-index: 100;
 }
 
-/* --- Phần Trái --- */
+/* =========================================
+   2. PHẦN TRÁI (LOGO)
+   ========================================= */
 .header-left .logo a {
   display: flex; 
   align-items: center;
@@ -24,7 +29,9 @@
   transition: transform 0.2s; 
 }
 
-/* --- Phần Giữa --- */
+/* =========================================
+   3. PHẦN GIỮA (NAVIGATION)
+   ========================================= */
 .header-center a {
   color: #c2c2c2;
   text-decoration: none;
@@ -38,14 +45,16 @@
   color: #3DB4F2;
 }
 
-/* --- Phần Phải (Đã cập nhật Search, Avatar Dropdown) --- */
+/* =========================================
+   4. PHẦN PHẢI (ACTIONS & USER)
+   ========================================= */
 .header-right {
   display: flex;
   align-items: center;
   gap: 15px; 
 }
 
-/* Định dạng chung */
+/* Định dạng chung cho nút/link bên phải */
 .header-right a,
 .header-right button {
     text-decoration: none;
@@ -76,23 +85,25 @@
     background-color: #2a62bc; 
 }
 
-/* --- Style MỚI cho nút Search --- */
+/* --- Nút Search --- */
 .header-right .btn-search {
     background-color: transparent;
     color: #c2c2c2;
-    padding: 8px; /* Padding nhỏ hơn vì là icon */
+    padding: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .header-right .btn-search:hover {
-    color: #3DB4F2; /* Đổi màu xanh khi hover */
+    color: #3DB4F2;
 }
 
-/* --- Style MỚI cho Container chứa Avatar (Dropdown cha) --- */
+/* =========================================
+   5. USER MENU & AVATAR
+   ========================================= */
 .user-menu-container {
-    position: relative; /* Quan trọng để dropdown con định vị theo cái này */
+    position: relative;
     display: flex;
     align-items: center;
 }
@@ -103,6 +114,7 @@
     display: flex;
     cursor: pointer;
     border-radius: 50%;
+    position: relative; /* Quan trọng để badge nằm đè lên */
 }
 
 .header-right .user-avatar-img {
@@ -118,12 +130,39 @@
     border-color: #3578E5;
 }
 
-/* --- Menu Dropdown --- */
+/* Notification Badge trên Avatar */
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #EF5D5D;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 2px solid #152232;
+    padding: 0 4px;
+    z-index: 102;
+    box-sizing: content-box;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
+}
+
+/* --- Dropdown Menu --- */
 .dropdown-menu {
     position: absolute;
-    top: 130%; /* Đẩy xuống dưới avatar một chút */
-    right: 0; /* Căn phải thẳng hàng với avatar */
-    background-color: #1a2b3c; /* Màu nền hơi sáng hơn header chút để nổi bật */
+    top: 130%;
+    right: 0;
+    background-color: #1a2b3c;
     min-width: 150px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
@@ -134,85 +173,27 @@
     animation: fadeIn 0.2s ease-in-out;
 }
 
-/* Style cho các item trong dropdown */
 .dropdown-menu .dropdown-item {
     text-align: left;
     color: #c2c2c2;
     padding: 10px 20px;
-    border-radius: 0; /* Ghi đè border-radius chung */
+    border-radius: 0;
     background-color: transparent;
     font-size: 0.95rem;
-    width: 100%; /* Full width */
+    width: 100%;
     box-sizing: border-box;
 }
 
 .dropdown-menu .dropdown-item:hover {
-    background-color: #152232; /* Màu nền khi hover item */
+    background-color: #152232;
     color: #3DB4F2;
 }
 
-/* Style riêng cho nút Logout trong dropdown */
 .dropdown-menu .btn-dropdown-logout:hover {
-    color: #EF5D5D; /* Màu đỏ khi hover logout */
+    color: #EF5D5D;
 }
 
-/* Hiệu ứng xuất hiện nhẹ nhàng */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* src/components/Header.css */
-
-/* ... (Giữ nguyên các code cũ) ... */
-
-/* [UPDATE] Thêm position relative cho trigger để badge định vị theo avatar */
-.header-right .user-avatar-trigger {
-    padding: 0;
-    display: flex;
-    cursor: pointer;
-    border-radius: 50%;
-    position: relative; /* Quan trọng để badge nằm đè lên */
-}
-
-/* ... */
-
-/* [NEW] Style cho Notification Badge */
-.notification-badge {
-    position: absolute;
-    top: -5px;      /* Căn chỉnh lên trên cùng */
-    right: -5px;    /* Căn chỉnh sang phải */
-    background-color: #EF5D5D; /* Màu đỏ nổi bật */
-    color: white;
-    font-size: 0.75rem; /* Cỡ chữ nhỏ */
-    font-weight: bold;
-    min-width: 18px;    /* Đảm bảo hình tròn/bầu dục đẹp */
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px; /* Bo tròn */
-    border: 2px solid #152232; /* Tạo viền cùng màu nền header để làm hiệu ứng tách biệt */
-    padding: 0 4px;
-    z-index: 102; /* Đảm bảo nằm trên avatar */
-    box-sizing: content-box;
-}
-
-/* Animation nhẹ khi badge xuất hiện */
-.notification-badge {
-    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes popIn {
-    0% { transform: scale(0); }
-    100% { transform: scale(1); }
-}
-
-/* src/components/Header.css */
-
-/* ... (Giữ nguyên các code cũ) ... */
-
-/* [NEW] Style Badge nhỏ trong dropdown item */
+/* Badge nhỏ trong dropdown item */
 .dropdown-badge {
     margin-left: 8px;
     background-color: #EF5D5D;
@@ -222,7 +203,14 @@
     border-radius: 10px;
 }
 
-/* [NEW] Notification Modal Overlay (Nền tối) */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   6. NOTIFICATION MODAL
+   ========================================= */
 .noti-modal-overlay {
     position: fixed;
     top: 0;
@@ -230,14 +218,13 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
-    z-index: 2000; /* Cao hơn header */
+    z-index: 2000;
     display: flex;
     justify-content: center;
     align-items: center;
     animation: fadeIn 0.2s ease-out;
 }
 
-/* Nội dung Modal */
 .noti-modal-content {
     background-color: #1a2b3c;
     width: 400px;
@@ -256,7 +243,6 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Header của Modal */
 .noti-header {
     padding: 15px 20px;
     border-bottom: 1px solid #2c3e50;
@@ -286,7 +272,6 @@
     color: #fff;
 }
 
-/* Danh sách cuộn */
 .noti-list {
     flex: 1;
     overflow-y: auto;
@@ -320,23 +305,56 @@
     flex: 1;
 }
 
+/* Text nội dung chính */
 .noti-text {
-    margin: 0 0 5px 0;
+    margin: 0 0 8px 0;
     color: #e0e0e0;
     font-size: 0.95rem;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 .noti-text strong {
+    color: #fff; /* Episode X màu trắng */
+}
+
+/* Highlight tên Anime */
+.anime-title-highlight {
     color: #3DB4F2;
-    display: block;
-    margin-bottom: 2px;
+    font-weight: 600;
+    font-size: 1rem;
+    display: inline-block;
+    margin-left: 4px;
+}
+
+/* Dòng chứa thông tin thời gian (Sent at & Countdown) */
+.noti-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    padding-top: 4px;
+    border-top: 1px dashed #2c3e50;
 }
 
 .noti-time {
-    display: block;
     color: #8a9ba8;
-    font-size: 0.8rem;
+    font-style: italic;
+}
+
+/* Countdown */
+.noti-countdown {
+    color: #FFC107;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 193, 7, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.noti-countdown.aired {
+    color: #4CAF50; /* Màu xanh lá nếu đã chiếu */
+    background-color: rgba(76, 175, 80, 0.1);
 }
 
 .noti-empty {

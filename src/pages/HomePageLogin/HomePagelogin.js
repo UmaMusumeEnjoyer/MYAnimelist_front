@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import AnimeSection from './components/AnimeSection'; 
 import { getUserAnimeList } from '../../services/api';
-// import { Link } from 'react-router-dom'; // Unlock this if you want to link to a search page
+// import { Link } from 'react-router-dom'; 
 
 const HomePage = () => {
   // Initialize state
@@ -89,10 +89,14 @@ const HomePage = () => {
           ) : (
             /* Standard List View */
             <>
-              {/* 1. Watching */}
-              <AnimeSection title="Anime in Progress" animeList={inProgressList} />
+              {/* 1. Watching - Có nút Notification Setting */}
+              <AnimeSection 
+                title="Anime in Progress" 
+                animeList={inProgressList} 
+                allowNotification={true} 
+              />
               
-              {/* 2. Plan to Watch */}
+              {/* 2. Plan to Watch - Không có nút Notification */}
               <AnimeSection title="Plan to Watch" animeList={planningList} />
 
               {/* 3. Completed */}
