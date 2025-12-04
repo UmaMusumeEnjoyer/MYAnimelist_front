@@ -9,6 +9,8 @@ const FilterBar = ({ onSearch, activeFilters }) => {
   const [year, setYear] = useState('Any');
   const [season, setSeason] = useState('Any');
   const [format, setFormat] = useState('Any');
+  const [status, setStatus] = useState('Any'); // [MỚI] State cho Status
+  const [sort, setSort] = useState('POPULARITY_DESC');
 
   useEffect(() => {
     if (activeFilters) {
@@ -16,13 +18,15 @@ const FilterBar = ({ onSearch, activeFilters }) => {
       if (activeFilters.filters.season) setSeason(activeFilters.filters.season);
       if (activeFilters.filters.genre) setGenre(activeFilters.filters.genre);
       if (activeFilters.filters.format) setFormat(activeFilters.filters.format);
+      if (activeFilters.filters.status) setStatus(activeFilters.filters.status);
+      if (activeFilters.filters.sort) setSort(activeFilters.filters.sort);
       setKeyword(activeFilters.keyword || '');
     }
   }, [activeFilters]);
 
   const handleSearchAction = () => {
     if (onSearch) {
-      onSearch(keyword, { genre, year, season, format });
+      onSearch(keyword, { genre, year, season, format, status, sort});
     }
   };
 
@@ -34,10 +38,11 @@ const FilterBar = ({ onSearch, activeFilters }) => {
     setYear('Any');
     setSeason('Any');
     setFormat('Any');
+    setStatus('Any');
 
     // 2. Trigger search với giá trị rỗng (để Parent component reset về Home)
     if (onSearch) {
-      onSearch('', { genre: 'Any', year: 'Any', season: 'Any', format: 'Any' });
+      onSearch('', { genre: 'Any', year: 'Any', season: 'Any', format: 'Any', status: 'Any', sort: 'POPULARITY_DESC' });
     }
   };
 
@@ -46,12 +51,15 @@ const FilterBar = ({ onSearch, activeFilters }) => {
     if (key === 'year') setYear(value);
     if (key === 'season') setSeason(value);
     if (key === 'format') setFormat(value);
-
+    if (key === 'status') setStatus(value);
+    if (key === 'sort') setSort(value); // [MỚI]
     const updatedFilters = {
       genre: key === 'genre' ? value : genre,
       year: key === 'year' ? value : year,
       season: key === 'season' ? value : season,
       format: key === 'format' ? value : format,
+      status: key === 'status' ? value : status,
+      sort: key === 'sort' ? value : sort, // [MỚI]
     };
 
     if (onSearch) {
@@ -129,6 +137,23 @@ const FilterBar = ({ onSearch, activeFilters }) => {
         <select value={format} onChange={(e) => handleFilterChange('format', e.target.value)}>
           <option value="Any">Any</option>
           {filterData.formats.map((item) => (
+            <option key={item.value} value={item.value}>{item.label}</option>
+          ))}
+        </select>
+      </div>
+      <div className="filter-group filter-status">
+        <label>Status</label>
+        <select value={status} onChange={(e) => handleFilterChange('status', e.target.value)}>
+          <option value="Any">Any</option>
+          {filterData.statuses.map((item) => (
+            <option key={item.value} value={item.value}>{item.label}</option>
+          ))}
+        </select>
+      </div>
+      <div className="filter-group filter-sort">
+        <label>Sort</label>
+        <select value={sort} onChange={(e) => handleFilterChange('sort', e.target.value)}>
+          {filterData.sorts.map((item) => (
             <option key={item.value} value={item.value}>{item.label}</option>
           ))}
         </select>

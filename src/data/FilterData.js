@@ -46,5 +46,18 @@ genres: [
     { label: "Ova",     value: "OVA" },
     { label: "Ona",     value: "ONA" },
     { label: "Music",     value: "MUSIC" }
+  ],
+  statuses: [
+    { label: "Airing", value: "RELEASING" },
+    { label: "Finished", value: "FINISHED" },
+    { label: "Not Yet Aired", value: "NOT_YET_RELEASED" },
+    { label: "Cancelled", value: "CANCELLED" },
+    { label: "Hiatus", value: "HIATUS" }
+  ],
+  sorts: [
+    { label: "Popularity", value: "POPULARITY_DESC" },
+    { label: "Title", value: "TITLE_ROMAJI" },
+    { label: "Average Score", value: "SCORE_DESC" },
+    { label: "Trending", value: "TRENDING_DESC" }
   ]
 };

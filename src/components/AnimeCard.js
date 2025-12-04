@@ -4,7 +4,7 @@ import './AnimeCard.css';
 
 const AnimeCard = ({ anime }) => {
   let displayInfo = null;
-  let progressPercent = 0;
+  // Đã xóa biến progressPercent
 
   // 1. Logic lấy tên
   const title = anime.title_romaji || anime.name_romaji || "Unknown Title";
@@ -18,10 +18,6 @@ const AnimeCard = ({ anime }) => {
     const totalEp = anime.episodes || '?';
     
     displayInfo = `Watched: ${currentEp} / ${totalEp}`;
-    
-    if (anime.episodes && anime.episodes > 0) {
-        progressPercent = Math.min(100, (currentEp / anime.episodes) * 100);
-    }
   } 
   else if (anime.next_airing_ep) {
     const { episode, timeUntilAiring } = anime.next_airing_ep;
@@ -35,10 +31,6 @@ const AnimeCard = ({ anime }) => {
       timeString = `${hours}h ${minutes}m`;
     }
     displayInfo = `Ep ${episode} - ${timeString}`;
-    
-    // Thanh thời gian chờ (đảo ngược logic visual một chút cho đẹp mắt nếu cần)
-    const timeSinceAired = 604800 - timeUntilAiring;
-    progressPercent = Math.max(0, Math.min(100, (timeSinceAired / 604800) * 100));
   }
 
   // Logic class: Thêm 'no-info' nếu không có displayInfo
@@ -59,12 +51,7 @@ const AnimeCard = ({ anime }) => {
             {displayInfo && (
             <div className="airing-info">
                 <p className="episode-time">{displayInfo}</p>
-                <div className="progress-bar-container">
-                <div 
-                    className="progress-bar-fill" 
-                    style={{ width: `${progressPercent}%` }}
-                ></div>
-                </div>
+                {/* Đã xóa phần progress-bar-container tại đây */}
             </div>
             )}
         </div>

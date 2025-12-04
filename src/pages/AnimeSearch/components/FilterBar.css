@@ -1,6 +1,8 @@
 .filter-bar {
   display: grid;
-  grid-template-columns: 1fr repeat(4, max-content) max-content;
+  /* [THAY ĐỔI] Tăng lên repeat(6, ...) để chứa: Genres, Year, Season, Format, Status, Sort */
+  /* Cấu trúc: Search (1fr) | 6 Filters (max-content) | Clear Btn (max-content) */
+  grid-template-columns: 1fr repeat(6, max-content) max-content;
   gap: 20px;
   align-items: end;
   margin-bottom: 35px;
@@ -24,18 +26,17 @@
 
 /* SEARCH STYLE */
 .filter-search { width: 100%; }
-.search-box { position: relative; width: 100%; }
 .search-box { 
-  position: relative; /* BẮT BUỘC PHẢI CÓ DÒNG NÀY */
+  position: relative; 
   width: 100%; 
-  display: flex;      /* Giúp loại bỏ khoảng trắng thừa */
+  display: flex;      
   align-items: center;
 }
 
 .search-box input {
   width: 100%; 
   height: 40px; 
-  padding-left: 40px; /* Chừa chỗ cho nút search (quan trọng) */
+  padding-left: 40px; 
   padding-right: 15px;
   background-color: #151f2e; 
   border: none; 
@@ -48,24 +49,21 @@
   box-sizing: border-box; 
   transition: all 0.2s ease;
 }
+
 .search-btn {
   position: absolute;
-  left: 5px;           /* Cách lề trái 5px cho đẹp */
-  top: 50%;            /* Đặt đỉnh nút ở giữa chiều cao cha */
-  transform: translateY(-50%); /* Kéo ngược lên 50% để căn giữa hoàn hảo */
-  
-  width: 30px;         /* Vùng bấm rộng 30x30 */
+  left: 5px;           
+  top: 50%;            
+  transform: translateY(-50%); 
+  width: 30px;         
   height: 30px;
-  
-  /* Căn icon vào giữa vùng bấm */
   display: flex;
   align-items: center;
   justify-content: center;
-  
   color: #8BA0B2;
   cursor: pointer;
-  z-index: 10;         /* Nằm đè lên input */
-  border-radius: 50%;  /* (Tùy chọn) Hiệu ứng tròn khi hover */
+  z-index: 10;         
+  border-radius: 50%;  
   transition: all 0.2s;
 }
 
@@ -73,7 +71,6 @@
   color: #fff;
 }
 
-/* Tùy chỉnh kích thước icon bên trong nếu cần */
 .search-btn svg {
   font-size: 0.9rem;
 }
@@ -96,29 +93,18 @@
 .filter-season select { min-width: 110px; }
 .filter-format select { min-width: 110px; }
 
+/* [MỚI] Style cho Status và Sort Filter */
+.filter-status select { min-width: 120px; }
+.filter-sort select { min-width: 130px; }
+
 .search-box input:focus, .filter-group select:hover, .filter-group select:focus {
   background-color: #1b2636; color: #fff; box-shadow: 0 0 0 2px rgba(100, 37, 208, 0.5);
 }
 
-
-/* RESPONSIVE */
-@media (max-width: 1024px) {
-  .filter-bar { grid-template-columns: repeat(5, 1fr); }
-  .filter-search { grid-column: 1 / -1; }
-  .filter-group select { width: 100%; min-width: unset; }
-}
-
-@media (max-width: 600px) {
-  .filter-bar { grid-template-columns: 1fr 1fr; gap: 15px; }
-  .filter-search { grid-column: 1 / -1; }
-}
-
-/* ... Các CSS cũ giữ nguyên ... */
-
 .btn-clear-filter {
-  height: 42px; /* Chiều cao bằng với input/select (thường là khoảng 40-45px) */
+  height: 40px; 
   padding: 0 15px;
-  background-color: #3db4f2; /* Màu xanh chủ đạo của Anilist/Web bạn */
+  background-color: #3db4f2; 
   color: white;
   border: none;
   border-radius: 4px;
@@ -129,17 +115,48 @@
   align-items: center;
   justify-content: center;
   transition: background-color 0.2s;
-  margin-top: 24px; /* Căn chỉnh với label của các ô input khác */
 }
 
 .btn-clear-filter:hover {
   background-color: #3399cc;
 }
 
-/* Responsive cho mobile */
-@media (max-width: 768px) {
+/* RESPONSIVE */
+
+/* Laptop/Tablet (Dưới 1400px - Tăng mốc này vì thanh filter giờ rất dài) */
+@media (max-width: 1400px) {
+  .filter-bar {
+    /* Chia làm 4 cột để các ô select không bị bé quá */
+    grid-template-columns: repeat(4, 1fr); 
+  }
+  
+  /* Search box chiếm trọn hàng đầu tiên */
+  .filter-search { 
+    grid-column: 1 / -1; 
+  }
+}
+
+/* Tablet nhỏ (Dưới 900px) */
+@media (max-width: 900px) {
+  .filter-bar {
+    grid-template-columns: repeat(3, 1fr); 
+  }
+  .filter-search { 
+    grid-column: 1 / -1; 
+  }
+}
+
+/* Mobile (Dưới 600px) */
+@media (max-width: 600px) {
+  .filter-bar { 
+    grid-template-columns: 1fr 1fr; /* 2 cột */
+    gap: 15px; 
+  }
+  .filter-search { 
+    grid-column: 1 / -1; /* Search full width */
+  }
+  
   .btn-clear-filter {
-    margin-top: 10px;
-    width: 100%; /* Full width trên mobile */
+    width: 100%;
   }
 }

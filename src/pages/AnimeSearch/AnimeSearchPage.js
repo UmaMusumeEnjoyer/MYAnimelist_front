@@ -23,7 +23,7 @@ import {
   allTimePopular
 } from '../../data/animeSearchData';
 
-const SESSION_KEY = 'ANIME_SEARCH_STATE'; // [MỚI] Key để lưu session
+const SESSION_KEY = 'ANIME_SEARCH_STATE';
 
 const AnimeSearchPage = () => {
   const [searchResults, setSearchResults] = useState([]);
@@ -35,13 +35,12 @@ const AnimeSearchPage = () => {
   const [canLoadMore, setCanLoadMore] = useState(false);
   const [currentFilters, setCurrentFilters] = useState(null); 
 
-  // --- [MỚI] 1. RESTORE STATE KHI COMPONENT MOUNT ---
+  // --- 1. RESTORE STATE KHI COMPONENT MOUNT ---
   useEffect(() => {
     const savedState = sessionStorage.getItem(SESSION_KEY);
     if (savedState) {
       try {
         const parsed = JSON.parse(savedState);
-        // Khôi phục lại toàn bộ trạng thái cũ
         setSearchResults(parsed.searchResults);
         setIsSearching(parsed.isSearching);
         setViewTitle(parsed.viewTitle);
@@ -49,7 +48,6 @@ const AnimeSearchPage = () => {
         setCanLoadMore(parsed.canLoadMore);
         setCurrentFilters(parsed.currentFilters);
         
-        // Scroll nhẹ xuống phần kết quả để user biết đang ở đâu (tuỳ chọn)
         if (parsed.isSearching) {
             setTimeout(() => {
                 window.scrollTo({ top: 400, behavior: 'smooth' });
@@ -62,9 +60,8 @@ const AnimeSearchPage = () => {
     }
   }, []);
 
-  // --- [MỚI] 2. AUTO SAVE STATE KHI DATA THAY ĐỔI ---
+  // --- 2. AUTO SAVE STATE KHI DATA THAY ĐỔI ---
   useEffect(() => {
-    // Chỉ lưu khi đang ở chế độ search và có kết quả (hoặc filters)
     if (isSearching) {
       const stateToSave = {
         searchResults,
@@ -90,18 +87,22 @@ const AnimeSearchPage = () => {
     season: rawItem.season,
     next_airing_ep: null, 
     ...rawItem,
-    next_airing_ep: null 
   });
 
   // --- SEARCH HANDLER ---
   const handleSearch = async (keyword, filters) => {
-    const { genre, year, season, format } = filters;
+    // [MỚI] Destructure thêm status và sort
+    const { genre, year, season, format, status, sort } = filters;
     
+    // Kiểm tra xem có filter nào đang được active không
     const hasFilter = 
       (genre && genre !== 'Any') ||
       (year && year !== 'Any') ||
       (season && season !== 'Any') ||
-      (format && format !== 'Any');
+      (format && format !== 'Any') ||
+      (status && status !== 'Any');
+      // Sort thường luôn có giá trị mặc định nên ta không nhất thiết tính là 'hasFilter' 
+      // trừ khi muốn logic chặt chẽ hơn. Ở đây ta ưu tiên logic Search Text vs Filter.
 
     // Nếu không có gì để search -> Về trang chủ
     if ((!keyword || keyword.trim() === "") && !hasFilter) {
@@ -120,20 +121,32 @@ const AnimeSearchPage = () => {
     try {
       let mappedResults = [];
 
-      if (hasFilter) {
+      // Logic: Nếu có filter hoặc cần sort, ta dùng searchAnimeByCriteria
+      // (Giả sử API searchByCriteria của bạn hỗ trợ tham số search text và sort)
+      if (hasFilter || (sort && sort !== 'POPULARITY_DESC')) {
         const criteriaBody = { page: 1, perpage: 20 };
+        
         if (year && year !== 'Any') criteriaBody.year = parseInt(year);
         if (season && season !== 'Any') criteriaBody.season = season;
         if (format && format !== 'Any') criteriaBody.format = format;
-        
-        // [ĐÃ SỬA] Đổi key thành 'genres' số nhiều
         if (genre && genre !== 'Any') criteriaBody.genres = genre;
+        
+        // [MỚI] Thêm status
+        if (status && status !== 'Any') criteriaBody.status = status;
+
+        // [MỚI] Thêm sort
+        if (sort) criteriaBody.sort = sort;
+
+        // Nếu có keyword đi kèm filter, ta gửi thêm keyword (nếu API hỗ trợ)
+        // Nếu API criteria không hỗ trợ 'search' text, bạn cần cân nhắc logic backend
+        if (keyword && keyword.trim() !== "") criteriaBody.search = keyword;
         
         const response = await searchAnimeByCriteria(criteriaBody);
         const rawResults = response.data.results || [];
         mappedResults = rawResults.map(mapAnimeData);
         setCanLoadMore(rawResults.length === 20);
       } 
+      // Chỉ search theo tên thuần túy (không filter, sort mặc định)
       else if (keyword && keyword.trim() !== "") {
         const response = await searchAnimeByName(keyword);
         const rawCandidates = response.data.candidates || [];
@@ -154,7 +167,7 @@ const AnimeSearchPage = () => {
 
   // --- VIEW ALL HANDLER ---
   const handleViewAllClick = async (type) => {
-    // Reset để tránh conflict state cũ
+    // Reset session cũ
     sessionStorage.removeItem(SESSION_KEY);
 
     if (type === 'TRENDING_NOW') {
@@ -179,7 +192,15 @@ const AnimeSearchPage = () => {
         return; 
     }
 
-    let targetFilters = { genre: 'Any', year: 'Any', season: 'Any', format: 'Any' };
+    // [MỚI] Cập nhật default filters có thêm status và sort
+    let targetFilters = { 
+        genre: 'Any', 
+        year: 'Any', 
+        season: 'Any', 
+        format: 'Any', 
+        status: 'Any', 
+        sort: 'POPULARITY_DESC' 
+    };
 
     if (type === 'POPULAR_THIS_SEASON') {
       const { year, season } = getCurrentSeasonInfo();
@@ -200,16 +221,23 @@ const AnimeSearchPage = () => {
 
   // --- BACK BUTTON HANDLER ---
   const handleBackToHome = () => {
-    // [MỚI] 3. Xóa Session khi người dùng chủ động Back
     sessionStorage.removeItem(SESSION_KEY);
 
     setIsSearching(false);
     setSearchResults([]);
     setPage(1);
     
+    // [MỚI] Reset về trạng thái mặc định đầy đủ
     setCurrentFilters({
       keyword: '',
-      filters: { genre: 'Any', year: 'Any', season: 'Any', format: 'Any' }
+      filters: { 
+          genre: 'Any', 
+          year: 'Any', 
+          season: 'Any', 
+          format: 'Any', 
+          status: 'Any', 
+          sort: 'POPULARITY_DESC' 
+      }
     });
   };
 
@@ -220,15 +248,19 @@ const AnimeSearchPage = () => {
 
     try {
       const { filters } = currentFilters;
-      const { genre, year, season, format } = filters;
+      // [MỚI] Lấy thêm status và sort
+      const { genre, year, season, format, status, sort } = filters;
 
       const criteriaBody = { page: nextPage, perpage: 20 };
+      
       if (year && year !== 'Any') criteriaBody.year = parseInt(year);
       if (season && season !== 'Any') criteriaBody.season = season;
       if (format && format !== 'Any') criteriaBody.format = format;
-      
-      // [ĐÃ SỬA] Đổi key thành 'genres' số nhiều
       if (genre && genre !== 'Any') criteriaBody.genres = genre;
+      
+      // [MỚI] Gửi status và sort khi load more
+      if (status && status !== 'Any') criteriaBody.status = status;
+      if (sort) criteriaBody.sort = sort;
 
       const response = await searchAnimeByCriteria(criteriaBody);
       const rawResults = response.data.results || [];
@@ -250,7 +282,6 @@ const AnimeSearchPage = () => {
     <div className="anime-search-page">
       <HeroSection slides={heroList} />
       
-      {/* Truyền activeFilters để FilterBar hiển thị đúng trạng thái khi Restore */}
       <FilterBar onSearch={handleSearch} activeFilters={currentFilters} />
 
       <div className="page-content">
