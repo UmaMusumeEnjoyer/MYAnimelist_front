@@ -46,7 +46,7 @@ const AddAnimeModal = ({ isOpen, onClose, onAddAnime, currentList = [] }) => {
             anilist_id: rawItem.anilist_id || correctId, 
             
             // Map title linh hoạt (ưu tiên title_romaji phẳng từ JSON của bạn)
-            title_romaji: rawItem.romaji || rawItem.title?.romaji || rawItem.name_romaji || rawItem.media?.title?.romaji,
+            title_romaji: rawItem.romaji || rawItem.title_romaji || rawItem.name_romaji || rawItem.media?.title?.romaji,
             title_english: rawItem.title_english || rawItem.title?.english || rawItem.name_english || rawItem.media?.title?.english,
             
             // Map cover image (ưu tiên cover_image phẳng từ JSON của bạn)
