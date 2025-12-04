@@ -159,26 +159,18 @@ const fetchListDetails = useCallback(() => {
         });
         setGroupedAnime(groups);
       })
-      // --- PHẦN CHỈNH SỬA BẮT ĐẦU TỪ ĐÂY ---
       .catch((err) => {
         console.error("Error fetching list data:", err);
         
-        // Kiểm tra response từ server xem có đúng lỗi permission không
         if (err.response && err.response.data) {
           const errorMsg = err.response.data.error;
-          
-          // So sánh chuỗi lỗi chính xác như bạn yêu cầu
           if (errorMsg === "['You do not have permission to view this private list']") {
-            // (Tuỳ chọn) Thông báo cho người dùng biết trước khi chuyển trang
-            // alert("Bạn không có quyền xem danh sách riêng tư này."); 
-            
-            navigate('/browse'); // Chuyển hướng về trang browse
+            navigate('/browse'); 
           }
         }
       })
-      // --- KẾT THÚC PHẦN CHỈNH SỬA ---
       .finally(() => setLoading(false));
-  }, [id, navigate]); // Đảm bảo thêm navigate vào dependency array nếu eslint yêu cầu
+  }, [id, navigate]); 
 
   useEffect(() => {
     setLoading(true);
@@ -190,19 +182,16 @@ const fetchListDetails = useCallback(() => {
   // 2. HANDLERS
   // =================================================================
   
-  // [UPDATE] Đã sửa action thành 'approve'
+  // [UPDATE] Removed window.confirm
   const handleAcceptRequest = async (request) => {
-    if (!window.confirm(`Accept request from @${request.username}?`)) return;
-
+    // Đã bỏ confirm
     try {
       if (request.request_type === 'join') {
-        // [Cite: api.js respondToJoinRequest]
-        await respondToJoinRequest(id, request.request_id, 'approve'); // <-- 'approve'
+        await respondToJoinRequest(id, request.request_id, 'approve'); 
         alert(`User @${request.username} has joined the list.`);
       } 
       else if (request.request_type === 'edit_permission' || request.request_type === 'edit') {
-        // [Cite: api.js respondToEditRequest]
-        await respondToEditRequest(id, request.request_id, 'approve'); // <-- 'approve'
+        await respondToEditRequest(id, request.request_id, 'approve'); 
         alert(`User @${request.username} is now an Editor.`);
       }
 
@@ -214,16 +203,14 @@ const fetchListDetails = useCallback(() => {
     }
   };
 
+  // [UPDATE] Removed window.confirm
   const handleRejectRequest = async (request) => {
-    if (!window.confirm(`Reject request from @${request.username}?`)) return;
-
+    // Đã bỏ confirm
     try {
       if (request.request_type === 'join') {
-        // [Cite: api.js respondToJoinRequest]
         await respondToJoinRequest(id, request.request_id, 'reject');
       } 
       else if (request.request_type === 'edit_permission' || request.request_type === 'edit') {
-        // [Cite: api.js respondToEditRequest]
         await respondToEditRequest(id, request.request_id, 'reject');
       }
 
@@ -246,6 +233,7 @@ const fetchListDetails = useCallback(() => {
     setListInfo(prev => ({ ...prev, ...updatedData }));
   };
 
+  // [NOTE] KEEPING window.confirm here as requested
   const handleDeleteList = async () => {
     if (window.confirm("Are you sure you want to delete this list?")) {
       try {
@@ -350,10 +338,9 @@ const fetchListDetails = useCallback(() => {
     fetchMembersData();
   };
   
+  // [UPDATE] Removed window.confirm
   const handleRemoveMember = async (username) => {
-    const confirmDelete = window.confirm(`Are you sure you want to remove @${username} from this list?`);
-    if (!confirmDelete) return;
-
+    // Đã bỏ confirm
     try {
       await removeMemberFromList(id, username);
       fetchMembersData();
