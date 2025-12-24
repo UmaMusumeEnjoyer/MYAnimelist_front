@@ -7,12 +7,14 @@
   border-radius: 6px;
   height: 80px;
   overflow: hidden;
+  padding-right: 15px; /* Thêm padding phải để chữ không dính sát lề */
 }
 
 .staff-avatar {
   width: 55px;
   height: 100%;
   object-fit: cover;
+  flex-shrink: 0; /* Đảm bảo ảnh không bị bóp méo khi text dài */
 }
 
 .no-image-placeholder {
@@ -30,6 +32,11 @@
 
 .staff-details {
   padding: 5px 0;
+  flex: 1;      /* Chiếm toàn bộ không gian còn lại */
+  min-width: 0; /* [QUAN TRỌNG] Bắt buộc có để text-overflow hoạt động trong Flexbox */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .staff-name {
@@ -37,10 +44,38 @@
   font-size: 0.9rem;
   font-weight: 500;
   margin: 0 0 4px 0;
+  
+  /* Xử lý khi tên quá dài */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .staff-role {
   color: #c2c2c2;
   font-size: 0.8rem;
   margin: 0;
+  
+  /* Xử lý khi chức vụ quá dài */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  /* Trên mobile có thể thu gọn card một chút nếu muốn, 
+     nhưng giữ 80px để dễ bấm cảm ứng cũng tốt. 
+     Ở đây mình giảm gap giữa ảnh và chữ */
+     
+  .staff-card {
+    gap: 12px;
+  }
+  
+  .staff-name {
+    font-size: 0.95rem; /* Tăng nhẹ size tên cho dễ đọc trên đt */
+  }
 }

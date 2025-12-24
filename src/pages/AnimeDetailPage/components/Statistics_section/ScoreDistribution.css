@@ -47,3 +47,25 @@
   font-weight: bold;
   color: #fff;
 }
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .score-dist-container {
+    padding: 10px 5px; /* Giảm padding trái phải để tận dụng chiều rộng */
+    height: 180px;      /* Giảm nhẹ chiều cao */
+  }
+
+  /* Làm cột mập hơn một chút trên mobile cho dễ nhìn */
+  .bar-element-container {
+    width: 70%; 
+  }
+
+  /* Giảm font size để số không bị dính vào nhau */
+  .bar-amount, 
+  .bar-score {
+    font-size: 0.7rem; 
+  }
+}

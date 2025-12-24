@@ -4,3 +4,17 @@
   flex-wrap: wrap; /* Cho phép các item tự xuống dòng */
   gap: 15px;
 }
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .rankings-grid {
+    display: grid; /* Chuyển sang Grid để kiểm soát cột tốt hơn */
+    grid-template-columns: 1fr; /* 1 cột duy nhất, thẻ sẽ full width */
+    /* Nếu muốn 2 cột trên mobile thì đổi thành: grid-template-columns: 1fr 1fr; */
+    
+    gap: 10px; /* Giảm khoảng cách giữa các thẻ */
+  }
+}

@@ -6,10 +6,15 @@
   background-color: #152232;
   border-radius: 8px;
   padding: 12px 20px;
+  
+  /* [QUAN TRỌNG] Giúp thẻ tự giãn ra lấp đầy khoảng trống trong flexbox */
+  flex: 1 1 auto; 
 }
 
 .ranking-icon {
   font-size: 1.2rem;
+  /* Đảm bảo icon không bị bóp méo */
+  flex-shrink: 0; 
 }
 
 .ranking-text {
@@ -17,4 +22,19 @@
   font-size: 0.9rem;
   font-weight: 500;
   text-transform: capitalize;
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .ranking-card {
+    padding: 10px 15px; /* Giảm padding cho gọn */
+    gap: 10px;
+  }
+
+  .ranking-text {
+    font-size: 0.85rem; /* Giảm nhẹ cỡ chữ nếu cần */
+  }
 }

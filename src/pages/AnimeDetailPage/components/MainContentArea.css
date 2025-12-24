@@ -1,10 +1,9 @@
 /* src/components/MainContentArea.css */
+
 .main-content-area {
   flex: 1; /* Chiếm hết không gian còn lại */
   min-width: 0; /* Để không bị tràn */
 }
-
-
 
 .section-title {
   color: #fff;
@@ -21,17 +20,18 @@
   height: 0;
   overflow: hidden;
   border-radius: 8px;
+  background-color: #000; /* Thêm nền đen để đỡ trống khi load */
 }
 
 .trailer-container iframe {
   position: absolute;
   top: 0;
   left: 0;
-  width: 51%;
-  height: 51%;
+  width: 51%;   /* Giữ nguyên logic desktop của bạn */
+  height: 51%;  /* Giữ nguyên logic desktop của bạn */
+  /* Lưu ý: Thường iframe youtube responsive thì nên để 100%, 
+     nhưng mình tôn trọng style desktop cũ của bạn */
 }
-
-/* Thêm vào cuối file src/components/MainContentArea.css */
 
 .distribution-container {
   display: flex;
@@ -41,4 +41,29 @@
 /* Đảm bảo mỗi khu vực trong container chiếm không gian bằng nhau */
 .distribution-container .content-section {
   flex: 1;
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  /* 1. Xử lý phần chia cột (Distribution) */
+  .distribution-container {
+    flex-direction: column; /* Xếp chồng dọc thay vì ngang */
+    gap: 20px; /* Giảm khoảng cách cho gọn hơn */
+  }
+
+  /* 2. Xử lý Trailer */
+  /* Trên mobile màn hình nhỏ, trailer cần full khung mới xem được */
+  .trailer-container iframe {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* 3. Tinh chỉnh tiêu đề */
+  .section-title {
+    font-size: 1.1rem; /* Giảm nhẹ size chữ tiêu đề */
+    margin-bottom: 12px;
+  }
 }

@@ -1,3 +1,5 @@
+/* src/components/SummarySection.css */
+
 .summary-section {
   display: flex;
   gap: 30px;
@@ -5,6 +7,7 @@
   position: relative;
   padding-bottom: 30px;
   border-bottom: 1px solid #2d3748;
+  z-index: 10; /* Đảm bảo nổi lên trên các thành phần khác */
 }
 
 /* Khi không có banner, dùng margin-top bình thường */
@@ -20,6 +23,8 @@
   width: 100%;
   border-radius: 8px;
   margin-bottom: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5); /* Thêm bóng đổ cho poster nổi bật hơn */
+  display: block;
 }
 
 .summary-left .btn {
@@ -38,13 +43,13 @@
   background-color: #3DB4F2;
 }
 
-
 .summary-right {
-  padding-top: 100px; /* Đẩy text xuống cho cân đối */
+  padding-top: 100px; /* Đẩy text xuống cho cân đối trên PC */
+  flex: 1; /* [THÊM] Để text chiếm hết phần còn lại */
 }
 
 .summary-section.no-banner .summary-right {
-  padding-top: 0; /* Bỏ padding-top khi không có banner */
+  padding-top: 0; 
 }
 
 .summary-right .anime-tagline {
@@ -58,10 +63,82 @@
   font-size: 2.5rem;
   margin: 0 0 15px 0;
   word-wrap: break-word;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .summary-right .anime-description {
   line-height: 1.6;
   font-size: 0.95rem;
   color: #c2c2c2;
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .summary-section {
+    flex-direction: row; /* Xếp chồng dọc */
+    align-items: flex-start;    /* Căn giữa poster */
+    
+    /* Điều chỉnh vị trí đè banner trên mobile */
+    /* Banner mobile cao 200px, nên kéo lên khoảng -80px là đẹp */
+    margin-top: -80px; 
+    
+    gap: 15px;
+    padding-bottom: 20px;
+    padding-left: 10px;
+  }
+
+  .summary-left {
+    flex: 0 0 150px; 
+        width: 150px;
+        
+        /* Reset lại display */
+        display: block;
+  }
+  
+  /* Nút bấm trên mobile */
+  .summary-left .btn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .summary-right {
+flex: 1; /* Chiếm hết không gian còn lại bên phải */
+    min-width: 0; /* [QUAN TRỌNG] Giúp text wrap đúng cách trong Flexbox */
+    
+    /* [QUAN TRỌNG] Đẩy text xuống 85px để nó nằm dưới mép banner 
+       (vì margin-top là -80px nên phần đầu section đang nằm trong banner) */
+    padding-top: 85px; 
+    
+    text-align: left;
+  }
+
+  .summary-right .anime-title-main {
+    font-size: 1.3rem; /* Giảm size chữ tiêu đề */
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+
+  .summary-right .anime-tagline {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+    opacity: 0.8;
+  }
+  
+  /* Ẩn bớt description nếu quá dài hoặc chỉnh lại căn lề */
+  .summary-right .anime-description {
+    text-align: left; /* Description vẫn nên căn trái cho dễ đọc */
+    font-size: 0.85rem;
+    line-height: 1.4;
+    
+    /* Giới hạn số dòng description trên mobile để không quá dài (Tùy chọn) */
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }

@@ -9,7 +9,7 @@
   margin-bottom: 0;
 }
 
-/* Container cho tiêu đề và nút xem thêm */
+/* Header */
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -28,6 +28,8 @@
   align-items: center;
   gap: 10px;
   text-decoration: none;
+  text-decoration: none !important; 
+    border-bottom: none !important;
 }
 
 .count-badge {
@@ -42,10 +44,11 @@
   gap: 12px;
 }
 
+/* --- GRID DESKTOP --- */
 .anime-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
 }
 
 /* --- Buttons --- */
@@ -62,9 +65,8 @@
   white-space: nowrap;
 }
 
-/* Đổi màu hover của View All sang xanh cho đồng bộ (hoặc giữ đỏ nếu muốn khác biệt) */
 .view-all-btn:hover {
-  background-color: #3182ce; /* Blue */
+  background-color: #3182ce; 
   border-color: #3182ce;
   color: white;
   transform: translateY(-2px);
@@ -87,7 +89,6 @@
   white-space: nowrap;
 }
 
-/* Màu hover của nút Notify: Blue */
 .notify-btn:hover {
   background-color: #3182ce;
   border-color: #3182ce;
@@ -102,174 +103,80 @@
 }
 
 /* --- MODAL STYLES --- */
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(2px);
-}
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(2px); }
+.modal-content { background-color: #1a202c; padding: 24px; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); border: 1px solid #2d3748; color: #fff; animation: modalFadeIn 0.2s ease-out; }
+@keyframes modalFadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #2d3748; padding-bottom: 10px; }
+.modal-header h3 { margin: 0; font-size: 1.25rem; color: #fff; }
+.close-btn { background: none; border: none; color: #a0aec0; font-size: 1.5rem; cursor: pointer; }
+.close-btn:hover { color: #fff; }
+.modal-body { display: flex; flex-direction: column; gap: 15px; }
+.master-switch { padding-bottom: 15px; border-bottom: 1px dashed #2d3748; margin-bottom: 10px; }
+.master-switch label { font-weight: bold; font-size: 1.1rem; color: #63b3ed; }
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+.form-group label { font-size: 0.9rem; color: #cbd5e0; }
+.form-group input[type="number"] { padding: 8px 12px; border-radius: 6px; border: 1px solid #4a5568; background-color: #2d3748; color: #fff; font-size: 1rem; }
+.form-group-checkbox label { display: flex; align-items: center; gap: 10px; cursor: pointer; color: #cbd5e0; }
+.form-group-checkbox input[type="checkbox"] { width: 18px; height: 18px; accent-color: #3182ce; cursor: pointer; }
+.settings-group.disabled { opacity: 0.5; pointer-events: none; }
+.modal-footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #2d3748; }
+.cancel-btn { background: transparent; border: 1px solid #4a5568; color: #cbd5e0; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+.cancel-btn:hover { background-color: #2d3748; }
+.save-btn { background-color: #3182ce; border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+.save-btn:hover { background-color: #2b6cb0; }
 
-.modal-content {
-  background-color: #1a202c;
-  padding: 24px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-  border: 1px solid #2d3748;
-  color: #fff;
-  animation: modalFadeIn 0.2s ease-out;
-}
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
 
-@keyframes modalFadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #2d3748;
-  padding-bottom: 10px;
-}
-
-.modal-header h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  color: #fff;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  color: #a0aec0;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.close-btn:hover {
-  color: #fff;
-}
-
-.modal-body {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.master-switch {
-  padding-bottom: 15px;
-  border-bottom: 1px dashed #2d3748;
-  margin-bottom: 10px;
-}
-
-.master-switch label {
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: #63b3ed; /* Light Blue text for emphasis */
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.form-group label {
-  font-size: 0.9rem;
-  color: #cbd5e0;
-}
-
-.form-group input[type="number"] {
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid #4a5568;
-  background-color: #2d3748;
-  color: #fff;
-  font-size: 1rem;
-}
-
-.form-group-checkbox label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  color: #cbd5e0;
-}
-
-/* Checkbox Style: Blue accent */
-.form-group-checkbox input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  accent-color: #3182ce; /* Blue checkbox */
-  cursor: pointer;
-}
-
-.settings-group.disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 20px;
-  padding-top: 15px;
-  border-top: 1px solid #2d3748;
-}
-
-.cancel-btn {
-  background: transparent;
-  border: 1px solid #4a5568;
-  color: #cbd5e0;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.cancel-btn:hover {
-  background-color: #2d3748;
-}
-
-/* Save Button: Blue */
-.save-btn {
-  background-color: #3182ce;
-  border: none;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s;
-}
-
-.save-btn:hover {
-  background-color: #2b6cb0; /* Darker blue */
-}
-
-/* Responsive */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  /* --- HEADER MOBILE --- */
   .section-header {
-    flex-direction: column; 
+    flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 12px;
+    margin-bottom: 12px;
+    
   }
   
-  .header-controls {
+  .section-title {
+    font-size: 1.4rem;
     width: 100%;
-    justify-content: flex-end;
+    justify-content: space-between; 
+    text-decoration: none !important; 
+    border-bottom: none !important;
   }
 
+  .header-controls {
+    width: 100%;
+    justify-content: flex-end; /* Nút nằm bên phải */
+    gap: 10px;
+  }
+
+  /* --- [CHỈNH SỬA QUAN TRỌNG] GRID MOBILE --- */
   .anime-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 15px;
+display: grid !important; /* Đảm bảo grid luôn được bật */
+    
+    /* [SỬA ĐỔI] Dùng !important để ghi đè mọi style khác đang cản trở */
+    grid-template-columns: repeat(2, 1fr) !important; 
+    
+    gap: 12px !important;
+    padding: 0 !important; /* Xóa padding thừa nếu có */
+  }
+
+  /* --- BUTTONS MOBILE --- */
+  .view-all-btn, 
+  .notify-btn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+  
+  .notify-btn {
+    white-space: nowrap;
+  }
+  
+  .modal-content {
+    width: 95%;
+    padding: 16px;
   }
 }

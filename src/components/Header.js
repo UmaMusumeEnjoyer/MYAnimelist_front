@@ -6,35 +6,23 @@ import { useAuth } from '../context/AuthContext';
 import GlobalSearchModal from './GlobalSearchModal'; 
 import { getUserNotifications } from '../services/api';
 
-// [UPDATE] Hàm format thời gian (Ngày + Giờ)
 const formatDateTime = (dateString) => {
   if (!dateString) return '';
   const date = new Date(dateString);
-  // Sử dụng toLocaleString để hiển thị đầy đủ ngày giờ theo múi giờ người dùng
   return date.toLocaleString('vi-VN', { 
-    year: 'numeric', 
-    month: '2-digit', 
-    day: '2-digit', 
-    hour: '2-digit', 
-    minute: '2-digit' 
+    year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' 
   }); 
 };
 
-// [UPDATE] Hàm tính thời gian đếm ngược (Countdown) cho airing_at
 const getRelativeTime = (airingAt) => {
     if (!airingAt) return '';
     const now = new Date();
     const airDate = new Date(airingAt);
     const diff = airDate - now;
-
-    // Nếu đã qua giờ chiếu (diff < 0)
     if (diff < 0) return 'Aired'; 
-
-    // Tính toán thời gian còn lại
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
     if (days > 0) return `${days}d ${hours}h left`;
     if (hours > 0) return `${hours}h ${minutes}m left`;
     return `${minutes}m left`;
@@ -52,8 +40,6 @@ const Header = () => {
   const [notificationCount, setNotificationCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
 
-  // ... (Giữ nguyên các hàm getAvatarUrl, toggleDropdown, useEffect...) 
-  // Code phần này không thay đổi so với phiên bản trước
   const DEFAULT_AVATAR = "https://media.gametora.com/umamusume/characters/profile/1114.png";
   const getAvatarUrl = (url) => {
     if (!url) return DEFAULT_AVATAR;
@@ -83,8 +69,6 @@ const Header = () => {
   return (
     <>
       <header className="app-header">
-         {/* ... (Phần Header Left, Center, Right giữ nguyên) ... */}
-         {/* Copy lại phần JSX của Header từ code cũ, chỉ thay đổi phần Notification Modal bên dưới */}
          <div className="header-left">
           <div className="logo">
               <Link to="/" tabIndex="-1">
@@ -93,6 +77,7 @@ const Header = () => {
           </div>
         </div>
 
+        {/* Menu giữa này sẽ bị ẩn đi trên Mobile bằng CSS */}
         <nav className="header-center">
           {isAuthenticated ? <Link to="/homepagelogin" tabIndex="-1">Home</Link> : <Link to="/" tabIndex="-1">Home</Link>}
           <Link to="/browse" tabIndex="-1">Browse</Link>
@@ -121,6 +106,17 @@ const Header = () => {
                 
                 {isDropdownOpen && (
                   <div className="dropdown-menu">
+                    
+                    {/* --- [MỚI] MOBILE ONLY NAVIGATION LINKS --- */}
+                    {/* Phần này sẽ bị ẩn trên PC và chỉ hiện trên Mobile */}
+                    <div className="mobile-nav-group">
+                        <Link to={isAuthenticated ? "/homepagelogin" : "/"} className="dropdown-item" onClick={() => setIsDropdownOpen(false)}>Home</Link>
+                        <Link to="/browse" className="dropdown-item" onClick={() => setIsDropdownOpen(false)}>Browse</Link>
+                        <Link to="/animelist" className="dropdown-item" onClick={() => setIsDropdownOpen(false)}>Anime List</Link>
+                        <div className="dropdown-divider"></div>
+                    </div>
+                    {/* ------------------------------------------ */}
+
                     <Link to="/profile" className="dropdown-item" tabIndex="-1" onClick={() => setIsDropdownOpen(false)}>
                       Profile
                     </Link>
@@ -146,7 +142,6 @@ const Header = () => {
       
       <GlobalSearchModal isOpen={isSearchModalOpen} onClose={() => setIsSearchModalOpen(false)} />
 
-      {/* --- NOTIFICATION MODAL (PHẦN QUAN TRỌNG ĐÃ CẬP NHẬT) --- */}
       {isNotiModalOpen && (
         <div className="noti-modal-overlay" onClick={() => setIsNotiModalOpen(false)}>
           <div className="noti-modal-content" onClick={(e) => e.stopPropagation()}>
@@ -161,32 +156,21 @@ const Header = () => {
                     <div className="noti-icon">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3DB4F2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
                     </div>
-                    
                     <div className="noti-info">
-                      {/* Dòng 1: Episode + Tên Anime */}
                       <p className="noti-text">
                         <strong>Episode {noti.episode_number}</strong>
-                        {/* Kiểm tra null trước khi hiển thị */}
                         <span className="anime-title-highlight"> 
                           {noti.anime_title ? noti.anime_title : `Anime ID: ${noti.anilist_id}`} 
                         </span>
                       </p>
-                      
-                      {/* Dòng 2: Thời gian Sent + Countdown Airing */}
                       <div className="noti-meta-row">
-                        {/* Sent at: Thời gian server gửi thông báo */}
-                        <span className="noti-time">
-                           Sent: {formatDateTime(noti.sent_at)}
-                        </span>
-
-                        {/* Airing at: Thời gian chiếu phim */}
+                        <span className="noti-time">Sent: {formatDateTime(noti.sent_at)}</span>
                         <span className={`noti-countdown ${getRelativeTime(noti.airing_at) === 'Aired' ? 'aired' : ''}`}>
                            <svg style={{marginRight: '4px', marginBottom: '-1px'}} xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                            {getRelativeTime(noti.airing_at)}
                         </span>
                       </div>
                     </div>
-
                   </div>
                 ))
               ) : (

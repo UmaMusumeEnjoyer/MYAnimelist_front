@@ -15,5 +15,6 @@
 @media (max-width: 768px) {
   .staff-grid {
     grid-template-columns: 1fr;
+    gap: 12px; /* [TỐI ƯU] Giảm khoảng cách để danh sách gọn hơn trên mobile */
   }
 }

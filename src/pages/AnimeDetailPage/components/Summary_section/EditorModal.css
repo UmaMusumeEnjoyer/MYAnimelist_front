@@ -240,3 +240,74 @@
   cursor: not-allowed;
   border-color: #1a2533 !important;
 }
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  /* 1. Modal Container: Full màn hình & Cuộn được */
+  .editor-modal-content {
+    width: 95% !important; /* Gần full màn hình */
+    max-height: 90vh;      /* Giới hạn chiều cao */
+    overflow-y: auto;      /* Cho phép cuộn nội dung form */
+    margin: 10px 0;
+  }
+
+  /* 2. Header: Sắp xếp lại đơn giản hơn */
+  .editor-modal-header {
+    height: auto;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px;
+    gap: 10px;
+  }
+
+  .editor-modal-header-info {
+    position: static; /* Bỏ overlap để không che nội dung */
+    top: 0;
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .editor-modal-thumb {
+    width: 60px; /* Thu nhỏ ảnh thumb */
+  }
+  
+  .editor-modal-anime-title {
+    font-size: 1.1rem;
+  }
+
+  .editor-modal-header-actions {
+    width: 100%;
+    justify-content: flex-end; /* Nút save nằm góc phải */
+    margin-bottom: 0;
+  }
+
+  /* 3. Body: Chuyển sang 1 cột dọc */
+  .editor-modal-body {
+    padding: 15px; /* Giảm padding */
+  }
+
+  .editor-modal-form-split-layout {
+    flex-direction: column; /* Xếp chồng 2 cột lớn */
+    gap: 20px;
+  }
+
+  /* Chuyển Grid 3 cột thành 1 cột */
+  .editor-modal-form-left-col {
+    grid-template-columns: 1fr; 
+    gap: 15px;
+  }
+  
+  /* Footer: Xếp dọc nếu cần */
+  .editor-modal-footer {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .editor-modal-btn-delete {
+    width: 100%;
+    text-align: center;
+  }
+}

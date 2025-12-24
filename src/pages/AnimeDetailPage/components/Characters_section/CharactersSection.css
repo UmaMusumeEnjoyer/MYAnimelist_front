@@ -1,20 +1,24 @@
 /* src/components/CharactersSection.css */
 .characters-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Tạo layout 3 cột */
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
+  width: 100%;
 }
 
-/* Responsive: chuyển về 2 cột trên màn hình nhỏ hơn */
 @media (max-width: 1024px) {
   .characters-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Responsive: chuyển về 1 cột trên màn hình rất nhỏ */
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
 @media (max-width: 768px) {
   .characters-grid {
-    grid-template-columns: 1fr;
+    /* Bắt buộc 1 cột trên mobile để thẻ đủ rộng hiển thị giống hình mẫu */
+    grid-template-columns: minmax(0, 1fr) !important; 
+    gap: 12px !important;
   }
 }

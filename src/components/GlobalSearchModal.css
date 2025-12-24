@@ -8,7 +8,8 @@
   background-color: rgba(0, 0, 0, 0.85);
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Để modal nằm cao hơn chút cho giống thanh search */
+  /* Mặc định desktop */
+  align-items: flex-start; 
   padding-top: 80px;
   z-index: 2000;
   backdrop-filter: blur(5px);
@@ -20,7 +21,7 @@
   background-color: #1a202c;
   width: 90%;
   max-width: 600px;
-  max-height: 70vh; /* Không quá dài */
+  max-height: 70vh; 
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
@@ -56,7 +57,7 @@
   font-size: 1.1rem;
   outline: none;
   transition: all 0.2s ease;
-  box-sizing: border-box; /* Quan trọng để không vỡ layout */
+  box-sizing: border-box; 
 }
 
 .gs-input:focus {
@@ -105,7 +106,7 @@
   cursor: pointer;
   transition: all 0.2s;
   border: 1px solid transparent;
-  text-decoration: none; /* Vì có thể dùng Link */
+  text-decoration: none; 
 }
 
 .gs-result-item:hover {
@@ -142,4 +143,27 @@
 @keyframes gsFadeIn {
   from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+@media (max-width: 768px) {
+    .gs-overlay {
+        padding-top: 10px; /* Đẩy sát lên trên hơn để chừa chỗ cho bàn phím */
+    }
+
+    .gs-content {
+        width: 95%; /* Mở rộng gần hết màn hình */
+        max-height: 80vh; /* Tăng chiều cao tối đa */
+    }
+
+    .gs-header {
+        padding: 12px 16px; /* Giảm padding header */
+    }
+
+    .gs-input {
+        font-size: 1rem; /* Chữ nhỏ lại 1 chút để không bị zoom trên iOS */
+        height: 42px;
+    }
 }
