@@ -133,3 +133,50 @@
 .text-secondary { 
   color: var(--text-secondary); 
 }
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .user-group-section {
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+
+  .user-group-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .user-group-title h3 {
+    font-size: 1.1rem;
+  }
+  
+  /* Nếu đang ở chế độ xóa, cho phép thanh công cụ cuộn ngang nếu quá dài */
+  .user-actions-controls {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 5px;
+  }
+
+  /* Grid Anime: Tối ưu chiều cao thẻ */
+  .anime-grid-row {
+    grid-template-columns: repeat(2, 1fr); /* 2 Cột */
+    gap: 12px;
+  }
+  
+  .grid-item {
+    /* [QUAN TRỌNG] Bỏ chiều cao cứng 340px gây xấu trên mobile */
+    height: auto; 
+    /* Dùng aspect-ratio để thẻ luôn cân đối (Tỉ lệ 2:3 chuẩn poster) */
+    aspect-ratio: 2/3; 
+    min-height: 220px; /* Chiều cao tối thiểu an toàn */
+  }
+
+  /* Nút thêm mới (Circle Add) to hơn chút */
+  .btn-add-circle {
+    padding: 8px; /* Tăng vùng bấm */
+  }
+}

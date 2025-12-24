@@ -250,3 +250,58 @@
 .alc-meta.no-avatar {
   justify-content: flex-end; /* Đẩy like sang phải */
 }
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  /* 1. Tinh chỉnh Container & Header */
+  .container {
+    padding: 0 15px; /* Giảm padding lề */
+  }
+
+  .list-page-header {
+    padding-top: 20px; 
+    margin-bottom: 15px;
+  }
+  
+  .list-page-header h1 {
+    font-size: 1.6rem; /* Giảm size tiêu đề lớn */
+  }
+
+  /* 2. Thanh tìm kiếm (Search Bar) */
+  .list-search-bar {
+    grid-template-columns: 1fr; /* Xếp chồng dọc (Search trên, Sort dưới) */
+    gap: 12px;
+    margin-bottom: 25px;
+    align-items: stretch; /* Kéo dãn các phần tử con */
+  }
+  
+  /* Đảm bảo các group con full width */
+  .ls-search-group {
+    width: 100%;
+  }
+
+  /* 3. Grid Danh sách (Lists Grid) */
+  .lists-grid {
+    /* [QUAN TRỌNG] Chuyển về 1 cột duy nhất để card hiển thị rõ ràng */
+    grid-template-columns: 1fr; 
+    gap: 15px;
+  }
+
+  /* 4. Tinh chỉnh Card */
+  .alc-preview {
+    /* Giảm chiều cao vùng ảnh preview một chút cho cân đối trên màn hình nhỏ */
+    height: 140px; 
+  }
+  
+  .alc-title {
+    font-size: 0.95rem; /* Giảm size chữ tiêu đề card */
+  }
+
+  /* Tắt hiệu ứng hover bay lên trên mobile (vì dùng cảm ứng) */
+  .anime-list-card:hover {
+    transform: none;
+  }
+}

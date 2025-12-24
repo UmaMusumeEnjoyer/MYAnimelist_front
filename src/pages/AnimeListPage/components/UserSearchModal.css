@@ -166,3 +166,74 @@
   from { opacity: 0; transform: scale(0.98); }
   to { opacity: 1; transform: scale(1); }
 }
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .user-modal-content {
+    width: 95%; 
+    max-width: none;
+    height: 90vh; 
+    border-radius: 8px;
+  }
+
+  /* 1. Header: Chuyển về Relative để định vị nút X */
+  .user-modal-header {
+    padding: 16px;
+    position: relative; /* Quan trọng để nút X bám theo header */
+    display: block;     /* Dùng block để input chiếm full dòng dễ dàng */
+  }
+
+  /* 2. Input: Full width và chừa chỗ bên phải cho nút X */
+  .user-search-input {
+    width: 100%;
+    font-size: 16px; /* Chống zoom trên iOS */
+    padding-left: 40px; /* Chỗ cho icon Search bên trái */
+    padding-right: 45px; /* [QUAN TRỌNG] Chừa chỗ cho nút X bên phải */
+    box-sizing: border-box;
+    height: 44px; /* Đảm bảo chiều cao cố định */
+  }
+
+  /* 3. Nút Close (X): Định vị tuyệt đối vào góc phải */
+  /* Lưu ý: Class có thể là .close-btn hoặc thẻ button bên trong header */
+  .user-modal-header .close-btn,
+  .user-modal-header button {
+    position: absolute;
+    top: 16px;   /* Căn bằng với padding-top của header */
+    right: 16px; /* Căn bằng với padding-right của header */
+    width: 44px; /* Chiều rộng bằng chiều cao input để cân đối */
+    height: 44px; /* Chiều cao bằng input */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10; /* Nổi lên trên input */
+    background-color: transparent; /* Đảm bảo nền trong suốt */
+  }
+
+  /* 4. Body và các phần khác */
+  .user-modal-body {
+    padding: 16px;
+  }
+  
+  .user-card-item {
+    padding: 12px;
+    flex-direction: column; 
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .user-card-info {
+    width: 100%;
+  }
+
+  .btn-invite {
+    width: 100%;
+    justify-content: center;
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+}

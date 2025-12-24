@@ -147,3 +147,59 @@
 }
 
 /* ... Các code cũ phần empty-text, remove-member-btn giữ nguyên ... */
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .sidebar {
+    padding-top: 10px;
+  }
+  
+  .sidebar-section {
+    margin-bottom: 24px;
+    background-color: rgba(255,255,255,0.02); /* Thêm nền nhẹ để tách biệt khu vực */
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .sidebar-header {
+    margin-bottom: 12px;
+  }
+
+  /* Nút Add to hơn để dễ chạm */
+  .add-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .sidebar-user-item {
+    margin-bottom: 12px;
+    padding: 4px 0; /* Tăng khoảng cách chạm */
+  }
+
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .user-name {
+    font-size: 0.9rem;
+  }
+
+  /* Nút xóa thành viên: Luôn hiện rõ trên mobile (vì không có hover chuột) */
+  .remove-member-btn {
+    opacity: 1; 
+    padding: 8px; /* Tăng vùng bấm */
+    background-color: rgba(255, 255, 255, 0.05); /* Nền nhẹ để dễ nhận biết là nút */
+    border-radius: 6px;
+  }
+  
+  /* Điều chỉnh lại item của chính mình */
+  .sidebar-user-item.current-user {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    box-sizing: border-box; /* Để padding không làm vỡ khung */
+  }
+}

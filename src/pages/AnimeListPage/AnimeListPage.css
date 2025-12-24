@@ -67,6 +67,68 @@
   font-size: 1rem; outline: none; padding: 0 16px 0 48px;
 }
 
-/* Layout Media Queries */
-@media (min-width: 1024px) { .main-layout { grid-template-columns: 3fr 1fr; } }
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  /* 1. Tối ưu không gian chung */
+  .page-container {
+    padding: 12px 16px; /* Giảm padding lề */
+  }
+
+  .main-layout {
+    gap: 20px; /* Giảm khoảng cách giữa các khối chính */
+  }
+
+  /* 2. Thanh tìm kiếm dính (Sticky Search) */
+  .filter-bar-sticky {
+    padding: 8px 0 12px;
+    top: 0;
+    /* Thêm shadow nhẹ khi dính để tách biệt nội dung khi cuộn */
+    box-shadow: 0 4px 20px -10px rgba(0,0,0,0.5); 
+    margin: 0 -16px; /* Hack: Kéo thanh search rộng full màn hình đè lên padding cha */
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .search-wrapper {
+    height: 44px; /* Chiều cao chuẩn mobile */
+    margin-bottom: 12px;
+  }
+  
+  .search-input {
+    font-size: 16px; /* [QUAN TRỌNG] Font 16px giúp iOS không tự zoom khi nhập liệu */
+  }
+
+  /* 3. Khu vực Sidebar & Actions */
+  /* Sidebar thường nằm dưới hoặc trên list chính ở mobile */
+  .sidebar-actions {
+    gap: 10px;
+  }
+
+  /* 4. Các nút bấm (Buttons) */
+  .action-buttons {
+    gap: 10px;
+    /* Nếu có nhiều nút, cho phép trượt ngang thay vì xuống dòng chiếm diện tích */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 5px; /* Chừa chỗ cho thanh scroll ảo nếu có */
+    
+    /* Ẩn thanh scrollbar xấu xí */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .action-buttons::-webkit-scrollbar {
+    display: none;
+  }
+
+  .btn {
+    height: 38px;
+    font-size: 0.85rem;
+    white-space: nowrap; /* Giữ chữ trên 1 dòng */
+    flex-shrink: 0; /* Không cho nút bị co lại */
+  }
+}
 

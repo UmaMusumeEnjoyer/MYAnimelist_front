@@ -57,3 +57,48 @@
   min-width: 0;
   height: 100%;
 }
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .anime-section {
+    margin-bottom: 30px; 
+    padding: 0 10px; 
+  }
+
+  /* [CHỈNH SỬA MẠNH] Ép buộc layout hàng ngang */
+  .section-header {
+    display: flex !important;
+    flex-direction: row !important; /* Bắt buộc xếp ngang */
+    justify-content: space-between !important; /* Đẩy tiêu đề sang trái, nút sang phải */
+    align-items: center !important; /* Căn giữa theo chiều dọc */
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .section-title {
+    font-size: 1.1rem; 
+    margin: 0 !important; /* Xóa margin mặc định của thẻ h2 */
+    flex: 1;              /* Chiếm khoảng trống thừa */
+    text-align: left;     /* Căn trái chữ */
+  }
+
+  .view-all-btn {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    white-space: nowrap;
+    
+    /* Đảm bảo nút nằm sát bên phải */
+    margin-left: 10px;
+    margin-right: 0;
+    
+    /* Ngăn nút bị co lại nếu tiêu đề quá dài */
+    flex-shrink: 0; 
+  }
+
+  .anime-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px 10px; 
+  }
+}

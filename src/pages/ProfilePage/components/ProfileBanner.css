@@ -1,5 +1,4 @@
 /* src/components/ProfileBanner.css */
-/* Được tái thiết kế thành Tab Bar kiểu GitHub */
 
 .profile-nav-container {
   width: 100%;
@@ -7,14 +6,24 @@
   margin-bottom: 20px;
   position: sticky;
   top: 0;
-  background-color: var(--bg-dark); /* Sticky background để không bị trong suốt khi cuộn */
+  background-color: var(--bg-dark); 
   z-index: 10;
 }
 
 .profile-nav {
   display: flex;
   gap: 8px;
-  overflow-x: auto; /* Cho phép scroll ngang trên mobile */
+  overflow-x: auto; 
+  
+  /* [FIX] Ẩn thanh scrollbar nhưng vẫn vuốt được */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  padding: 0 10px; /* Thêm padding 2 bên để item đầu/cuối không sát mép */
+}
+
+/* Ẩn scrollbar cho Chrome/Safari/Webkit */
+.profile-nav::-webkit-scrollbar {
+    display: none;
 }
 
 .nav-item {
@@ -25,13 +34,13 @@
   font-size: 14px;
   color: var(--text-main);
   cursor: pointer;
-  border-bottom: 2px solid transparent; /* Chuẩn bị cho border active */
+  border-bottom: 2px solid transparent; 
   transition: border-bottom-color 0.2s, color 0.2s;
   white-space: nowrap;
 }
 
 .nav-item:hover {
-  color: var(--text-highlight); /* Hover text color */
+  color: var(--text-highlight); 
   background-color: rgba(255,255,255,0.03);
   border-radius: 6px 6px 0 0;
 }
@@ -39,15 +48,25 @@
 .nav-item.active {
   font-weight: 600;
   color: var(--text-main);
-  border-bottom-color: #f78166; /* GitHub orange accent cho tab active */
+  border-bottom-color: #f78166; 
 }
 
 .nav-icon {
   width: 16px;
   height: 16px;
-  fill: rgba(139, 148, 158, 1); /* Màu icon xám */
+  fill: rgba(139, 148, 158, 1); 
 }
 
 .nav-item.active .nav-icon {
-  fill: var(--text-main); /* Icon sáng lên khi active */
+  fill: var(--text-main); 
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+@media (max-width: 768px) {
+  .nav-item {
+    padding: 10px 12px; /* Tăng vùng bấm, giảm độ rộng ngang để hiển thị nhiều tab hơn */
+    font-size: 13px;
+  }
 }

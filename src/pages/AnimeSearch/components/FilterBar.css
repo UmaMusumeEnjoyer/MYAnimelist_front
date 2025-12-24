@@ -121,42 +121,92 @@
   background-color: #3399cc;
 }
 
-/* RESPONSIVE */
 
-/* Laptop/Tablet (Dưới 1400px - Tăng mốc này vì thanh filter giờ rất dài) */
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+/* Laptop/Tablet (Dưới 1400px) */
 @media (max-width: 1400px) {
   .filter-bar {
-    /* Chia làm 4 cột để các ô select không bị bé quá */
     grid-template-columns: repeat(4, 1fr); 
   }
-  
-  /* Search box chiếm trọn hàng đầu tiên */
   .filter-search { 
     grid-column: 1 / -1; 
   }
 }
 
-/* Tablet nhỏ (Dưới 900px) */
+/* Tablet dọc (Dưới 900px) */
 @media (max-width: 900px) {
   .filter-bar {
     grid-template-columns: repeat(3, 1fr); 
+    gap: 15px;
   }
   .filter-search { 
     grid-column: 1 / -1; 
   }
 }
 
-/* Mobile (Dưới 600px) */
-@media (max-width: 600px) {
-  .filter-bar { 
-    grid-template-columns: 1fr 1fr; /* 2 cột */
-    gap: 15px; 
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+/* Laptop/Tablet (Dưới 1400px) */
+@media (max-width: 1400px) {
+  .filter-bar {
+    grid-template-columns: repeat(4, 1fr); 
   }
   .filter-search { 
-    grid-column: 1 / -1; /* Search full width */
+    grid-column: 1 / -1; 
+  }
+}
+
+/* Tablet dọc (Dưới 900px) - Grid 3 Cột */
+@media (max-width: 900px) {
+  .filter-bar {
+    grid-template-columns: repeat(3, 1fr) !important; /* Ép cứng 3 cột */
+    gap: 15px;
+  }
+  .filter-search { 
+    grid-column: 1 / -1 !important; 
   }
   
+  /* [FIX MẠNH] Ép nút Clear sang cột thứ 3 (Cột phải ngoài cùng) */
   .btn-clear-filter {
+    grid-column: 3 / 4 !important; /* Bắt buộc nằm ở cột 3 */
     width: 100%;
+    margin-top: 5px;
+  }
+}
+
+/* Mobile (Dưới 600px) - Grid 2 Cột */
+@media (max-width: 600px) {
+  .filter-bar { 
+    grid-template-columns: 1fr 1fr !important; /* Ép cứng 2 cột */
+    gap: 12px; 
+    margin-bottom: 20px;
+  }
+
+  .filter-search { 
+    grid-column: 1 / -1 !important; 
+  }
+  
+  /* [FIX MẠNH] Ép nút Clear sang cột thứ 2 (Cột phải ngoài cùng) */
+  .btn-clear-filter {
+    grid-column: 2 / 3 !important; /* Bắt buộc nằm ở cột 2 */
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  /* Tinh chỉnh input/select */
+  .search-box input,
+  .filter-group select {
+    font-size: 13px;
+    height: 38px;
+  }
+  
+  .filter-group label {
+    font-size: 0.75rem;
+    margin-bottom: 2px;
   }
 }

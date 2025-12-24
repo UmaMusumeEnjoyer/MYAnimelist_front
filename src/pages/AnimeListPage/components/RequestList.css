@@ -179,3 +179,53 @@
   background-color: rgba(239, 68, 68, 0.15);
   border-color: #ef4444;
 }
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  /* 1. Container bên ngoài */
+  .request-list-container {
+    margin-top: 15px;
+    border-radius: 8px; /* Bo góc ít hơn chút cho gọn */
+  }
+
+  /* 2. Header Summary (Phần bấm để mở rộng) */
+  .request-summary {
+    padding: 12px;
+  }
+
+  .summary-title {
+    font-size: 0.85rem;
+  }
+
+  /* 3. Item Request bên trong */
+  .request-item {
+    padding: 12px;
+  }
+
+  .req-user-row {
+    flex-direction: row; /* Vẫn giữ ngang */
+    align-items: flex-start; /* Căn trên để nếu tên dài xuống dòng */
+    gap: 10px;
+  }
+
+  .req-username {
+    font-size: 0.9rem;
+    /* Xử lý tên dài */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60%; 
+  }
+
+  /* 4. Nút bấm hành động (Accept/Reject) */
+  .req-actions {
+    gap: 8px;
+  }
+
+  .btn-req-action {
+    padding: 10px 0; /* Tăng chiều cao vùng bấm cho dễ chạm */
+    font-size: 0.85rem;
+  }
+}

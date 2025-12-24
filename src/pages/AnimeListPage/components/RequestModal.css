@@ -99,3 +99,44 @@
 .btn-secondary:hover {
   background-color: #475569;
 }
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  /* 1. Modal rộng hơn trên mobile */
+  .request-modal {
+    width: 95%; /* Gần full màn hình */
+    max-width: none; /* Bỏ giới hạn pixel */
+  }
+
+  /* 2. Giảm padding các phần */
+  .modal-header {
+    padding: 15px 16px; /* Giảm padding */
+  }
+
+  .modal-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .modal-body {
+    padding: 16px;
+  }
+
+  .request-message-input {
+    min-height: 80px; /* Giảm chiều cao tối thiểu một chút */
+    font-size: 16px; /* [QUAN TRỌNG] Font 16px để iOS không zoom khi nhập */
+  }
+
+  /* 3. Footer nút bấm */
+  .modal-footer {
+    padding: 0 16px 16px 16px;
+  }
+
+  /* Nút bấm to ra cho dễ bấm */
+  .modal-footer button {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+  }
+}

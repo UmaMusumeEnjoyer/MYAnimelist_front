@@ -1,11 +1,11 @@
 /* src/pages/ProfilePage.css */
 :root {
-  --bg-dark: #0d1117; /* GitHub Dark Dimmed background base */
-  --bg-card: #161b22; /* GitHub card bg */
+  --bg-dark: #0d1117; 
+  --bg-card: #161b22; 
   --border-color: #30363d;
   --text-main: #c9d1d9;
   --text-secondary: #8b949e;
-  --text-highlight: #58a6ff; /* GitHub Blue */
+  --text-highlight: #58a6ff; 
   --btn-bg: #21262d;
   --btn-border: #30363d;
   --btn-hover: #30363d;
@@ -15,7 +15,7 @@
 
 body {
   background-color: var(--bg-dark);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   color: var(--text-main);
   margin: 0;
 }
@@ -29,7 +29,7 @@ body {
 
 .profile-layout {
   display: grid;
-  grid-template-columns: 296px 1fr; /* Cột trái cố định 296px giống GitHub, phải fill */
+  grid-template-columns: 296px 1fr; 
   gap: 24px;
 }
 
@@ -149,7 +149,7 @@ body {
 
 /* --- RIGHT CONTENT --- */
 .profile-content {
-  min-width: 0; /* Prevent overflow */
+  min-width: 0; 
 }
 
 /* Pinned Items Section */
@@ -178,7 +178,7 @@ body {
 
 .pinned-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 cột giống GitHub */
+  grid-template-columns: repeat(2, 1fr); 
   gap: 16px;
   margin-bottom: 24px;
 }
@@ -199,7 +199,7 @@ body {
   gap: 8px;
   margin-bottom: 8px;
   font-weight: 600;
-  color: var(--text-highlight); /* Blue text */
+  color: var(--text-highlight); 
 }
 
 .repo-icon {
@@ -240,22 +240,6 @@ body {
   color: var(--text-main);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .profile-layout {
-    grid-template-columns: 1fr;
-  }
-  
-  .profile-avatar {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .pinned-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* --- Custom List Styles --- */
 .custom-lists-container {
   margin-top: 20px;
@@ -283,21 +267,28 @@ body {
 .modal-overlay {
   position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
   background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000;
-}
-.modal-content {
-  background: var(--bg-card); border: 1px solid var(--border-color); padding: 20px; border-radius: 6px; width: 400px;
+  padding: 20px; /* Thêm padding để modal không dính sát mép màn hình */
+  box-sizing: border-box;
 }
 
-/* --- [MỚI] Phần hiển thị Favorites Grid (Thêm lại CSS cũ) --- */
+.modal-content {
+  background: var(--bg-card); 
+  border: 1px solid var(--border-color); 
+  padding: 20px; 
+  border-radius: 6px; 
+  /* [FIX] Thay vì fix cứng 400px, dùng max-width để responsive */
+  width: 100%;
+  max-width: 400px; 
+}
+
+/* --- Favorites Grid --- */
 .favorites-container {
   margin-top: 20px;
 }
 
 .anime-grid-6 {
   display: grid;
-  /* Tạo đúng 6 cột bằng nhau */
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
-  /* Khoảng cách giữa các card */
   gap: 20px 15px; 
 }
 
@@ -309,4 +300,78 @@ body {
   color: var(--text-secondary);
   font-style: italic;
   padding: 20px 0;
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  /* Layout chính: 1 cột */
+  .profile-layout {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .profile-page {
+    padding: 16px;
+  }
+
+  /* SIDEBAR MOBILE */
+  /* Biến sidebar thành Flexbox để xếp Avatar nằm ngang với Tên */
+  .profile-sidebar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+  }
+
+  /* Thu nhỏ avatar */
+  .profile-avatar {
+    width: 80px; 
+    height: 80px;
+  }
+  .profile-avatar-wrapper {
+    margin-bottom: 0; /* Xóa margin dưới để căn giữa với tên */
+  }
+
+  /* Phần tên nằm bên cạnh avatar */
+  .profile-names {
+    margin-bottom: 0;
+    flex: 1; /* Chiếm phần còn lại của dòng */
+  }
+  
+  .profile-display-name {
+    font-size: 20px;
+  }
+  .profile-username {
+    font-size: 16px;
+  }
+
+  /* Các phần tử còn lại (Bio, Button, Stats) sẽ xuống dòng và full width */
+  .profile-bio, 
+  .btn-edit-profile, 
+  .profile-meta, 
+  .profile-stats,
+  .separator {
+    width: 100%;
+    flex-basis: 100%;
+  }
+  
+  .profile-bio {
+    margin-top: 5px;
+    margin-bottom: 15px;
+  }
+
+  /* Pinned Grid: 1 cột */
+  .pinned-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* GRID ANIME POSTERS */
+  /* Giảm kích thước tối thiểu để hiển thị được 3 cột trên mobile */
+  .anime-grid-6 {
+    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+    gap: 10px; /* Giảm gap cho gọn */
+  }
 }

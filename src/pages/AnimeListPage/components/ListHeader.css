@@ -128,3 +128,34 @@
   font-size: 0.85rem;
   font-weight: 400;
 }
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column; /* Xếp chồng dọc: Tiêu đề trên, Nút dưới */
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  /* Header text chiếm full chiều ngang */
+  .header-text {
+    width: 100%;
+  }
+
+  .page-title {
+    font-size: 1.6rem; /* Giảm từ 2.25rem xuống cho vừa màn hình */
+  }
+
+  .page-description {
+    font-size: 0.9rem;
+  }
+
+  /* Đưa nhóm nút hành động (Tim, Số lượng) sang trái hoặc full width tùy ý */
+  .header-actions {
+    align-self: flex-start; /* Căn trái */
+    /* Hoặc nếu muốn full width thì dùng: width: 100%; justify-content: center; */
+  }
+}

@@ -88,3 +88,32 @@
   cursor: pointer;
 }
 .close-btn:hover { color: white; }
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .likers-modal {
+    width: 90%;
+    /* Giới hạn chiều cao theo màn hình thay vì px cứng */
+    max-height: 80vh; 
+    display: flex;
+    flex-direction: column;
+  }
+
+  .likers-list {
+    /* List tự co giãn nhưng không vượt quá màn hình */
+    max-height: unset; 
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+  .liker-item {
+    padding: 12px 16px;
+  }
+  
+  .modal-header {
+    padding: 12px 16px;
+  }
+}
